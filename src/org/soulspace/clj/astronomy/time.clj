@@ -1,18 +1,14 @@
 (ns org.soulspace.clj.astronomy.time
-  (:use
-    [org.soulspace.clj.math.math]
-    [org.soulspace.clj.math.java-math]
-    )
-  (:import
-    [java.util Date])
-  )
+  (:use [org.soulspace.clj.math math java-math])
+  (:import [java.util Date]))
 
 ; Implements Time based on 'Astronomical Algorithms' from Jean Meeus
 
+(def julian-century 36525)
 (def days [:sunday :monday :tuesday :wednesday :thursday :friday :saturday])
 
 (defn julian-day [y m d b]
-  "Calculates the julian day from a calender date"
+  "Calculates the julian day from a calender date."
   (+ (floor (* 365.25 (+ y 4716))) (floor (* 30.6001 (+ m 1))) d b -1524.5))
 
 (defn modified-julian-day [jd]
@@ -23,26 +19,30 @@
   (let [a (floor (/ y 100))] 
     (+ 2 (- a) (floor (/ a 4)))))
 
-(defn julian-day-by-gregorian-date [year month day]
+(defn gregorian-date-to-julian-day [year month day]
   (if (> month 2)
     (julian-day year month day (gregorian-b year))
     (let [y (- year 1)
           m (+ month 12)]
       (julian-day y m day (gregorian-b y)))))
 
-(defn julian-day-by-julian-date [year month day]
+(defn julian-date-to-julian-day [year month day]
   (if (> month 2)
     (julian-day year month day 0)
     (let [y (- year 1)
           m (+ month 12)]
       (julian-day y m day 0))))
 
-(defn julian-day-by-date [year month day]
+(defn java-date-to-julian-day [date]
+  (let [time-millis (.getTime date)]
+    (+ (/ time-millis 1000 60 60 24) (julian-day-to-date 1970 1 1) (- 0.5))))
+
+(defn date-to-julian-day [year month day]
   (if (or (< year 1582)
           (and (<= year 1582) (< month 10))
           (and (<= year 1582) (= month 10) (< day 5)))
-    (julian-day-by-julian-date year month day)
-    (julian-day-by-gregorian-date year month day)))
+    (julian-date-to-julian-day year month day)
+    (gregorian-date-to-julian-day year month day)))
 
 (defn- jd-a [z]
   (if (< z 2299161)
@@ -57,7 +57,7 @@
         s (rem (* (rem m 1) 60) 60)]
     {:hour (floor h) :min (floor m) :sec (floor s)}))
 
-(defn date-by-julian-day [jd]
+(defn julian-day-to-date [jd]
   (let [x (+ jd 0.5)
         z (floor x)
         f (- x z)
@@ -89,7 +89,7 @@
     (gregorian-leap-year? year)))
 
 (defn leap-year-by-julian-day? [jd]
-  (let [{year :year} (date-by-julian-day jd)]
+  (let [{year :year} (julian-day-to-date jd)]
     (if (< jd 2299160.5) ; 1582 10 15
       (julian-leap-year? year)
       (gregorian-leap-year? year))))
@@ -99,7 +99,7 @@
 
 (defn day-of-year
   ([jd]
-    (let [{year :year month :month day :day} (date-by-julian-day jd)]
+    (let [{year :year month :month day :day} (julian-day-to-date jd)]
       (day-of-year year month day)))
   ([year month day]
     (let [k (if (leap-year? year) 1 2)]
@@ -145,7 +145,7 @@
     (easter-date-by-gregorian-date year)))
 
 (defn easter-date-by-julian-day [jd]
-  (let [{year :year} (date-by-julian-day jd)]
+  (let [{year :year} (julian-day-to-date jd)]
     (easter-date year)))
 
 (defn delta-t [year]
@@ -157,15 +157,11 @@
       (< year 2101) (+ 102 (* 102 t) (* 25.3 t t) (* 0.37 (- year 2100)))
       (true) (+ 102 (* 102 t) (* 25.3 t t)))))
 
-(defn td-by-ut [year ut]
+(defn universal-time-to-dynamic-time [year ut]
   (+ (delta-t year) ut))
 
-(defn ut-by-td [year td]
+(defn dynamic-time-to-universal-time [year td]
   (- td (delta-t year)))
-
-(defn jd-by-java-date [date]
-  (let [time-millis (.getTime date)]
-    (+ (/ time-millis 1000 60 60 24) (julian-day-by-date 1970 1 1) (- 0.5))))
 
 (defprotocol PointInTime
   (julianDay [date])
@@ -174,25 +170,11 @@
 (defrecord JulianDay [jd]
   PointInTime
   (julianDay [this] jd)
-  (date [this] (date-by-julian-day jd)))
+  (date [this] (julian-day-to-date jd)))
 
-;(julian-day-by-julian-date 332 13 27.5) ; 1842713.0
-;(julian-day-by-gregorian-date 1957 10 4.81) ; 2436116.31
-;(julian-day-by-date 1582 10 4) ; 2299159.5
-;(julian-day-by-date 1582 10 15) ; 2299160.5
+(defn- t [jd]
+  "helper function for T"
+  (/ (- jd 2451545.0) julian-century))
 
-;(date-by-julian-day (julian-day-by-gregorian-date 1957 10 4.81))
-;(date-by-julian-day (julian-day-by-julian-date 332 13 27.5))
-
-;(week-day (julian-day-by-date 1582 10 4)) ; :thursday
-;(week-day (julian-day-by-date 1582 10 15)) ; :friday
-
-;(leap-year? (julian-day-by-date 1500 1 1)) ; true
-;(leap-year? (julian-day-by-date 1700 1 1)) ; false
-
-;(day-of-year 2299160.5) ; 288
-;(day-of-year 1582 10 15) ; 288
-;(easter-date-by-gregorian-date 1991) ; 1991 3 31
-;(easter-date-by-julian-date 179) ; 179 4 12
-
-;(time-of-day (jd-by-java-date (Date.))) ; now
+(defn mean-siderial-time-greenwich-0ut [jd]
+  )

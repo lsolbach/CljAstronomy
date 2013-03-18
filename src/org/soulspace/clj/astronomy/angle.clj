@@ -1,23 +1,41 @@
 (ns org.soulspace.clj.astronomy.angle
   (:use
-    [org.soulspace.clj.math.java-math]
-    ))
+    [org.soulspace.clj.math math java-math]))
 
-(defn angle-by-hour-angle [ha]
+; TODO define an angle protocol?
+; TODO angle operations: +, - (*, /)?
+
+(def dms-pattern #"(\+|-)?(\d+)°(?:(\d+)'(?:(\d+(?:\.\d+)?)\")?)?")
+
+(defn- parse-long [x]
+  "resilient long conversion"
+  (try 
+    (Long/parseLong x)
+    (catch Exception e 0)))
+
+(defn- parse-double [x]
+  "resilient double conversion"
+  (try 
+    (Double/parseDouble x)
+    (catch Exception e 0.0)))
+
+(defn hour-angle-to-angle [ha]
   (* 15 ha))
 
-(defn hour-angle-by-angle [a]
+(defn angle-to-hour-angle [a]
   (/ a 15))
 
-(defn angle-by-deg-min-sec [deg min sec]
-  (+ deg (/ min 60) (/ sec 3600)))
+(defn dms-to-angle
+  ([s]
+    (let [[_ sgn deg min sec] (re-matches dms-pattern s)]
+      (dms-to-angle sgn (parse-long deg) (parse-long min) (parse-double sec))))
+  ([sgn deg min]
+    (dms-to-angle sgn deg min 0.0))
+  ([sgn deg min sec]
+    (let [sign (if (= sgn "-") -1 1)]
+      (+ (* sign deg) (/ (* sign min) 60) (/ (* sign sec) 3600)))))
 
-(defn deg-min-sec-by-angle [a]
+(defn angle-to-dms [a]
   (let [af (rem a 1)
         mf (rem (* af 60) 1)]
-  {:deg (long (floor a)) :min (long (floor (* af 60))) :sec (* mf 60)}))
-
-(defn dec-angle-by-min-angle
-  ([deg m s]
-    (+ deg (* m 60) (* s 3600))))
-
+  {:sign (if (< a 0) -1 1) :deg (long (floor a)) :min (long (floor (* af 60))) :sec (* mf 60)}))
