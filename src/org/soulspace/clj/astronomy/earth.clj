@@ -64,4 +64,3 @@
         H2 (/ (+ (* 3 R) 1) (* 2 S))
         s (* D (+ 1 (* flattening H1 (sqr (sin F)) (sqr (cos G))) (* -1 flattening H2 (sqr (cos F)) (sqr (sin G)))))]
     s))
-
