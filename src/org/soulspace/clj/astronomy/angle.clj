@@ -5,6 +5,7 @@
 ; TODO define an angle protocol?
 ; TODO angle operations: +, - (*, /)?
 
+; pattern for the parsing of an angle in degree minutes and seconds
 (def dms-pattern #"(\+|-)?(\d+)°(?:(\d+)'(?:(\d+(?:\.\d+)?)\")?)?")
 
 (defn- parse-long [x]
