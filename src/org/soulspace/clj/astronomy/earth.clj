@@ -31,7 +31,7 @@
   ([geographic-latitude]
     (+ 0.9983271 (* 0.0016764 (cos (* 2 geographic-latitude))) (* -0.0000035 (cos (* 4 geographic-latitude)))))
   ([geographic-latitude height]
-    (:rho (geocentric-distance-by-height geographic-latitude height))))
+    (:rho (geocentric-parameters-by-height geographic-latitude height))))
 
 (defn parallel-radius [geographic-latitude]
   "radius of the parallel circle at the given geographic latitude"

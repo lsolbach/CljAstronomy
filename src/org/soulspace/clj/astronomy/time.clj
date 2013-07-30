@@ -19,6 +19,26 @@
   (let [a (floor (/ y 100))] 
     (+ 2 (- a) (floor (/ a 4)))))
 
+(defn- jd-a [z]
+  (if (< z 2299161)
+    z
+    (let [a (floor (/ (- z 1876216.25) 36524.25))]
+      (+ z 1 a (- (floor (/ a 4)))))))
+
+(defn julian-day-to-date [jd]
+  (let [x (+ jd 0.5)
+        z (floor x)
+        f (- x z)
+        a (jd-a z)
+        b (+ a 1524)
+        c (floor (/ (- b 122.1) 365.25))
+        d (floor (* 365.25 c))
+        e (floor (/ (- b d) 30.6001))
+        day (+ (- b d (floor (* 30.6001 e))) f)
+        month (if (< e 14) (- e 1) (- e 13))
+        year (if (> month 2) (- c 4716) (- c 4715))]
+    {:year year :month month :day day}))
+
 (defn gregorian-date-to-julian-day [year month day]
   (if (> month 2)
     (julian-day year month day (gregorian-b year))
@@ -44,32 +64,12 @@
     (julian-date-to-julian-day year month day)
     (gregorian-date-to-julian-day year month day)))
 
-(defn- jd-a [z]
-  (if (< z 2299161)
-    z
-    (let [a (floor (/ (- z 1876216.25) 36524.25))]
-      (+ z 1 a (- (floor (/ a 4)))))))
-
 (defn time-of-day [day]
   (let [df (rem day 1)
         h (rem (* df 24) 24)
         m (rem (* (rem h 1) 60) 60)
         s (rem (* (rem m 1) 60) 60)]
     {:hour (floor h) :min (floor m) :sec (floor s)}))
-
-(defn julian-day-to-date [jd]
-  (let [x (+ jd 0.5)
-        z (floor x)
-        f (- x z)
-        a (jd-a z)
-        b (+ a 1524)
-        c (floor (/ (- b 122.1) 365.25))
-        d (floor (* 365.25 c))
-        e (floor (/ (- b d) 30.6001))
-        day (+ (- b d (floor (* 30.6001 e))) f)
-        month (if (< e 14) (- e 1) (- e 13))
-        year (if (> month 2) (- c 4716) (- c 4715))]
-    {:year year :month month :day day}))
 
 (defn julian-leap-year? [year]
     (zero? (mod year 4)))
