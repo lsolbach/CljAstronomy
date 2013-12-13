@@ -39,6 +39,7 @@
       (+ z 1 a (- (floor (/ a 4)))))))
 
 (defn julian-day-to-date
+  "Calculates a calender date from the julian day."
   [jd]
   (let [x (+ jd 0.5)
         z (floor x)
@@ -205,8 +206,8 @@
   (date [this] (julian-day-to-date jd)))
 
 (defn- t
-  [jd]
   "helper function for T"
+  [jd]
   (/ (- jd 2451545.0) julian-century))
 
 (defn mean-siderial-time-greenwich-0ut
