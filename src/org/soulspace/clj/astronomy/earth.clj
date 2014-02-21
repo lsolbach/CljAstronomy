@@ -19,7 +19,7 @@
 (def equatorial-radius 6378140) ; equatorial radius in meters
 (def flattening (/ 1 298.257)) ; flattening
 (def polar-radius (* equatorial-radius (- 1 flattening))) ; polar radius in meters
-(def ecc (sqrt (- (* 2 flattening) (sqr flattening)))) ; eccentricity of the meridian
+(def eccentricity (sqrt (- (* 2 flattening) (sqr flattening)))) ; eccentricity of the meridian
 (def omega 7.292114992e-5) ; rotational angular velocity with respect to the stars at epoch 1996.5 (but earth is slowing down)
 
 (defn geocentric-latitude [geographic-latitude]
@@ -44,14 +44,14 @@
 
 (defn parallel-radius [geographic-latitude]
   "radius of the parallel circle at the given geographic latitude"
-  (/ (* equatorial-radius (cos geographic-latitude)) (sqrt (- 1 (* (sqr ecc) (sqr (sin geographic-latitude)))))))
+  (/ (* equatorial-radius (cos geographic-latitude)) (sqrt (- 1 (* (sqr eccentricity) (sqr (sin geographic-latitude)))))))
 
 (defn longitude-distance-per-degree [geographic-latitude]
   (* (/ pi 180) (parallel-radius geographic-latitude)))
 
 (defn curvature-radius [geographic-latitude]
-  (/ (* equatorial-radius (- 1 (sqr ecc)))
-     (pow (- 1 (* (sqr ecc) (sqr (sin geographic-latitude)))) 3/2)))
+  (/ (* equatorial-radius (- 1 (sqr eccentricity)))
+     (pow (- 1 (* (sqr eccentricity) (sqr (sin geographic-latitude)))) 3/2)))
 
 (defn latitude-distance-per-degree [geographic-latitude]
   (* (/ pi 180) (curvature-radius geographic-latitude)))

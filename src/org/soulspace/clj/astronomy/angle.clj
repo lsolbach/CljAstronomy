@@ -54,3 +54,4 @@
   (let [af (rem a 1)
         mf (rem (* af 60) 1)]
   {:sign (if (< a 0) -1 1) :deg (long (floor a)) :min (long (floor (* af 60))) :sec (* mf 60)}))
+
