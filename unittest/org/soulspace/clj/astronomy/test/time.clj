@@ -10,8 +10,7 @@
 (ns org.soulspace.clj.astronomy.test.time
   (:use
     [clojure.test]
-    [org.soulspace.clj.astronomy.time]
-    ))
+    [org.soulspace.clj.astronomy.time.time]))
 
 (deftest julian-day-test
   (is (= (date-to-julian-day 2000 1 1.5) 2451545.0))

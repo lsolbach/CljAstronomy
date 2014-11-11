@@ -7,8 +7,7 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 ;
-(ns org.soulspace.clj.astronomy.driver
-  (:use
-    [org.soulspace.clj.astronomy angle earth time]
-    ))
+(ns org.soulspace.clj.astronomy.objects.orbital-elements)
 
+(defprotocol OrbitalElements
+  )

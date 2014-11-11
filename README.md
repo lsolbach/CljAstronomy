@@ -1,6 +1,6 @@
-Clj<X>Library
-==============
-The Clj<X>Library is a library .
+CljAstronomyLibrary
+===================
+The CljAstronomyLibrary is a library for astronomical calculations.
 
 Author/Project Lead
 -------------------
@@ -16,7 +16,7 @@ License
 
 Code Repository
 ---------------
-[https://github.com/lsolbach/CljJavaLibrary] (https://github.com/lsolbach/CljJavaLibrary)
+[https://github.com/lsolbach/CljjAstronomyLibrary] (https://github.com/lsolbach/CljjAstronomyLibrary)
 
 History
 -------

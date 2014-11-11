@@ -7,11 +7,12 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 ;
-(ns org.soulspace.clj.astronomy.coordinate
-  (:use [org.soulspace.clj.math math java-math])
-  )
+(ns org.soulspace.clj.astronomy.coordinates.transformation
+  (:use [org.soulspace.clj.math math java-math]))
 
-;Montenbruck, Oliver; Grundlagen der Ephemeridenrechnung, 7. Aufl., Spektrum Akademischer Verlag
+; References:
+; Montenbruck, Oliver; Grundlagen der Ephemeridenrechnung; 7. Aufl.; Spektrum Akademischer Verlag
+
 (defn- calc-beta
   [z rho]
   (if (== rho 0)

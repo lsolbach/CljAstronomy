@@ -1,6 +1,8 @@
 TODO's
 ======
 
+many :-)
+
 * enhance time functions
 * add coordinate system transformations
 * add orbit abstraction
@@ -8,3 +10,4 @@ TODO's
 * add star positioning
 * add star catalog reading
 * check JSky for useful functions
+
