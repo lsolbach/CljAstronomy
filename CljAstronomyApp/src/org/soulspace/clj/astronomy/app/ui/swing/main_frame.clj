@@ -14,7 +14,7 @@
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
         [org.soulspace.clj.application classpath]
-        [org.soulspace.clj.astronomy.app application i18n])
+        [org.soulspace.clj.astronomy.app i18n])
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (declare ui-frame)

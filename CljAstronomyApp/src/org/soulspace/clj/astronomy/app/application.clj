@@ -5,5 +5,5 @@
 (defn -main
   "Main function to start the application"
   [& args]
-  
+  (start)
   )
