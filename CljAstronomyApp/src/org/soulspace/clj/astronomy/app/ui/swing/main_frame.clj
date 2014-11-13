@@ -14,12 +14,21 @@
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
         [org.soulspace.clj.application classpath]
-        [org.soulspace.clj.astronomy.app i18n])
+        [org.soulspace.clj.astronomy.app.application i18n])
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (declare ui-frame)
 
 (def heading-font (font (font-names :dialog) [(font-styles :bold)] 14))
+
+; TODO implement if neccessary
+(defn open
+  [file])
+
+; TODO implement if neccessary
+(defn save
+  [file])
+
 
 ; actions
 (def new-action
@@ -64,12 +73,12 @@
            ;:icon (image-icon (system-resource-url "images/Quit.gif") {})
            }))
 
-(def time-panel
+(defn time-panel
   []
   (let []
     ))
 
-(def location-panel
+(defn location-panel
   []
   (let []
     ))
