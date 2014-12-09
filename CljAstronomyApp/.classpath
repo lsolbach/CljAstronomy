@@ -12,10 +12,6 @@
 	<classpathentry kind="lib" path="build/lib/runtime/dynapath.jar"/>
 	<classpathentry kind="lib" path="build/lib/runtime/miglayout.jar"/>
 	<classpathentry kind="lib" path="build/lib/runtime/swing-utils.jar"/>
-	<classpathentry exported="true" kind="lib" path="classes">
-		<attributes>
-			<attribute name="optional" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="build/lib/runtime/data.csv.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

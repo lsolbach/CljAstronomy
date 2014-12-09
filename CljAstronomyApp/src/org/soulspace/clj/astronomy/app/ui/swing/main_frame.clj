@@ -14,7 +14,8 @@
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
         [org.soulspace.clj.application classpath]
-        [org.soulspace.clj.astronomy.app.application i18n])
+        [org.soulspace.clj.astronomy.app.application i18n catalog]
+        [org.soulspace.clj.astronomy.app.ui.swing chart common equipment observation])
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (declare ui-frame)
@@ -28,7 +29,6 @@
 ; TODO implement if neccessary
 (defn save
   [file])
-
 
 ; actions
 (def new-action
@@ -73,15 +73,37 @@
            ;:icon (image-icon (system-resource-url "images/Quit.gif") {})
            }))
 
+(def star-chart-action
+  (action (fn [_] (doto (star-chart-frame)
+                    (.pack)
+                    (.setVisible true)))
+          {:name (i18n "action.view.starchart")
+           :accelerator (key-stroke \c :ctrl)
+           :mnemonic nil}))
+
+(def planetarium-action
+  (action (fn [_] (doto (chart-frame)
+                    (.pack)
+                    (.setVisible true)))
+          {:name (i18n "action.view.planetarium")
+           :accelerator (key-stroke \p :ctrl)
+           :mnemonic nil}))
+
+(def orrery-action
+  (action (fn [_] (doto (chart-frame)
+                    (.pack)
+                    (.setVisible true)))
+          {:name (i18n "action.view.orrery")
+           :accelerator (key-stroke \y :ctrl)
+           :mnemonic nil}))
+
 (defn time-panel
   []
-  (let []
-    ))
+  (let []))
 
 (defn location-panel
   []
-  (let []
-    ))
+  (let []))
 
 (defn main-menu
   []
@@ -93,6 +115,10 @@
                     (menu-item {:action saveas-action})
                     (separator {})
                     (menu-item {:action quit-action})])
+             (menu {:text (i18n "menu.views")}
+                   [(menu-item {:action star-chart-action})
+                    (menu-item {:action planetarium-action})
+                    (menu-item {:action orrery-action})])
              (menu {:text (i18n "menu.settings")}
                    [(menu {:text (i18n "menu.settings.layout")}
                           [(menu-item {:action (action (fn [_] (set-look-and-feel ui-frame :metal))

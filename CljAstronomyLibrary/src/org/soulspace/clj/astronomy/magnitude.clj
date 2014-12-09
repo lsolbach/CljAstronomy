@@ -22,6 +22,13 @@
   ([mag1 mag2]
     (brightness-ratio (- mag2 mag1))))
 
+(defn contrast
+  "Calculates the contrast from the magnitudes or the magnitude difference."
+  ([delta-mag]
+    (* -0.4 delta-mag))
+  ([mag1 mag2]
+    (* -0.4 (- mag1 mag2))))
+
 (defn combined-magnitude
   "Calculates the combined magnitude."
   ([coll]
@@ -30,3 +37,33 @@
     (let [x (* 0.4 (- mag2 mag1))]
       (println x)
       (- mag2 (* 2.5 (log10 (+ (pow 10 x) 1)))))))
+
+(defn mag-per-''²-to-mag-per-'²
+  "Calculates the magnitudes per square minute from the magnitudes per square second."
+  [mag-per-''²]
+  (- mag-per-''² 8.89))
+
+(defn mag-per-''²-to-mag-per-°²
+  "Calculates the magnitudes per square degree from the magnitudes per square second."
+  [mag-per-''²]
+  (- mag-per-''² 17.78))
+
+(defn mag-per-'²-to-mag-per-°²
+  "Calculates the magnitudes per square degree from the magnitudes per square minute."
+  [mag-per-'²]
+  (- mag-per-'² 8.89))
+
+(defn mag-per-'²-to-mag-per-''²
+  "Calculates the magnitudes per square second from the magnitudes per square minute."
+  [mag-per-'²]
+  (+ mag-per-'² 8.89))
+
+(defn mag-per-°²-to-mag-per-''²
+  "Calculates the magnitudes per square second from the magnitudes per square degree."
+  [mag-per-°²]
+  (+ mag-per-°² 17.78))
+
+(defn mag-per-°²-to-mag-per-'²
+  "Calculates the magnitudes per square minute from the magnitudes per square degree."
+  [mag-per-°²]
+  (+ mag-per-°² 8.89))

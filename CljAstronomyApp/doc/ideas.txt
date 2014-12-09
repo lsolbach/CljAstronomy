@@ -6,227 +6,255 @@ Features
 
 Star Catalogs
 -------------
-* Catalog Import
- * Yale
- * SAO
- * GSC II
- * Tycho/Hipparchos
- * ...
-* Object Identification
- * Uniquely Identifiable
- * Multiple Designations
-  * Business Keys
-   * Coordinates, Object Type
-  * Matching
+ * Catalog Import
+  * Yale
+  * SAO
+  * GSC II
+  * Tycho/Hipparchos
+  * Messier
+  * NCG/IC
+  * ...
+ * Object Identification
+  * Uniquely Identifiable
+  * Multiple Designations
+   * Business Keys
+    * Coordinates, Object Type
+   * Matching
 
 Star Charts
 -----------
-* Visualisation
- * Stars
-  * Magnitude
-  * Colour
-  * Double/Multiple Star Systems
-   * Angle
-   * Separation
-  * Variable Stars
-   * Amplitude
-   * Period 
- * Constellations
-  * Outlines/Contours
-  * Star Connections
- * Solar System
-  * Orbit Plots
-   * Time Ticks
- * Milky Way
-  * Outlines/Contours
- * Deep Sky
-  * Symbols
-  * Outlines/Contours
-  * Images
- * Labels
-  * Naming
-   * Names
-   * Catalog Designations
-  * FoV, Telrad Circles
-  * Intelligent Placement
-* Coordinate Systems
- * RA/Deg
-* Projections
-* Filter
- * Object Types
- * Magnitude
-  * Min/Max
-  * Mag/Area Mag
-* Printing
- * Devices
-  * Printer
-  * PDF
- * Page Size
-
-Planetarium
------------
-* Visualisation
- * Stars
- * Constellations
- * Solar System
- * Milky Way
-* Coordinate Systems
- * Alt/Az
-* Filter
- * Object Types
- * Magnitude
-  * Min/Max
-  * Mag/Area Mag
-* Time
- * Now
-  * Realtime Updates
- * Tonight
- * Defined Times
- * Time Lapse
-
-Orrerey
--------
-* Visualization
- * Solar System
-  * Planets
-
-Planet/Moon Views
------------------
-* Visualization
- * Solar System
-  * Planets
-   * Moons
-   * Texture Mapping
-
-Location Management
--------------------
-* Observing Locations
- * Positions
- * Forecasts
-  * Weather Forecast
-   * Temperature
-   * Clouds
-   * Wind
-   * Seeing
-   * Transparency
-  * Traffic Forecast (ETA)
-
-Equipment Management
---------------------
-* Telescopes
-* Mounts
-* Eye Pieces
-* Filters
-* Barlows/Reducers
-* Cameras
-
-Telescope Control
------------------
-* Alignment
- * Two Star
- * Polar
- * Solar System
-* GoTo Object
- * Star Chart
- * Planetarium
- * Observing List/Log
-
-Camera Control
---------------
-* Imaging
- * Live View
-
-Calculators
------------
-* Calender
- * Conversion
-  * Islamic
-  * Jewish
-  * Variable Holidays
-* Location
- * Conversions
-  * Geocentric/Geodesic
-  * DMS/Degrees
-* Ephemerides
- * Solar System 
-  * Sun
-   * Rise/Transit/Set
-   * Dusk/Dawn
-   * Golden/Blue Hours
-   * Eclipses
-  * Moon
-   * Rise/Transit/Set
-   * Eclipses
-  * Planets
-   * Rise/Transit/Set
-   * Planet Moons
-    * Eclipses
-  * Minor Planets
-   * Rise/Transit/Set
-  * Comets
-   * Rise/Transit/Set
-* Telescope
- * Field of View
- * Magnification
-* Camera
- * Field of View
- * Exposure Times
-* Image
- * Plate Solving
-
-Observing Log
--------------
-* Record Observations
- * Conditions
-  * Time
-  * Location
-  * Seeing
-  * Transparency
-  * FST
-  * Sky Quality
-  * Lunar Phase
-  * Comments
- * Objects
-  * Descriptions
-  * Drawings/Photos
- * Project Specific Records
-  * Double Stars
-   * Angle/Separation Measurements 
-  * Variable Stars
-   * Magnitude/Time Measurements
-  * Super Novas
-   * Magnitude/Time Measurements
-  * Sun
-   * Sun Spot Numbers
-* Multidimensional Indexing
- * Object
-  * Object Type
- * Time
- * Location
-* Searching
-* Reporting
-
-Observing List Creation
------------------------
-* Find Objects
+ * Visualisation
+  * Stars
+   * Magnitude
+   * Colour
+   * Double/Multiple Star Systems
+    * Angle
+    * Separation
+   * Variable Stars
+    * Amplitude
+    * Period 
+  * Constellations
+   * Outlines/Contours
+   * Star Connections
+  * Solar System
+   * Orbit Plots
+    * Time Ticks
+  * Milky Way
+   * Outlines/Contours
+  * Deep Sky
+   * Symbols
+   * Outlines/Contours
+   * Images
+  * Labels
+   * Naming
+    * Names
+    * Catalog Designations
+   * FoV, Telrad Circles
+   * Intelligent Placement
+ * Coordinate Systems
+  * RA/Deg
+ * Projections
  * Filter
-  * Location
-  * Date/Time
   * Object Types
-  * Visibility
-  * Sky Conditions, Contrast
-  * RA/Deg, Alt/Az
   * Magnitude
    * Min/Max
    * Mag/Area Mag
-  * Observation Log
-   * Observed/Unobserved
- * Observation Suggestions
-  * Eye Pieces/Magnification
-  * Based on
-   * Equipment
-   * Sky Conditions
+ * Printing
+  * Devices
+   * Printer
+   * PDF
+  * Page Size
 
+Planisphere (Planetarium)
+-------------------------
+ * Visualisation
+  * Stars
+  * Constellations
+  * Solar System
+  * Milky Way
+ * Coordinate Systems
+  * Alt/Az
+ * Filter
+  * Object Types
+  * Magnitude
+   * Min/Max
+   * Mag/Area Mag
+ * Time
+  * Now
+   * Realtime Updates
+  * Tonight
+  * Defined Times
+  * Time Lapse
+
+Orrerey
+-------
+ * Visualization
+  * Solar System
+   * Planets
+
+Planet/Moon Views
+-----------------
+ * Visualization
+  * Solar System
+   * Planets
+    * Moons
+    * Texture Mapping
+
+Location Management
+-------------------
+ * Observing Locations
+  * Positions
+  * Forecasts
+   * Weather Forecast
+    * Temperature
+    * Clouds
+    * Wind
+    * Seeing
+    * Transparency
+   * Traffic Forecast (ETA)
+
+Equipment Management
+--------------------
+ * Telescopes
+ * Mounts
+ * Eye Pieces
+ * Filters
+ * Barlows/Reducers
+ * Cameras
+
+Telescope Control
+-----------------
+ * Alignment
+  * Two Star
+  * Polar
+  * Solar System
+ * GoTo Object
+  * Star Chart
+  * Planetarium
+  * Observing List/Log
+
+Camera Control
+--------------
+ * Imaging
+  * Live View
+
+Calculators
+-----------
+ * Calender
+  * Conversion
+   * Islamic
+   * Jewish
+   * Variable Holidays
+ * Location
+  * Conversions
+   * Geocentric/Geodesic
+   * DMS/Degrees
+ * Ephemerides
+  * Solar System 
+   * Sun
+    * Rise/Transit/Set
+    * Dusk/Dawn
+    * Golden/Blue Hours
+    * Eclipses
+   * Moon
+    * Rise/Transit/Set
+    * Eclipses
+   * Planets
+    * Rise/Transit/Set
+    * Planet Moons
+     * Eclipses
+   * Minor Planets
+    * Rise/Transit/Set
+   * Comets
+    * Rise/Transit/Set
+ * Telescope
+  * Field of View
+  * Magnification
+ * Camera
+  * Field of View
+  * Exposure Times
+ * Image
+  * Plate Solving
+
+Observing List Creation
+-----------------------
+ * Find Objects
+  * Filter
+   * Location
+   * Date/Time
+   * Object Types
+   * Visibility
+   * Sky Conditions, Contrast
+   * RA/Deg, Alt/Az
+   * Magnitude
+    * Min/Max
+    * Mag/Area Mag
+   * Observation Log
+    * Observed/Unobserved
+  * Observation Suggestions
+   * Eye Pieces/Magnification
+   * Based on
+    * Equipment
+    * Sky Conditions
+
+Observing Log
+-------------
+ * Record Observations
+  * Conditions
+   * Time
+   * Location
+   * Seeing
+   * Transparency
+   * FST
+   * Sky Quality
+   * Lunar Phase
+   * Comments
+  * Objects
+   * Descriptions
+   * Drawings/Photos
+  * Project Specific Records
+   * Double Stars
+    * Angle/Separation Measurements 
+   * Variable Stars
+    * Magnitude/Time Measurements
+   * Super Novas
+    * Magnitude/Time Measurements
+   * Sun
+    * Sun Spot Numbers
+ * Multidimensional Indexing
+  * Object
+   * Object Type
+  * Time
+  * Location
+ * Searching
+ * Reporting
+
+Online Observation Database
+---------------------------
+ * Sharing of observations
+ * Searching observations
+
+
+User Stories
+=-=-=-=-=-=-
+
+Star Charts/Planisphere
+-----------------------
+
+As a user I want to
+ * open a star chart for a specific instant of time or a time period (to show orbits of solar system bodies)
+ * see stars, nebulae, clusters and galaxies
+ * see constellation lines and boundaries
+ * coordinate reference lines and grids (horizontal, ecliptic and galactic coordinates)
+ * zoom in/out
+ * scroll
+ * switch projections
+ * switch colour scheme
+ * configure filters for object types, min/max magnitude
+ * configure labeling, drawing styles
+ * place eye piece or telrad circles
+ * print the chart
+ * use different input methods like keyboard, mouse or touch screens 
 
 Constraints
 =-=-=-=-=-=
@@ -250,35 +278,46 @@ Architecture
 
 Domain Driven
 -------------
-* Domain Model
-* Modular Sub Domains
-* Separation of Domain Logic and (User) Interfaces
+ * Domain Model
+ * Modular Sub Domains
+ * Separation of Domain Logic and (User) Interfaces
 
 Service Oriented
 ----------------
-* Provide Services for the different Interface Adapters
+ * Provide Services for the different Interface Adapters
+
+Building Blocks
+---------------
+ * Libraries
+ * Components
+ * Processes
+ * (User) Interfaces
+
 
 Design
 =-=-=-
 
 Celestial Model
 ---------------
-* Different Visualisations
- * Star Chart
- * Planetarium
+ * Different Visualisations
+  * Star Chart
+  * Planisphere (Planetarium)
 
-* Generic Object Filtering/Selection
- * Star Charts
- * Planetarium
- * Observing List
+ * Generic Object Filtering/Selection
+  * Star Charts
+  * Planisphere (Planetarium)
+  * Observing List
 
-* Generic Transformations
- * Location
-  * RA/Deg -> Alt/Az
-  * View Points
-   * Earth
-   * Planets
- * Time
-  * Solar System Object Motion
-  * Stellar Proper Motion
+ * Generic Transformations
+  * Location
+   * RA/Dec -> Alt/Az
+   * View Points
+    * Earth
+    * Planets
+  * Time
+   * Solar System Object Motion
+   * Stellar Proper Motion
+
+ * Searching
+  * Indexing and full text search (Lucene?)
 
