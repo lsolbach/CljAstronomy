@@ -5,7 +5,7 @@
         [org.soulspace.clj.astronomy.app.application i18n])
   (:import [javax.swing Action BorderFactory JFrame]))
 
-(defn conditions-panel
+(defn observation-conditions-panel
   []
   (let [f-time-start (text-field)
         f-time-end (text-field)
@@ -19,17 +19,17 @@
         f-condition-notes (text-area)]
     ))
 
-(defn equipment-panel
+(defn observation-equipment-panel
   []
   (let [f-optics (text-field)]
     ))
 
-(defn deepsky-observation-panel
+(defn observation-deepsky-panel
   []
   (let []
     ))
 
-(defn sun-observation-panel
+(defn observation-sun-panel
   []
   (let []
     ))

@@ -19,6 +19,7 @@
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (declare ui-frame)
+(def chart-frame) ; TODO use atom or ref here
 
 (def heading-font (font (font-names :dialog) [(font-styles :bold)] 14))
 
@@ -33,7 +34,7 @@
 ; actions
 (def new-action
   (action (fn [_] ) ; TODO 
-          {:name (i18n "menu.file.new")
+          {:name (i18n "action.file.new")
            :accelerator (key-stroke \n :ctrl)
            :mnemonic nil
            ;:icon (image-icon (system-resource-url "images/New.gif") {})
@@ -42,7 +43,7 @@
 (def open-action
   (action (fn [_] (if-let [file (file-open-dialog ".")]
                     (open file)))
-          {:name (i18n "menu.file.load")
+          {:name (i18n "action.file.load")
            :accelerator (key-stroke \o :ctrl)
            :mnemonic nil
            ;:icon (image-icon (system-resource-url "images/Open.gif") {})
@@ -50,7 +51,7 @@
 
 (def save-action
   (action (fn [_] nil)
-          {:name (i18n "menu.file.save")
+          {:name (i18n "action.file.save")
            :accelerator (key-stroke \s :ctrl)
            :mnemonic nil
            ;:icon (image-icon (system-resource-url "images/Save.gif") {})
@@ -59,7 +60,7 @@
 (def saveas-action
   (action (fn [_] (if-let [file (file-save-dialog ".")]
                     (save file)))
-          {:name (i18n "menu.file.saveAs")
+          {:name (i18n "action.file.saveAs")
            :accelerator (key-stroke \a :ctrl)
            :mnemonic nil
            ;:icon (image-icon (system-resource-url "images/SaveAs.gif") {})
@@ -67,22 +68,26 @@
 
 (def quit-action
   (action (fn [_] (System/exit 0))
-          {:name (i18n "menu.file.quit")
+          {:name (i18n "action.file.quit")
            :accelerator (key-stroke \q :ctrl)
            :mnemonic nil
            ;:icon (image-icon (system-resource-url "images/Quit.gif") {})
            }))
 
+; Hypothesis for NPE after painting: maybe the frame or any resource used is gc'ed after initial painting  
+; TODO fix NPE by creating a reference to the frame or other required resources
 (def star-chart-action
-  (action (fn [_] (doto (star-chart-frame)
-                    (.pack)
-                    (.setVisible true)))
+  (action (fn [_]
+            (def chart-frame (star-chart-frame))
+            (doto chart-frame
+              (.pack)
+              (.setVisible true)))
           {:name (i18n "action.view.starchart")
            :accelerator (key-stroke \c :ctrl)
            :mnemonic nil}))
 
 (def planetarium-action
-  (action (fn [_] (doto (chart-frame)
+  (action (fn [_] (doto (star-chart-frame)
                     (.pack)
                     (.setVisible true)))
           {:name (i18n "action.view.planetarium")
@@ -90,7 +95,7 @@
            :mnemonic nil}))
 
 (def orrery-action
-  (action (fn [_] (doto (chart-frame)
+  (action (fn [_] (doto (star-chart-frame)
                     (.pack)
                     (.setVisible true)))
           {:name (i18n "action.view.orrery")
@@ -155,8 +160,7 @@
                   {}
                   [(panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 0, fill, top"})}
                           [(scroll-pane (j-tree {}))])
-                   (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
-                          [])])
+                   (star-chart-panel)])
                 (vertical-split-pane
                   {}
                   [(panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
