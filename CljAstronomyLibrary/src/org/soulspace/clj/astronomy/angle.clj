@@ -15,11 +15,12 @@
 
 ; pattern for parsing an angle given in signed degrees, minutes and seconds (e.g. -80° 7' 30")
 (def dms-pattern #"(\+|-)?(\d+)°\s*(?:(\d+)'\s*(?:(\d+(?:\.\d+)?)\")?)?")
+(def ha-pattern #"(\d+)h\s*(?:(\d+)'\s*(?:(\d+(?:\.\d+)?)\")?)?")
 
 (defn- parse-long
   "Resilient long conversion."
   [x]
-  (try 
+  (try
     (Long/parseLong x)
     (catch Exception e 0)))
 
@@ -31,12 +32,12 @@
     (catch Exception e 0.0)))
 
 (defn hour-angle-to-angle
-  ""
+  "Converts an hour angle to an angle."
   [ha]
   (* 15 ha))
 
 (defn angle-to-hour-angle
-  ""
+  "Converts an angle to an hour angle."
   [a]
   (/ a 15))
 
@@ -72,17 +73,15 @@
   (to-hours [angle] "Returns the angle as hour value.")
   (to-minutes [angle] "Returns the angle as arc minutes value.")
   (to-seconds [angle] "Returns the angle as arc seconds value.")
-  (to-dms [angle] "Returns the angle as a map of sign, degrees, minutes and seconds.")
-  )
+  (to-dms [angle] "Returns the angle as a map of sign, degrees, minutes and seconds."))
 
+; Implementation of the Angle protocol that stores the angle as a radian value.
 (defrecord RadianAngleImpl
   [radian]
-  ;"Implementation of the Angle protocol that stores the angle as a radian value."
   Angle
   (to-radians [angle] (:radian angle))
   (to-degrees [angle] (rad-to-deg (:radian angle)))
   (to-hours [angle] (/ (rad-to-deg (:radian angle)) 15))
   (to-minutes [angle] (* 60 (rad-to-deg (:radian angle))))
   (to-seconds [angle] (* 3600 (rad-to-deg (:radian angle))))
-  (to-dms [angle] (angle-to-dms-angle (rad-to-deg (:radian angle))))
-  )
+  (to-dms [angle] (angle-to-dms-angle (rad-to-deg (:radian angle)))))

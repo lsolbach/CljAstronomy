@@ -26,8 +26,7 @@
   (beneficial-magnification [telescope] "Calculates the normal magnification for the telescope.")
   (comfortable-magnification [telescope] "Calculates the maximal useful magnification for the telescope.")
   (field-of-view [telescope ocular] "Estimates the field of view seen with the given ocular.")
-  (angular-resolution [telescope] "Calculates the resolution by the Dawes formula.")
-  (angular-resolution [telescope wave-length] "Calculates the angular resolution for the given wave length.")
+  (angular-resolution [telescope wave-length] "Calculates the resolution for the wave length, if given, by the Dawes formula.")
   (dawes-resolution [telescope] "Calculates the resolution by the Dawes formula.")
   (rayleigh-resolution [telescope] "Calculates the resolution by the Rayleigh formula."))
 
@@ -56,7 +55,7 @@
   (field-of-view [telescope ocular]
     (* (:field-of-view ocular) (/ (:focal-length ocular) (:focal-length telescope))))
   (angular-resolution [telescope wave-length]
-    (* 1.22 (/ wave-length (:aperture telescope))))
+      (* 1.22 (/ wave-length (:aperture telescope))))
   (dawes-resolution [telescope]
     (/ 116.0 (:aperture telescope)))  
   (rayleigh-resolution [telescope]

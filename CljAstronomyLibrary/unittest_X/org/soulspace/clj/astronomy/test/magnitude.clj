@@ -10,4 +10,3 @@
 (ns org.soulspace.clj.astronomy.test.magnitude
   (:use [clojure.test]
         [org.soulspace.clj.astronomy magnitude]))
-

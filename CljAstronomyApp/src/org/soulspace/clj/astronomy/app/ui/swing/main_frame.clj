@@ -8,14 +8,15 @@
 ;   You must not remove this notice, or any other, from this software.
 ;
 (ns org.soulspace.clj.astronomy.app.ui.swing.main-frame
-  (:use [clojure.tools swing-utils]
-        [clojure.java.io]
+  (:use [clojure.java.io]
+        [clojure.tools.swing-utils :only [do-swing-and-wait]]
         [org.soulspace.clj.java awt]
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
         [org.soulspace.clj.application classpath]
-        [org.soulspace.clj.astronomy.app.application i18n catalog]
-        [org.soulspace.clj.astronomy.app.ui.swing chart common equipment observation])
+        [org.soulspace.clj.astronomy.app i18n]
+        [org.soulspace.clj.astronomy.app.data catalogs]
+        [org.soulspace.clj.astronomy.app.ui.swing chart equipment observation])
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (declare ui-frame)
@@ -74,30 +75,42 @@
            ;:icon (image-icon (system-resource-url "images/Quit.gif") {})
            }))
 
-; Hypothesis for NPE after painting: maybe the frame or any resource used is gc'ed after initial painting  
-; TODO fix NPE by creating a reference to the frame or other required resources
-(def star-chart-action
+(def equirectangular-star-chart-action
   (action (fn [_]
-            (def chart-frame (star-chart-frame))
-            (doto chart-frame
-              (.pack)
-              (.setVisible true)))
-          {:name (i18n "action.view.starchart")
+            (let [chart-dialog (equirectangular-star-chart-dialog)]
+              (.setVisible chart-dialog true)))
+          {:name (i18n "action.view.starchart.equirectangular")
+           :accelerator (key-stroke \c :ctrl)
+           :mnemonic nil}))
+
+(def stereoscopic-star-chart-action
+  (action (fn [_]
+            (let [chart-dialog (stereoscopic-star-chart-dialog)]
+              (.setVisible chart-dialog true)))
+          {:name (i18n "action.view.starchart.stereoscopic")
+           :accelerator (key-stroke \c :ctrl)
+           :mnemonic nil}))
+
+(def orthoscopic-star-chart-action
+  (action (fn [_]
+            (let [chart-dialog (orthoscopic-star-chart-dialog)]
+              (.setVisible chart-dialog true)))
+          {:name (i18n "action.view.starchart.orthoscopic")
            :accelerator (key-stroke \c :ctrl)
            :mnemonic nil}))
 
 (def planetarium-action
-  (action (fn [_] (doto (star-chart-frame)
-                    (.pack)
-                    (.setVisible true)))
+  (action (fn [_]
+            (let [chart-dialog (orthoscopic-star-chart-dialog)]
+              (.setVisible chart-dialog true)))
           {:name (i18n "action.view.planetarium")
            :accelerator (key-stroke \p :ctrl)
            :mnemonic nil}))
 
 (def orrery-action
-  (action (fn [_] (doto (star-chart-frame)
-                    (.pack)
-                    (.setVisible true)))
+  (action (fn [_]
+            (let [chart-dialog (orthoscopic-star-chart-dialog)]
+              (.setVisible chart-dialog true)))
           {:name (i18n "action.view.orrery")
            :accelerator (key-stroke \y :ctrl)
            :mnemonic nil}))
@@ -121,7 +134,10 @@
                     (separator {})
                     (menu-item {:action quit-action})])
              (menu {:text (i18n "menu.views")}
-                   [(menu-item {:action star-chart-action})
+                   [(menu {:text (i18n "menu.view.starchart")}
+                          [(menu-item {:action equirectangular-star-chart-action})
+                           (menu-item {:action stereoscopic-star-chart-action})
+                           (menu-item {:action orthoscopic-star-chart-action})])
                     (menu-item {:action planetarium-action})
                     (menu-item {:action orrery-action})])
              (menu {:text (i18n "menu.settings")}
@@ -160,7 +176,8 @@
                   {}
                   [(panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 0, fill, top"})}
                           [(scroll-pane (j-tree {}))])
-                   (star-chart-panel)])
+                   (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
+                          [])])
                 (vertical-split-pane
                   {}
                   [(panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}

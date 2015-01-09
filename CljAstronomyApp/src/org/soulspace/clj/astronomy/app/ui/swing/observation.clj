@@ -1,8 +1,7 @@
 (ns org.soulspace.clj.astronomy.app.ui.swing.observation
-  (:use [clojure.tools swing-utils]
-        [org.soulspace.clj.java.awt]
+  (:use [org.soulspace.clj.java.awt]
         [org.soulspace.clj.java.swing constants swinglib]
-        [org.soulspace.clj.astronomy.app.application i18n])
+        [org.soulspace.clj.astronomy.app i18n])
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (defn observation-conditions-panel
@@ -17,23 +16,29 @@
         f-faintest-star (text-field)
         f-sky-quality-meter (text-field)
         f-condition-notes (text-area)]
-    ))
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})} [])))
 
 (defn observation-equipment-panel
   []
   (let [f-optics (text-field)]
-    ))
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})} [])))
 
 (defn observation-deepsky-panel
   []
   (let []
-    ))
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})} [])))
 
 (defn observation-sun-panel
   []
   (let []
-    ))
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})} [])))
 
 (defn observation-panel
   []
-  )
+  (let []
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})} [])))

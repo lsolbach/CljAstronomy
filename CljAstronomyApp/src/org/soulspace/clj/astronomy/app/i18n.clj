@@ -7,7 +7,7 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 ;
-(ns org.soulspace.clj.astronomy.app.application.i18n
+(ns org.soulspace.clj.astronomy.app.i18n
   (:use [org.soulspace.clj.application i18n]))
 
 (def i18n (partial bundle-lookup (bundle "resources")))

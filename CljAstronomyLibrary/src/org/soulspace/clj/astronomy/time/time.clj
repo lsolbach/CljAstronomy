@@ -11,7 +11,8 @@
   (:use [org.soulspace.clj.math math java-math])
   (:import [java.util Date]))
 
-; Implements Time based on 'Astronomical Algorithms' from Jean Meeus
+; References:
+; Meeus, Jean; Astronomical Algorithms, 2nd Ed.; Willmann Bell
 
 (def julian-century 36525)
 (def J2000 2451545)

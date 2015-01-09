@@ -8,9 +8,11 @@ Star Catalogs
 -------------
  * Catalog Import
   * Yale
+  * Gliese
   * SAO
   * GSC II
-  * Tycho/Hipparchos
+  * Tycho
+  * Hipparchos
   * Messier
   * NCG/IC
   * ...
