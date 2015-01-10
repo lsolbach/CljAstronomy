@@ -2,6 +2,7 @@
   (:use [clojure.set :only [map-invert]]
         [clojure.java.io]
         [clojure.data.csv]
+        [org.soulspace.clj.math java-math]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
 (def messier-file (str data-dir "messier.csv"))
@@ -36,8 +37,10 @@
   [[id type ra dec mag size ngc constellation detailed-type common-name]]
   {:messier (parse-messier-id id)
    :type (messier-type type detailed-type)
-   :ra (java.lang.Double/valueOf ra)  ; TODO store rad angle
-   :dec (java.lang.Double/valueOf dec)  ; TODO store rad angle
+   :ra (java.lang.Double/valueOf ra)
+   :dec (java.lang.Double/valueOf dec)
+   :ra-rad (deg-to-rad (* 15 (java.lang.Double/valueOf ra)))
+   :dec-rad (deg-to-rad (java.lang.Double/valueOf dec))
    :mag (java.lang.Double/valueOf mag)
    :size size
    :ngc (parse-ngc-id ngc)
@@ -53,4 +56,3 @@
       (drop 1)
       (map parse-messier)
       (doall))))
-

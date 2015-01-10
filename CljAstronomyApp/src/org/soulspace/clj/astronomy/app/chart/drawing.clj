@@ -1,6 +1,7 @@
 (ns org.soulspace.clj.astronomy.app.chart.drawing
   (:import [java.awt Graphics2D Color])
   (:use [org.soulspace.clj string]
+        [org.soulspace.clj.math math java-math]
         [org.soulspace.clj.java.awt graphics]
         [org.soulspace.clj.astronomy.app.data common constellations greek]
         [org.soulspace.clj.astronomy.app.chart common]))
@@ -49,7 +50,7 @@
 (defmulti draw-dso (fn [gfx scale dso] (:type dso)) :hierarchy #'draw-dso-hierarchy)
 
 (defmethod draw-dso :star [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         dia (diameter-by-mag (:mag dso))
         col (color-by-spectral-type (:spectral-type dso))
         radius (/ dia 2)]
@@ -57,24 +58,24 @@
     (fill-circle gfx (- x radius) (- y radius) dia col))) ; draw an inner filled circle with a diameter based on mag and color
 
 (defmethod draw-dso :galaxy [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :galaxy)]
     (draw-ellipse gfx (- x 5) (- y 3) 10 6 col)))
 
 (defmethod draw-dso :open-cluster [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :open-cluster)]
     (draw-circle gfx (- x 5) (- y 5) 10 col)))
 
 (defmethod draw-dso :globular-cluster [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :open-cluster)]
     (draw-circle gfx (- x 6) (- y 6) 12 col)
     (draw-line gfx (- x 6) y (+ x 6) y col)
     (draw-line gfx x (- y 6) x (+ y 6) col)))
 
 (defmethod draw-dso :emission-nebula [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :emission-nebula)]
     (draw-line gfx (- x 6) y x (- y 6) col)
     (draw-line gfx x (- y 6) (+ x 6) y col)
@@ -82,14 +83,14 @@
     (draw-line gfx x (+ y 6) (- x 6) y col)))
 
 (defmethod draw-dso :planetary-nebula [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :planetary-nebula)]
     (draw-circle gfx (- x 4) (- y 4) 8 col)
     (draw-line gfx (- x 6) y (+ x 6) y col)
     (draw-line gfx x (- y 6) x (+ y 6) col)))
 
 (defmethod draw-dso :supernova-remnant [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :supernova-remnant)]
     (draw-line gfx (- x 6) y x (- y 6) col)
     (draw-line gfx x (- y 6) (+ x 6) y col)
@@ -97,7 +98,7 @@
     (draw-line gfx x (+ y 6) (- x 6) y col)))
 
 (defmethod draw-dso :nebula [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :nebula)]
     (draw-line gfx (- x 6) y x (- y 6) col)
     (draw-line gfx x (- y 6) (+ x 6) y col)
@@ -105,7 +106,7 @@
     (draw-line gfx x (+ y 6) (- x 6) y col)))
 
 (defmethod draw-dso :default [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :nebula)]
     (draw-line gfx (- x 6) y x (- y 6) col)
     (draw-line gfx x (- y 6) (+ x 6) y col)
@@ -122,13 +123,13 @@
 
 (defmethod draw-dso-label :star
   [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (color-by-spectral-type (:spectral-type dso))]
     (draw-string gfx (star-label dso) (+ (int x) 10) (+ (int y) 10)) col))
 
 (defmethod draw-dso-label :dso
   [^java.awt.Graphics2D gfx scale dso]
-  (let [[x y] (scale [(:ra dso) (:dec dso)])
+  (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (color-by-spectral-type (:spectral-type dso))]
     (draw-string gfx (dso-label dso) (+ (int x) 10) (+ (int y) 10)) col))
 
@@ -141,16 +142,27 @@
 (defn draw-chart-grid
   "Draws the chart grid."
   [^java.awt.Graphics2D gfx scale]
-  (let [col (chart-colors :grid)]
-    (draw-line gfx (scale [0 -45]) (scale [360 -45]) col)
-    (draw-line gfx (scale [0 0]) (scale [360 0]) col)
-    (draw-line gfx (scale [0 45]) (scale [360 45]) col)
-    ;(draw-line gfx (scale [0 -90]) (scale [0 90]) col)
-    (draw-line gfx (scale [3 -90]) (scale [3 90]) col)
-    (draw-line gfx (scale [6 -90]) (scale [6 90]) col)
-    (draw-line gfx (scale [9 -90]) (scale [9 90]) col)
-    (draw-line gfx (scale [12 -90]) (scale [12 90]) col)
-    (draw-line gfx (scale [15 -90]) (scale [15 90]) col)
-    (draw-line gfx (scale [18 -90]) (scale [18 90]) col)
-    (draw-line gfx (scale [21 -90]) (scale [21 90]) col)))
-
+  (let [col (chart-colors :grid)
+        rad-0 (deg-to-rad 0)
+        rad-45 (deg-to-rad 45)
+        rad--45 (deg-to-rad -45)
+        rad-90 (deg-to-rad 90)
+        rad--90 (deg-to-rad -90)
+        rad-135 (deg-to-rad 135)
+        rad-180 (deg-to-rad 180)
+        rad-225 (deg-to-rad 225)
+        rad-270 (deg-to-rad 270)
+        rad-315 (deg-to-rad 315)
+        rad-360 (deg-to-rad 360)]
+    ; 
+    (draw-line gfx (scale [rad-0 rad--45]) (scale [rad-360 rad--45]) col)
+    (draw-line gfx (scale [rad-0 rad-0]) (scale [rad-360 rad-0]) col)
+    (draw-line gfx (scale [rad-0 rad-45]) (scale [rad-360 rad-45]) col)
+    ;
+    (draw-line gfx (scale [rad-45 rad--90]) (scale [rad-45 rad-90]) col)
+    (draw-line gfx (scale [rad-90 rad--90]) (scale [rad-90 rad-90]) col)
+    (draw-line gfx (scale [rad-135 rad--90]) (scale [rad-135 rad-90]) col)
+    (draw-line gfx (scale [rad-180 rad--90]) (scale [rad-180 rad-90]) col)
+    (draw-line gfx (scale [rad-225 rad--90]) (scale [rad-225 rad-90]) col)
+    (draw-line gfx (scale [rad-270 rad--90]) (scale [rad-270 rad-90]) col)
+    (draw-line gfx (scale [rad-315 rad--90]) (scale [rad-315 rad-90]) col)))

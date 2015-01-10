@@ -36,8 +36,8 @@
           long (if (= rho 0)
                  long-0
                  (cond
-                   (= lat-1 90.0) (+ long-0 (atan (/ x (* -1 y))))
-                   (= lat-1 -90.0) (+ long-0 (atan (/ x y)))
+                   (= lat-1 (/ pi 2)) (+ long-0 (atan (/ x (* -1 y))))
+                   (= lat-1 (/ pi -2)) (+ long-0 (atan (/ x y)))
                    :default (asin (+ (* (cos c) (sin lat-1))))))]
       [long lat])))
   
@@ -89,8 +89,8 @@
           long (if (= rho 0)
                  long-0
                  (cond
-                   (= lat-1 90.0) (+ long-0 (atan (/ x (* -1 y))))
-                   (= lat-1 -90.0) (+ long-0 (atan (/ x y)))
+                   (= lat-1 (/ pi 2)) (+ long-0 (atan (/ x (* -1 y))))
+                   (= lat-1 (/ pi -2)) (+ long-0 (atan (/ x y)))
                    :default (asin (+ (* (cos c) (sin lat-1))))))]
       [long lat])))
 
@@ -123,4 +123,3 @@
   []
   (let []
     ))
-

@@ -35,18 +35,18 @@
 
 (defn equirectangular-scale
   "Scales ra/dec coordinates into user coordinates for drawing using a rectangular mapping."
-  [p]
-  (user-coordinates (relative-coordinates p)))
+  [[long lat]]
+  (user-coordinates (relative-coordinates [long lat])))
 
 (defn orthoscopic-scale
   "Scales ra/dec coordinates into user coordinates for drawing using an orthoscopic projection."
   [[long lat]]
-  (user-coordinates (orthoscopic-relative-coordinates (north-pole-orthoscopic-projector [(deg-to-rad (* 15 long)) (deg-to-rad lat)]))))
+  (user-coordinates (orthoscopic-relative-coordinates (north-pole-orthoscopic-projector [long lat]))))
 
 (defn stereoscopic-scale
   "Scales ra/dec coordinates into user coordinates for drawing using a stereoscopic projection."
   [[long lat]]
-  (user-coordinates (stereoscopic-relative-coordinates (north-pole-stereoscopic-projector [(deg-to-rad (* 15 long)) (deg-to-rad lat)]))))
+  (user-coordinates (stereoscopic-relative-coordinates (north-pole-stereoscopic-projector [long lat]))))
 
 (def chart-spec (ref {:ra 0.0
                       :dec pi
@@ -76,9 +76,9 @@
   (set-rendering-hint gfx (rendering-hint-keys :antialialising) (antialias-hints :on))
   (draw-chart-background gfx)
   (draw-chart-grid gfx equirectangular-scale)
-  (draw-dsos gfx equirectangular-scale (filter (mag-filter 7) deep-sky-catalog))
-  (draw-dsos gfx equirectangular-scale (filter (mag-filter 6) star-catalog))
-  (draw-dso-labels gfx equirectangular-scale (filter has-common-name? (filter (mag-filter 4) star-catalog))))
+  (draw-dsos gfx equirectangular-scale (filter (mag-filter 8) (get-deep-sky-objects)))
+  (draw-dsos gfx equirectangular-scale (filter (mag-filter 6) (get-stars)))
+  (draw-dso-labels gfx equirectangular-scale (filter has-common-name? (filter (mag-filter 4) (get-stars)))))
 
 (defn draw-orthoscopic-chart
   "Draw the orthoscopic star chart."
@@ -86,15 +86,15 @@
   (set-rendering-hint gfx (rendering-hint-keys :antialialising) (antialias-hints :on))
   (draw-chart-background gfx)
   (draw-dsos gfx orthoscopic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [24.0 90.0])
-                     (filter (mag-filter 7) deep-sky-catalog)))
+             (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
+                     (filter (mag-filter 8) (get-deep-sky-objects))))
   (draw-dsos gfx orthoscopic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [24.0 90.0]) 
-                     (filter (mag-filter 6) star-catalog)))
+             (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
+                     (filter (mag-filter 6) (get-stars))))
   (draw-dso-labels gfx orthoscopic-scale 
                    (filter has-common-name? 
-                           (filter (ra-dec-filter [0.0 0.0] [24.0 90.0]) 
-                                   (filter (mag-filter 4) star-catalog)))))
+                           (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+                                   (filter (mag-filter 4) (get-stars))))))
 
 (defn draw-stereoscopic-chart
   "Draw the orthoscopic star chart."
@@ -103,15 +103,15 @@
   (draw-chart-background gfx)
   ;(draw-chart-grid gfx)
   (draw-dsos gfx stereoscopic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [24.0 90.0])
-                     (filter (mag-filter 7) deep-sky-catalog)))
+             (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
+                     (filter (mag-filter 8) (get-deep-sky-objects))))
   (draw-dsos gfx stereoscopic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [24.0 90.0]) 
-                     (filter (mag-filter 6) star-catalog)))
+             (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+                     (filter (mag-filter 6) (get-stars))))
   (draw-dso-labels gfx stereoscopic-scale 
                    (filter has-common-name? 
-                           (filter (ra-dec-filter [0.0 0.0] [24.0 90.0]) 
-                                   (filter (mag-filter 4) star-catalog)))))
+                           (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+                                   (filter (mag-filter 4) (get-stars))))))
 
 (defn chart-filter-panel
   "Creates the chart filter panel"
@@ -155,3 +155,8 @@
   []
   (let [d (dialog {} [(scroll-pane (star-chart-panel draw-stereoscopic-chart {:x-max 1440 :y-max 1440}))])]
     d))
+
+;(defprotocol StarChart)
+;(defrecord EquirectangularStarChartImpl [chart-spec panel-spec])
+;(defrecord StereoscopicStarCharImpl [chart-spec panel-spec])
+;(defrecord OrthoscopicStarCharImpl [chart-spec panel-spec])

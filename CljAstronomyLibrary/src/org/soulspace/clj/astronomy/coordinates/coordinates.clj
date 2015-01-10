@@ -12,27 +12,29 @@
         [org.soulspace.clj.astronomy.time time instant]))
 
 (defn angular-separation
-  "Calculates the angular distance between the coordinates."
-  [[ra1 dec1] [ra2 dec2]]
-  (let [delta-ra (- ra1 ra2)
-        delta-dec (- dec1 dec2)
-        pi-half (/ pi 2) ; 180 degrees
-        pi-ninetieth (/ pi 90) ; 2 degrees
-        ]
-    (if (or (< (abs (- (abs dec1) pi-half)) pi-ninetieth) (< (abs (- (abs dec1) pi-half)) pi-ninetieth))
-      (ahav (+ (hav delta-dec) (* (cos dec1) (cos dec2) (hav delta-ra)))) ; use haversine if declinations are near the poles
-      (acos (+ (* (sin dec1) (sin dec2)) (* (cos dec1) (cos dec2) (cos delta-ra)))))))
+  "Calculates the angular distance between the coordinates (given in rad)."
+  ([[ra1 dec1] [ra2 dec2]]
+    (angular-separation ra1 dec1 ra2 dec2))
+  ([ra1 dec1 ra2 dec2]
+    (let [delta-ra (- ra1 ra2)
+          delta-dec (- dec1 dec2)
+          pi-half (/ pi 2) ; 180 degrees
+          pi-ninetieth (/ pi 90) ; 2 degrees
+          ]
+      (if (or (< (abs (- (abs dec1) pi-half)) pi-ninetieth) (< (abs (- (abs dec1) pi-half)) pi-ninetieth))
+        (ahav (+ (hav delta-dec) (* (cos dec1) (cos dec2) (hav delta-ra)))) ; use haversine if declinations are near the poles
+        (acos (+ (* (sin dec1) (sin dec2)) (* (cos dec1) (cos dec2) (cos delta-ra))))))))
 
 ; TODO use angle abstractions
 (defn zenit-distance-by-altitude
-  "Calculates the zenit distance by altitude."
+  "Calculates the zenit distance by altitude (given in rad)."
   [altitude]
-  (- 90 altitude))
+  (- (/ pi 2) altitude))
 
 (defn altitude-by-zenit-distance
-  "Calculates the altitude by zenit distance."
+  "Calculates the altitude by zenit distance (given in rad)."
   [zenit-distance]
-  (- 90 zenit-distance))
+  (- (/ pi 2) zenit-distance))
 
 (defn hour-angle
   "Calculates the hour angle of the right ascension at the given instant."
