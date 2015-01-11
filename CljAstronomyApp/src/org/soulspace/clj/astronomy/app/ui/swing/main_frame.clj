@@ -16,7 +16,7 @@
         [org.soulspace.clj.application classpath]
         [org.soulspace.clj.astronomy.app i18n]
         [org.soulspace.clj.astronomy.app.data catalogs]
-        [org.soulspace.clj.astronomy.app.ui.swing chart equipment observation])
+        [org.soulspace.clj.astronomy.app.ui.swing common chart equipment observation])
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (declare ui-frame)
