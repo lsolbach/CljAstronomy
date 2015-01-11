@@ -18,6 +18,9 @@
 (def J2000 2451545)
 (def days [:sunday :monday :tuesday :wednesday :thursday :friday :saturday])
 
+;
+; Calendar and time calculations
+;
 (defn julian-day
   "Calculates the julian day from a calender date."
   [y m d b]
@@ -156,6 +159,9 @@
         f (- x (floor x))]
     (time-of-day f)))
 
+;
+; Easter date
+;
 (defn easter-date-by-gregorian-date
   "Calculates the easter date for the given year in the gregorian calender."
   [year]
@@ -202,6 +208,9 @@
   (let [{year :year} (julian-day-to-date jd)]
     (easter-date year)))
 
+;
+; Dynamic time
+;
 (defn delta-t-meeus
   "Calculates Delta T after the formulars given in Astronomical Algorithms."
   [year]
@@ -284,6 +293,22 @@
   ([jd epoch]
     (/ (- jd epoch) julian-century)))
 
+;
+; Epoch calculations
+;
+(defn julian-day-of-julian-year
+  "Calculates the julian day of the beginning of the given bessel year."
+  [julian-year]
+  (+ J2000 (*  365.25M (- julian-year 2000))))
+
+(defn julian-day-of-bessel-year
+  "Calculates the julian day of the beginning of the given bessel year."
+  [bessel-year]
+  (+ 2415020.31352M (* 365.242198781M (- bessel-year 1900))))
+
+;
+; Sideral time
+;
 (defn mean-siderial-time-greenwich-0hut
   "Calculates the mean sidereal time in degrees at greenwich at 0h UT."
   [jd]

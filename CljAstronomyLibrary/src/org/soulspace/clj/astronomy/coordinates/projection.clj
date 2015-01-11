@@ -3,8 +3,11 @@
 
 ; Snyder, John P.; Map Projections - A Working Manual; USGS Professional Paper 1395 
 
+; symbol mapping
 ; lambda -> longitude
 ; phi    -> latitude
+
+; implementations of spherical projections, no ellipsoid projections implemented yet
 
 ; TODO move to a separate module
 ; TODO maybe add simplifications for long-0 or lat-0 = 0 or 90 degrees
@@ -17,8 +20,8 @@
       (let [k (/ (* 2 k-0) (+ 1 (* (sin lat-1) (sin lat)) (* (cos lat-1) (cos lat) (cos (- long long-0)))))
             x (* R k (cos lat) (sin (- long long-0)))
             y (* R k (- (* (cos lat-1) (sin lat)) (* (sin lat-1) (cos lat) (cos (- long long-0)))))
-            ;h-stroke (+ (* (sin lat-1) (sin lat)) (* (cos lat-1) (cos lat) (cos (- long long-0))))
-            ;k-stroke 1.0
+            ;h-stroke (+ (* (sin lat-1) (sin lat)) (* (cos lat-1) (cos lat) (cos (- long long-0)))) ; scale
+            ;k-stroke 1.0 ; scale
             ]
         ;[x y h-stroke k-stroke]
         [x y])))
@@ -48,7 +51,7 @@
   ([R k-0]
     (partial stereoscopic-projection R k-0))
   ([R k-0 [long-0 lat-1]]
-    (partial stereoscopic-projection R k-0 long-0 lat-1))
+    (partial stereoscopic-projection R k-0 [long-0 lat-1]))
   ([R k-0 long-0 lat-1]
     (partial stereoscopic-projection R k-0 long-0 lat-1)))
 
@@ -59,7 +62,7 @@
   ([R k-0]
     (partial reverse-stereoscopic-projection R k-0))
   ([R k-0 [long-0 lat-1]]
-    (partial reverse-stereoscopic-projection R k-0 long-0 lat-1))
+    (partial reverse-stereoscopic-projection R k-0 [long-0 lat-1]))
   ([R k-0 long-0 lat-1]
     (partial reverse-stereoscopic-projection R k-0 long-0 lat-1)))
 
@@ -99,7 +102,7 @@
   ([R]
     (partial orthoscopic-projection R))
   ([R [long-0 lat-1]]
-    (partial orthoscopic-projection R long-0 lat-1))
+    (partial orthoscopic-projection R [long-0 lat-1]))
   ([R long-0 lat-1]
     (partial orthoscopic-projection R long-0 lat-1)))
 
@@ -108,9 +111,11 @@
   ([R]
     (partial reverse-orthoscopic-projection R))
   ([R [long-0 lat-1]]
-    (partial reverse-orthoscopic-projection R long-0 lat-1))
+    (partial reverse-orthoscopic-projection R [long-0 lat-1]))
   ([R long-0 lat-1]
     (partial reverse-stereoscopic-projection R long-0 lat-1)))
+
+;TODO implement other projections
 
 (defn mercator-projection
   "Calculates the mercator projection of the coordinates."

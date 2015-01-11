@@ -158,3 +158,5 @@
         l-moon (mean-longitude-moon t)]
     ; TODO test
     (+ (* 9.20 (cos omega)) (* 0.57 (cos (* 2 l-sun))) (* 0.10 (cos (* 2 l-moon))) (* 0.09 (cos (* 2 omega))))))
+
+
