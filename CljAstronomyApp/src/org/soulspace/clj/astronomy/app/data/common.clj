@@ -127,6 +127,13 @@
   ([ra-min dec-min ra-max dec-max]
      (fn [obj] (and (>= (:ra obj) ra-min) (>= (:dec obj) dec-min) (<= (:ra obj) ra-max) (<= (:dec obj) dec-max)))))
 
+(defn rad-ra-dec-filter
+  "Returns a filter for the RA and Dec coordinates of an object."
+  ([[ra-min dec-min] [ra-max dec-max]]
+    (rad-ra-dec-filter ra-min dec-min ra-max dec-max))
+  ([ra-min dec-min ra-max dec-max]
+     (fn [obj] (and (>= (:ra-rad obj) ra-min) (>= (:dec-rad obj) dec-min) (<= (:ra-rad obj) ra-max) (<= (:dec-rad obj) dec-max)))))
+
 (defn common-name-filter
   "Returns a filter for objects with a common name."
   ([]

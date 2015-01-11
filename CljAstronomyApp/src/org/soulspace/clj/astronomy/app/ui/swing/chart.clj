@@ -1,25 +1,19 @@
 (ns org.soulspace.clj.astronomy.app.ui.swing.chart
-    (:use [clojure.java.io]
-          [org.soulspace.clj string]
-          [org.soulspace.clj.java awt]
-          [org.soulspace.clj.java.awt event graphics]
-          [org.soulspace.clj.java.swing constants event swinglib]
-          [org.soulspace.clj.math math java-math]
-          [org.soulspace.clj.application classpath]
-          [org.soulspace.clj.astronomy.coordinates projection]
-          [org.soulspace.clj.astronomy.app i18n]
-          [org.soulspace.clj.astronomy.app.chart common drawing scaling]
-          [org.soulspace.clj.astronomy.app.data catalogs common constellations greek])
-    (:import [javax.swing Action BorderFactory JFrame]))
+  (:import [javax.swing Action BorderFactory JFrame])
+  (:use [clojure.java.io]
+        [org.soulspace.clj string]
+        [org.soulspace.clj.java awt]
+        [org.soulspace.clj.java.awt event graphics]
+        [org.soulspace.clj.java.swing constants event swinglib]
+        [org.soulspace.clj.math math java-math]
+        [org.soulspace.clj.application classpath]
+        [org.soulspace.clj.astronomy.coordinates projection]
+        [org.soulspace.clj.astronomy.app i18n]
+        [org.soulspace.clj.astronomy.app.chart common drawing scaling]
+        [org.soulspace.clj.astronomy.app.data catalogs common constellations greek]
+        [org.soulspace.clj.astronomy.app.ui.swing common]))
 
 ; TODO make charts configurable
-
-;(def panel-spec {:x-max 2880 :y-max 2880})
-;(def panel-spec {:x-max 1440 :y-max 1440})
-
-(def panel-spec {:x-max 5760 :y-max 2880})
-;(def panel-spec {:x-max 2880 :y-max 1440})
-;(def panel-spec {:x-max 1440 :y-max 720})
 
 (defn user-coordinate-transformer
   "Returns a scaling transformer function which scales the coordinates in the intervall [0,1]
@@ -31,22 +25,27 @@
       [(* (+ (* -1 x) 1) width)
        (* (+ (* -1 y) 1) height)])))
 
-(def user-coordinates (user-coordinate-transformer (:x-max panel-spec) (:y-max panel-spec)))
+(def azimutal-panel-spec {:x-max 1440 :y-max 1440})
+(def rectangular-panel-spec {:x-max 5760 :y-max 2880})
+;(def rectangular-panel-spec {:x-max 1440 :y-max 720})
+
+(def rectangular-user-coordinates (user-coordinate-transformer [(:x-max rectangular-panel-spec) (:y-max rectangular-panel-spec)]))
+(def azimutal-user-coordinates (user-coordinate-transformer [(:x-max azimutal-panel-spec) (:y-max azimutal-panel-spec)]))
 
 (defn equirectangular-scale
   "Scales ra/dec coordinates into user coordinates for drawing using a rectangular mapping."
   [[long lat]]
-  (user-coordinates (relative-coordinates [long lat])))
+  (rectangular-user-coordinates (relative-coordinates [long lat])))
 
 (defn orthoscopic-scale
   "Scales ra/dec coordinates into user coordinates for drawing using an orthoscopic projection."
   [[long lat]]
-  (user-coordinates (orthoscopic-relative-coordinates (north-pole-orthoscopic-projector [long lat]))))
+  (azimutal-user-coordinates (orthoscopic-relative-coordinates (north-pole-orthoscopic-projector [long lat]))))
 
 (defn stereoscopic-scale
   "Scales ra/dec coordinates into user coordinates for drawing using a stereoscopic projection."
   [[long lat]]
-  (user-coordinates (stereoscopic-relative-coordinates (north-pole-stereoscopic-projector [long lat]))))
+  (azimutal-user-coordinates (stereoscopic-relative-coordinates (north-pole-stereoscopic-projector [long lat]))))
 
 (def chart-spec (ref {:ra 0.0
                       :dec pi
@@ -68,7 +67,7 @@
 (defn draw-chart-background
   "Draws the chart background."
   [^java.awt.Graphics2D gfx]
-  (fill-colored-rect gfx 0 0 (:x-max panel-spec) (:y-max panel-spec) (chart-colors :black)))
+  (fill-colored-rect gfx 0 0 (:x-max rectangular-panel-spec) (:y-max rectangular-panel-spec) (chart-colors :black)))
 
 (defn draw-equirectangular-chart
   "Draw the rectangular star chart."
@@ -86,14 +85,14 @@
   (set-rendering-hint gfx (rendering-hint-keys :antialialising) (antialias-hints :on))
   (draw-chart-background gfx)
   (draw-dsos gfx orthoscopic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
+             (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
                      (filter (mag-filter 8) (get-deep-sky-objects))))
   (draw-dsos gfx orthoscopic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
+             (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
                      (filter (mag-filter 6) (get-stars))))
   (draw-dso-labels gfx orthoscopic-scale 
                    (filter has-common-name? 
-                           (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+                           (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
                                    (filter (mag-filter 4) (get-stars))))))
 
 (defn draw-stereoscopic-chart
@@ -103,27 +102,27 @@
   (draw-chart-background gfx)
   ;(draw-chart-grid gfx)
   (draw-dsos gfx stereoscopic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
+             (filter (ra-dec-filter [0.0 0.0] [360.0 90.0])
                      (filter (mag-filter 8) (get-deep-sky-objects))))
   (draw-dsos gfx stereoscopic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+             (filter (ra-dec-filter [0.0 0.0] [360.0 90.0]) 
                      (filter (mag-filter 6) (get-stars))))
   (draw-dso-labels gfx stereoscopic-scale 
                    (filter has-common-name? 
-                           (filter (ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+                           (filter (ra-dec-filter [0.0 0.0] [360.0 90.0]) 
                                    (filter (mag-filter 4) (get-stars))))))
-
-(defn chart-filter-panel
-  "Creates the chart filter panel"
-  []
-  (let [f-faintest-stellar-mag (number-field {})
-        f-faintest-dso-mag (number-field {})])
-  )
 
 (def up-action (action (fn [_] (println "UP"))))
 (def down-action (action (fn [_] (println "DOWN"))))
 (def left-action (action (fn [_] (println "LEFT"))))
 (def right-action (action (fn [_] (println "RIGHT"))))
+
+(defn chart-filter-panel
+  "Creates the chart filter panel"
+  [chart-spec]
+  (let [f-faintest-stellar-mag (number-field {})
+        f-faintest-dso-mag (number-field {})])
+  )
 
 (defn star-chart-panel
   "Creates the star chart panel."
@@ -141,19 +140,19 @@
 (defn equirectangular-star-chart-dialog
   "Creates the star chart dialog."
   []
-  (let [d (dialog {} [(scroll-pane (star-chart-panel draw-equirectangular-chart {:x-max 5760 :y-max 2880}))])]
+  (let [d (dialog {} [(scroll-pane (star-chart-panel draw-equirectangular-chart rectangular-panel-spec))])]
     d))
 
 (defn orthoscopic-star-chart-dialog
   "Creates the star chart dialog."
   []
-  (let [d (dialog {} [(scroll-pane (star-chart-panel draw-orthoscopic-chart {:x-max 1440 :y-max 1440}))])]
+  (let [d (dialog {} [(scroll-pane (star-chart-panel draw-orthoscopic-chart azimutal-panel-spec))])]
     d))
 
 (defn stereoscopic-star-chart-dialog
   "Creates the star chart dialog."
   []
-  (let [d (dialog {} [(scroll-pane (star-chart-panel draw-stereoscopic-chart {:x-max 1440 :y-max 1440}))])]
+  (let [d (dialog {} [(scroll-pane (star-chart-panel draw-stereoscopic-chart azimutal-panel-spec))])]
     d))
 
 ;(defprotocol StarChart)

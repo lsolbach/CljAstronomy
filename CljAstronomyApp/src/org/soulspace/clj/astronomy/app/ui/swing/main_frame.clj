@@ -22,8 +22,6 @@
 (declare ui-frame)
 (def chart-frame) ; TODO use atom or ref here
 
-(def heading-font (font (font-names :dialog) [(font-styles :bold)] 14))
-
 ; TODO implement if neccessary
 (defn open
   [file])
@@ -117,11 +115,27 @@
 
 (defn time-panel
   []
-  (let []))
+  (let [f-local-time (text-field {})
+        f-universal-time (text-field {})
+        f-julian-day (text-field {})]
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})}
+           [[(label {:text (i18n "label.time.title") :font heading-font}) "left, wrap 10"]
+            (label {:text (i18n "label.time.local-time")}) f-local-time
+            (label {:text (i18n "label.time.universal-time")}) f-universal-time
+            (label {:text (i18n "label.time.julian-day")}) f-julian-day])))
 
 (defn location-panel
   []
-  (let []))
+  (let [f-name (text-field {})
+        f-long (text-field {})
+        f-lat (text-field {})]
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})}
+           [[(label {:text (i18n "label.location.title") :font heading-font}) "left, wrap 10"]
+            (label {:text (i18n "label.location.name")}) f-name
+            (label {:text (i18n "label.location.longitude")}) f-long
+            (label {:text (i18n "label.location.latitude")}) f-lat])))
 
 (defn main-menu
   []
@@ -154,17 +168,19 @@
                                [(menu-item {:action (action (fn [_] ) ; TODO set locale to de_DE
                                                        {:name (i18n "menu.settings.locale.de_DE") :mnemonic nil})})
                                 (menu-item {:action (action (fn [_] ) ; TODO set locale to en_GB
-                                                       {:name (i18n "menu.settings.locale.en_GB") :mnemonic nil})})])])
+                                                       {:name (i18n "menu.settings.locale.en_GB") :mnemonic nil})})
+                                (menu-item {:action (action (fn [_] ) ; TODO set locale to en_US
+                                                       {:name (i18n "menu.settings.locale.en_US") :mnemonic nil})})])])
              (menu {:text (i18n "menu.help")}
-                   [(menu-item {:action (action (fn [_] (message-dialog (i18n "dialog.about.message")
-                                                                        (i18n "dialog.about.title")
+                   [(menu-item {:action (action (fn [_] (message-dialog (i18n "label.about.message")
+                                                                        (i18n "label.about.title")
                                                                         :info))
                                                 {:name (i18n "menu.help.about")
                                                  :accelerator (key-stroke \A :ctrl :alt)
                                                  :mnemonic nil})})])]))
 
 (defn main-frame []
-  (frame {:title (i18n "app.title")
+  (frame {:title (i18n "label.app.title")
           :jMenuBar (main-menu)
           :defaultCloseOperation JFrame/DISPOSE_ON_CLOSE}
          [(panel
@@ -175,9 +191,9 @@
                [(vertical-split-pane
                   {}
                   [(panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 0, fill, top"})}
-                          [(scroll-pane (j-tree {}))])
+                          [(location-panel)])
                    (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
-                          [])])
+                          [(time-panel)])])
                 (vertical-split-pane
                   {}
                   [(panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}

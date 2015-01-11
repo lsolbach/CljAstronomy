@@ -65,11 +65,13 @@
 (defmethod draw-dso :open-cluster [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :open-cluster)]
+    ;(println x y)
     (draw-circle gfx (- x 5) (- y 5) 10 col)))
 
 (defmethod draw-dso :globular-cluster [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :open-cluster)]
+    ;(println x y)
     (draw-circle gfx (- x 6) (- y 6) 12 col)
     (draw-line gfx (- x 6) y (+ x 6) y col)
     (draw-line gfx x (- y 6) x (+ y 6) col)))
@@ -77,6 +79,7 @@
 (defmethod draw-dso :emission-nebula [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :emission-nebula)]
+    ;(println x y)
     (draw-line gfx (- x 6) y x (- y 6) col)
     (draw-line gfx x (- y 6) (+ x 6) y col)
     (draw-line gfx (+ x 6) y x (+ y 6) col)
