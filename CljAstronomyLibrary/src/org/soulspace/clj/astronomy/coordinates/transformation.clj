@@ -31,7 +31,7 @@
     (< x 0) (- (deg-to-rad 180) phi)))
 
 (defn cartesian-to-spherical
-  "Convert cartesian to spherical coordinates."
+  "Converts cartesian to spherical coordinates."
   ([cartesian-coords]
     (let [[x y z] cartesian-coords]
       (cartesian-to-spherical x y z)))
@@ -44,7 +44,7 @@
       [r beta lambda])))
 
 (defn spherical-to-cartesian
-  "Convert spherical to cartesian coordinates."
+  "Converts spherical to cartesian coordinates."
   ([spherical-coords]
     (let [[r beta lambda] spherical-coords]
       (spherical-to-cartesian r beta lambda)))

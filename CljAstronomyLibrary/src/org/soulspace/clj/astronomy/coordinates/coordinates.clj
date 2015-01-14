@@ -11,10 +11,10 @@
   (:use [org.soulspace.clj.math math java-math]
         [org.soulspace.clj.astronomy.time time instant]))
 
-(defn angular-separation
+(defn angular-distance
   "Calculates the angular distance between the coordinates (given in rad)."
   ([[ra1 dec1] [ra2 dec2]]
-    (angular-separation ra1 dec1 ra2 dec2))
+    (angular-distance ra1 dec1 ra2 dec2))
   ([ra1 dec1 ra2 dec2]
     (let [delta-ra (- ra1 ra2)
           delta-dec (- dec1 dec2)

@@ -9,7 +9,7 @@
 ;
 (ns org.soulspace.clj.astronomy.time.time
   (:use [org.soulspace.clj.math math java-math])
-  (:import [java.util Date]))
+  (:import [java.util Date GregorianCalendar SimpleTimeZone TimeZone]))
 
 ; References:
 ; Meeus, Jean; Astronomical Algorithms, 2nd Ed.; Willmann Bell
@@ -17,6 +17,12 @@
 (def julian-century 36525)
 (def J2000 2451545)
 (def days [:sunday :monday :tuesday :wednesday :thursday :friday :saturday])
+
+(def timezones ["Etc/GMT-14" "Etc/GMT-13" "Etc/GMT-12" "Etc/GMT-11" "Etc/GMT-10" "Etc/GMT-9"
+                "Etc/GMT-8" "Etc/GMT-7" "Etc/GMT-6" "Etc/GMT-5" "Etc/GMT-4" "Etc/GMT-3"
+                "Etc/GMT-2" "Etc/GMT-1" "Etc/GMT" "Etc/GMT+1" "Etc/GMT+2" "Etc/GMT+3"
+                "Etc/GMT+4" "Etc/GMT+5" "Etc/GMT+6" "Etc/GMT+7" "Etc/GMT+8" "Etc/GMT+9"
+                "Etc/GMT+10" "Etc/GMT+11" "Etc/GMT+12"])
 
 ;
 ; Calendar and time calculations
@@ -309,7 +315,7 @@
 ;
 ; Sideral time
 ;
-(defn mean-siderial-time-greenwich-0hut
+(defn mean-siderial-time-greenwich-0ut
   "Calculates the mean sidereal time in degrees at greenwich at 0h UT."
   [jd]
   (let [T (julian-centuries jd)]

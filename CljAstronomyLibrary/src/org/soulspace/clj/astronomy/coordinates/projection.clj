@@ -17,31 +17,42 @@
     ([R k-0 [long-0 lat-1] [long lat]]
       (stereoscopic-projection R k-0 long-0 lat-1 long lat))
     ([R k-0 long-0 lat-1 long lat]
-      (let [k (/ (* 2 k-0) (+ 1 (* (sin lat-1) (sin lat)) (* (cos lat-1) (cos lat) (cos (- long long-0)))))
+      (let [k (/ (* 2 k-0)
+                 (+ 1
+                    (* (sin lat-1) (sin lat))
+                    (* (cos lat-1) (cos lat) (cos (- long long-0)))))
             x (* R k (cos lat) (sin (- long long-0)))
-            y (* R k (- (* (cos lat-1) (sin lat)) (* (sin lat-1) (cos lat) (cos (- long long-0)))))
+            y (* R k (- (* (cos lat-1) (sin lat))
+                        (* (sin lat-1) (cos lat) (cos (- long long-0)))))
             ;h-stroke (+ (* (sin lat-1) (sin lat)) (* (cos lat-1) (cos lat) (cos (- long long-0)))) ; scale
             ;k-stroke 1.0 ; scale
             ]
         ;[x y h-stroke k-stroke]
         [x y])))
 
+; TODO fix quadrant problem in atans; maybe implement atan2 
 (defn reverse-stereoscopic-projection
   "Calculates the coordinates in a reversed stereoscopic projection."
   ([R k-0 [long-0 lat-1] [x y]]
     (reverse-stereoscopic-projection R k-0 long-0 lat-1 x y))
   ([R k-0 long-0 lat-1 x y]
     (let [rho (sqrt (+ (* x x) (* y y)))
-          c (* 2 (atan (/ rho (* 2 R k-0))))
-          lat (if (= rho 0)
+          c (* 2 (atan2 rho (* 2 R k-0)))
+          ; c (* 2 (atan (/ rho (* 2 R k-0))))
+          lat (if (= rho 0.0)
                  lat-1
-                 (asin (+ (* (cos c) (sin lat-1)) (* y (sin c) (cos (/ lat-1 rho))))))
-          long (if (= rho 0)
-                 long-0
-                 (cond
-                   (= lat-1 (/ pi 2)) (+ long-0 (atan (/ x (* -1 y))))
-                   (= lat-1 (/ pi -2)) (+ long-0 (atan (/ x y)))
-                   :default (asin (+ (* (cos c) (sin lat-1))))))]
+                 (asin (+ (* (cos c) (sin lat-1))
+                          (/ (* y (sin c) (cos lat-1))
+                             rho))))
+          long (cond
+                 (= rho 0.0) long-0
+                 ; (= lat-1 (/ pi 2)) (+ long-0 (atan (/ x (* -1 y))))
+                 (= lat-1 (/ pi 2)) (+ long-0 (atan2 x (* -1 y)))
+                 ; (= lat-1 (/ pi -2)) (+ long-0 (atan (/ x y)))
+                 (= lat-1 (/ pi -2)) (+ long-0 (atan2 x y))
+                 :default (+ long-0 (atan (* x (sin (/ c 
+                                                       (- (* rho (cos lat-1) (cos c))
+                                                          (* y (sin lat-1) (sin c)))))))))]
       [long lat])))
   
 (defn stereoscopic-projector
@@ -72,13 +83,15 @@
     (orthoscopic-projection R long-0 lat-1 long lat))
   ([R long-0 lat-1 long lat]
     (let [x (* R (cos lat) (sin (- long long-0))) 
-          y (* R (- (* (cos lat-1) (sin lat)) (* (sin lat-1) (cos lat) (cos (- long long-0)))))
+          y (* R (- (* (cos lat-1) (sin lat))
+                    (* (sin lat-1) (cos lat) (cos (- long long-0)))))
           ;h-stroke (+ (* (sin lat-1) (sin lat)) (* (cos lat-1) (cos lat) (cos (- long long-0))))
           ;k-stroke 1.0
           ]
       ;[x y h-stroke k-stroke]
       [x y])))
 
+; TODO fix quadrant problem in atans
 (defn reverse-orthoscopic-projection
   "Calculates the coordinates in a reversed orthoscopic projection."
   ([R [long-0 lat-1] [x y]]
@@ -86,15 +99,20 @@
   ([R long-0 lat-1 x y]
     (let [rho (sqrt (+ (* x x) (* y y)))
           c (asin (/ rho R))
-          lat (if (= rho 0)
+          lat (if (= rho 0.0)
                  lat-1
-                 (asin (+ (* (cos c) (sin lat-1)) (* y (sin c) (cos (/ lat-1 rho))))))
-          long (if (= rho 0)
-                 long-0
-                 (cond
-                   (= lat-1 (/ pi 2)) (+ long-0 (atan (/ x (* -1 y))))
-                   (= lat-1 (/ pi -2)) (+ long-0 (atan (/ x y)))
-                   :default (asin (+ (* (cos c) (sin lat-1))))))]
+                 (asin (+ (* (cos c) (sin lat-1))
+                          (/ (* y (sin c) (cos lat-1))
+                             rho))))
+          long (cond
+                 (= rho 0.0) long-0
+                 ; (= lat-1 (/ pi 2)) (+ long-0 (atan (/ x (* -1 y))))
+                 (= lat-1 (/ pi 2)) (+ long-0 (atan2 x (* -1 y)))
+                 ; (= lat-1 (/ pi -2)) (+ long-0 (atan (/ x y)))
+                 (= lat-1 (/ pi -2)) (+ long-0 (atan2 x y))
+                 :default (+ long-0 (atan (* x (sin (/ c
+                                                       (- (* rho (cos lat-1) (cos c))
+                                                          (* y (sin lat-1) (sin c)))))))))]
       [long lat])))
 
 (defn orthoscopic-projector
@@ -115,8 +133,8 @@
   ([R long-0 lat-1]
     (partial reverse-stereoscopic-projection R long-0 lat-1)))
 
-;TODO implement other projections
 
+;TODO implement other projections
 (defn mercator-projection
   "Calculates the mercator projection of the coordinates."
   []
