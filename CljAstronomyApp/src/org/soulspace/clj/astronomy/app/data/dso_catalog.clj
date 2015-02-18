@@ -41,18 +41,27 @@
   [type]
   ;type ; TODO parse type
   (cond
+    (= type "*") :star
     (= type "**") :double-star
     (= type "***") :triple-star
     (= type "Ast") :asterism
     (= type "Gxy") :galaxy
+    (= type "GxyCld") :galaxy-cloud
+    (= type "MWSC") :star-cloud
     (= type "OC") :open-cluster
+    (= type "OC+Neb") :open-cluster
     (= type "GC") :globular-cluster
     (= type "HIIRgn") :emission-nebula
     (= type "Neb") :emission-nebula
     (= type "SNR") :supernova-remnant
     (= type "PN") :planetary-nebula
     (= type "DN") :dark-nebula
-    :default nil
+    (= type "Neb?") :unknown
+    (= type "NF") :unknown
+    (= type "PD") :unknown
+    (= type "?") :unknown
+    (= type "") :unknown
+    :default (do (println type) :unknown)
     ))
 
 (defn catalog-id
@@ -64,15 +73,16 @@
 
 (defn parse-dso
   "Parse a line of Messier data."
-  [[ra dec type const mag common-name rarad decrad id r1 r2 angle dso-source id1 cat1 id2 cat2 dupid dupcat display-mag]]
+  [[ra dec type const mag common-name ra-rad dec-rad id r1 r2 angle dso-source id1 cat1 id2 cat2 dupid dupcat display-mag]]
   {:ra (java.lang.Double/valueOf ra)  ; TODO store rad angle
    :dec (java.lang.Double/valueOf dec)  ; TODO store rad angle
    :type (dso-type type)
    :constellation (keyword const)
+   :const const
    :mag (if (seq mag) (java.lang.Double/valueOf mag) 100.0)
    :common-name (if (seq common-name) common-name)
-   :ra-rad (java.lang.Double/valueOf ra)  ; TODO store rad angle
-   :dec-rad (java.lang.Double/valueOf dec)  ; TODO store rad angle
+   :ra-rad (java.lang.Double/valueOf ra-rad)  ; TODO store rad angle
+   :dec-rad (java.lang.Double/valueOf dec-rad)  ; TODO store rad angle
    :id id
    :r1 (if (seq r1) (java.lang.Double/valueOf r1))
    :r2 (if (seq r2) (java.lang.Double/valueOf r2))
@@ -84,10 +94,15 @@
    :cat2 cat2
    :dupid dupid
    :dupcat dupcat
-   :display-mag display-mag
-   :ngc (catalog-id "NGC" id1 cat1 id2 cat2)
+   :display-mag (if (seq display-mag) (java.lang.Double/valueOf display-mag))
    :messier (catalog-id "M" id1 cat1 id2 cat2)
+   :ngc (catalog-id "NGC" id1 cat1 id2 cat2)
    :ic (catalog-id "IC" id1 cat1 id2 cat2)
+   :c (catalog-id "C" id1 cat1 id2 cat2)
+   :col (catalog-id "Col" id1 cat1 id2 cat2)
+   :mel (catalog-id "Mel" id1 cat1 id2 cat2)
+   :pk (catalog-id "PK" id1 cat1 id2 cat2)
+   :pgc (catalog-id "PGC" id1 cat1 id2 cat2)
    })
 
 (defn read-dso
@@ -98,6 +113,10 @@
       (read-csv in-file)
       (drop 1)
       (map parse-dso)
+      (filter #(not= (:type %) :unknown))
+      ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
+      (filter #(not (:dupcat %)))
+      (filter #(not= (:messier %) "40"))
       (doall))))
 
 ;(def dso-cat (read-dso))

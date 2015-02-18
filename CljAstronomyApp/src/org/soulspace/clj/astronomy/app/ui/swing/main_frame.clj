@@ -14,9 +14,10 @@
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
         [org.soulspace.clj.application classpath]
-        [org.soulspace.clj.astronomy.app i18n]
+        [org.soulspace.clj.astronomy.time time]
+        [org.soulspace.clj.astronomy.app common i18n]
         [org.soulspace.clj.astronomy.app.data catalogs]
-        [org.soulspace.clj.astronomy.app.ui.swing common chart equipment observation])
+        [org.soulspace.clj.astronomy.app.ui.swing common chart object-info equipment observation])
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (declare ui-frame)
@@ -81,25 +82,25 @@
            :accelerator (key-stroke \c :ctrl)
            :mnemonic nil}))
 
-(def stereoscopic-star-chart-action
+(def stereographic-star-chart-action
   (action (fn [_]
-            (let [chart-dialog (stereoscopic-star-chart-dialog)]
+            (let [chart-dialog (stereographic-star-chart-dialog)]
               (.setVisible chart-dialog true)))
-          {:name (i18n "action.view.starchart.stereoscopic")
+          {:name (i18n "action.view.starchart.stereographic")
            :accelerator (key-stroke \c :ctrl)
            :mnemonic nil}))
 
-(def orthoscopic-star-chart-action
+(def orthographic-star-chart-action
   (action (fn [_]
-            (let [chart-dialog (orthoscopic-star-chart-dialog)]
+            (let [chart-dialog (orthographic-star-chart-dialog)]
               (.setVisible chart-dialog true)))
-          {:name (i18n "action.view.starchart.orthoscopic")
+          {:name (i18n "action.view.starchart.orthographic")
            :accelerator (key-stroke \c :ctrl)
            :mnemonic nil}))
 
 (def planetarium-action
   (action (fn [_]
-            (let [chart-dialog (orthoscopic-star-chart-dialog)]
+            (let [chart-dialog (orthographic-star-chart-dialog)]
               (.setVisible chart-dialog true)))
           {:name (i18n "action.view.planetarium")
            :accelerator (key-stroke \p :ctrl)
@@ -107,17 +108,27 @@
 
 (def orrery-action
   (action (fn [_]
-            (let [chart-dialog (orthoscopic-star-chart-dialog)]
+            (let [chart-dialog (orthographic-star-chart-dialog)]
               (.setVisible chart-dialog true)))
           {:name (i18n "action.view.orrery")
            :accelerator (key-stroke \y :ctrl)
            :mnemonic nil}))
 
+(def object-list-action
+  (action (fn [_]
+            (let [;object-list (ref (take 30 (get-deep-sky-objects)))
+                  object-list (ref [])
+                  object-list-dialog (object-list-dialog object-list)]
+              (.setVisible object-list-dialog true)))
+          {:name (i18n "action.view.object-list")
+           :accelerator (key-stroke \l :ctrl)
+           :mnemonic nil}))
+
 (defn time-panel
   []
-  (let [f-local-time (text-field {})
-        f-universal-time (text-field {})
-        f-julian-day (text-field {})]
+  (let [f-local-time (text-field {:editable false})
+        f-universal-time (text-field {:editable false})
+        f-julian-day (text-field {:text (str @current-jd) :editable false})]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.time.title") :font heading-font}) "left, wrap 10"]
@@ -127,9 +138,9 @@
 
 (defn location-panel
   []
-  (let [f-name (text-field {})
-        f-long (text-field {})
-        f-lat (text-field {})]
+  (let [f-name (text-field {:columns 10 :editable false :text (:name @location)})
+        f-long (text-field {:columns 10 :editable false :text (:longitude @location)})
+        f-lat (text-field {:columns 10 :editable false :text (:latitude @location)})]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.location.title") :font heading-font}) "left, wrap 10"]
@@ -150,10 +161,11 @@
              (menu {:text (i18n "menu.views")}
                    [(menu {:text (i18n "menu.view.starchart")}
                           [(menu-item {:action equirectangular-star-chart-action})
-                           (menu-item {:action stereoscopic-star-chart-action})
-                           (menu-item {:action orthoscopic-star-chart-action})])
+                           (menu-item {:action stereographic-star-chart-action})
+                           (menu-item {:action orthographic-star-chart-action})])
                     (menu-item {:action planetarium-action})
-                    (menu-item {:action orrery-action})])
+                    (menu-item {:action orrery-action})
+                    (menu-item {:action object-list-action})])
              (menu {:text (i18n "menu.settings")}
                    [(menu {:text (i18n "menu.settings.layout")}
                           [(menu-item {:action (action (fn [_] (set-look-and-feel ui-frame :metal))
@@ -186,20 +198,10 @@
          [(panel
             {:layout (mig-layout {:layoutConstraints "wrap 1"})}
             [(tool-bar {} [new-action open-action save-action saveas-action quit-action])
-             (horizontal-split-pane
-               {}
-               [(vertical-split-pane
-                  {}
-                  [(panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 0, fill, top"})}
-                          [(location-panel)])
-                   (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
-                          [(time-panel)])])
-                (vertical-split-pane
-                  {}
-                  [(panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
-                          [])
-                   (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
-                          [])])])])]))
+             (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 0, fill, top"})}
+                    [(location-panel)])
+             (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
+                    [(time-panel)])])]))
 
 (defn init-ui []
   (def ui-frame (main-frame))

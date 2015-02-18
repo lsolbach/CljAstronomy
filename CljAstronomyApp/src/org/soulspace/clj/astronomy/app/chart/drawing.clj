@@ -3,7 +3,8 @@
   (:use [org.soulspace.clj string]
         [org.soulspace.clj.math math java-math]
         [org.soulspace.clj.java.awt graphics]
-        [org.soulspace.clj.astronomy.app.data common constellations greek]
+        [org.soulspace.clj.astronomy.coordinates coordinates]
+        [org.soulspace.clj.astronomy.app.data common labels constellations greek]
         [org.soulspace.clj.astronomy.app.chart common]))
 
 (defn color-by-spectral-type
@@ -21,33 +22,8 @@
     (+ 1 (* -1.5 (- mag min-mag)))))
 
 
-(def draw-dso-hierarchy ""
-  (->
-    (make-hierarchy)
-    (derive :double-star :star)
-    (derive :triple-star :star)
-    (derive :multiple-star :star)
-    (derive :variable-star :star)
-    (derive :nebula :dso)
-    (derive :galaxy :dso)
-    (derive :open-cluster :dso)
-    (derive :globular-cluster :dso)
-    (derive :planetary-nebula :nebula)
-    (derive :emission-nebula :nebula)
-    (derive :reflection-nebula :nebula)
-    (derive :supernova-remnant :nebula)
-    (derive :dark-nebula :nebula)
-    (derive :spiral-galaxy :galaxy)
-    (derive :elliptical-galaxy :galaxy)
-    (derive :lenticular-galaxy :galaxy)
-    (derive :irregular-galaxy :galaxy)
-    (derive :nebulous-open-cluster :open-cluster)
-    (derive :star-cloud :open-cluster)
-    (derive :galaxy-cloud :open-cluster)
-    ))
-
 ;"Draws a deep sky object."
-(defmulti draw-dso (fn [gfx scale dso] (:type dso)) :hierarchy #'draw-dso-hierarchy)
+(defmulti draw-dso (fn [gfx scale dso] (:type dso)) :hierarchy #'object-hierarchy)
 
 (defmethod draw-dso :star [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
@@ -122,19 +98,19 @@
   (doseq [dso dsos]
     (draw-dso gfx scale dso)))
 
-(defmulti draw-dso-label (fn [gfx scale dso] (:type dso)) :hierarchy #'draw-dso-hierarchy)
+(defmulti draw-dso-label (fn [gfx scale dso] (:type dso)) :hierarchy #'object-hierarchy)
 
 (defmethod draw-dso-label :star
   [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (color-by-spectral-type (:spectral-type dso))]
-    (draw-string gfx (star-label dso) (+ (int x) 10) (+ (int y) 10)) col))
+    (draw-string gfx (object-label dso) (+ (int x) 10) (+ (int y) 10) col)))
 
 (defmethod draw-dso-label :dso
   [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
-        col (color-by-spectral-type (:spectral-type dso))]
-    (draw-string gfx (dso-label dso) (+ (int x) 10) (+ (int y) 10)) col))
+        col (chart-colors :white)]
+    (draw-string gfx (object-label dso) (+ (int x) 10) (+ (int y) 10) col)))
 
 (defn draw-dso-labels
   "Draws the labels for the collection of stars."

@@ -15,7 +15,7 @@
     (= type "Globular Cluster") :globular-cluster
     (= type "Open Cluster") (cond 
                               (= detailed-type "Asterism") :asterism
-                              (= detailed-type "Binary Star") :binary-star
+                              (= detailed-type "Binary Star") :double-star
                               :default :open-cluster)
     (= type "Nebula") (cond 
                         (= detailed-type "Diffuse Nebula") :emission-nebula

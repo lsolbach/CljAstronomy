@@ -7,5 +7,6 @@
   "Main function to start the application"
   [& args]
   (load-hyg-catalog)
-  (load-messier-catalog)
+  ;(load-messier-catalog)
+  (load-dso-catalog)
   (start))

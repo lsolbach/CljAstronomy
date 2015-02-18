@@ -23,9 +23,9 @@
   (let [[_ flamsteed bayer superscript constellation] (bayer-flamsteed-designations bayer-flamsteed)]
     {:hyg-id id
      :type :star
-     :hip (if (seq hip) hip)
      :hd (if (seq hd) hd)
      :hr (if (seq hr) hr)
+     :hip (if (seq hip) hip)
      :gliese (if (seq gliese) gliese)
      ;:bayer bayer
      ;:flamsteed flamsteed
