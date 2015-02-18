@@ -12,10 +12,10 @@
 ; TODO move to a separate module
 ; TODO maybe add simplifications for long-0 or lat-0 = 0 or 90 degrees
 
-(defn stereoscopic-projection
-  "Calculates the stereoscopic projection of the coordinates."
+(defn stereographic-projection
+  "Calculates the stereographic projection of the coordinates."
     ([R k-0 [long-0 lat-1] [long lat]]
-      (stereoscopic-projection R k-0 long-0 lat-1 long lat))
+      (stereographic-projection R k-0 long-0 lat-1 long lat))
     ([R k-0 long-0 lat-1 long lat]
       (let [k (/ (* 2 k-0)
                  (+ 1
@@ -31,10 +31,10 @@
         [x y])))
 
 ; TODO fix quadrant problem in atans; maybe implement atan2 
-(defn reverse-stereoscopic-projection
-  "Calculates the coordinates in a reversed stereoscopic projection."
+(defn reverse-stereographic-projection
+  "Calculates the coordinates in a reversed stereographic projection."
   ([R k-0 [long-0 lat-1] [x y]]
-    (reverse-stereoscopic-projection R k-0 long-0 lat-1 x y))
+    (reverse-stereographic-projection R k-0 long-0 lat-1 x y))
   ([R k-0 long-0 lat-1 x y]
     (let [rho (sqrt (+ (* x x) (* y y)))
           c (* 2 (atan2 rho (* 2 R k-0)))
@@ -55,32 +55,32 @@
                                                           (* y (sin lat-1) (sin c)))))))))]
       [long lat])))
   
-(defn stereoscopic-projector
-  "Returns a function for stereoscopic projections."
+(defn stereographic-projector
+  "Returns a function for stereographic projections."
   ([R]
-    (partial stereoscopic-projection R))
+    (partial stereographic-projection R))
   ([R k-0]
-    (partial stereoscopic-projection R k-0))
+    (partial stereographic-projection R k-0))
   ([R k-0 [long-0 lat-1]]
-    (partial stereoscopic-projection R k-0 [long-0 lat-1]))
+    (partial stereographic-projection R k-0 [long-0 lat-1]))
   ([R k-0 long-0 lat-1]
-    (partial stereoscopic-projection R k-0 long-0 lat-1)))
+    (partial stereographic-projection R k-0 long-0 lat-1)))
 
-(defn reverse-stereoscopic-projector
-  "Returns a function for reverse stereoscopic projections."
+(defn reverse-stereographic-projector
+  "Returns a function for reverse stereographic projections."
   ([R]
-    (partial reverse-stereoscopic-projection R))
+    (partial reverse-stereographic-projection R))
   ([R k-0]
-    (partial reverse-stereoscopic-projection R k-0))
+    (partial reverse-stereographic-projection R k-0))
   ([R k-0 [long-0 lat-1]]
-    (partial reverse-stereoscopic-projection R k-0 [long-0 lat-1]))
+    (partial reverse-stereographic-projection R k-0 [long-0 lat-1]))
   ([R k-0 long-0 lat-1]
-    (partial reverse-stereoscopic-projection R k-0 long-0 lat-1)))
+    (partial reverse-stereographic-projection R k-0 long-0 lat-1)))
 
-(defn orthoscopic-projection
-  "Calculates the orthoscopic projection of the coordinates."
+(defn orthographic-projection
+  "Calculates the orthographic projection of the coordinates."
   ([R [long-0 lat-1] [long lat]]
-    (orthoscopic-projection R long-0 lat-1 long lat))
+    (orthographic-projection R long-0 lat-1 long lat))
   ([R long-0 lat-1 long lat]
     (let [x (* R (cos lat) (sin (- long long-0))) 
           y (* R (- (* (cos lat-1) (sin lat))
@@ -91,11 +91,10 @@
       ;[x y h-stroke k-stroke]
       [x y])))
 
-; TODO fix quadrant problem in atans
-(defn reverse-orthoscopic-projection
-  "Calculates the coordinates in a reversed orthoscopic projection."
+(defn reverse-orthographic-projection
+  "Calculates the coordinates in a reversed orthographic projection."
   ([R [long-0 lat-1] [x y]]
-    (reverse-orthoscopic-projection R long-0 lat-1 x y))
+    (reverse-orthographic-projection R long-0 lat-1 x y))
   ([R long-0 lat-1 x y]
     (let [rho (sqrt (+ (* x x) (* y y)))
           c (asin (/ rho R))
@@ -115,23 +114,23 @@
                                                           (* y (sin lat-1) (sin c)))))))))]
       [long lat])))
 
-(defn orthoscopic-projector
-  "Returns a function for stereoscopic projections."
+(defn orthographic-projector
+  "Returns a function for orthographic projections."
   ([R]
-    (partial orthoscopic-projection R))
+    (partial orthographic-projection R))
   ([R [long-0 lat-1]]
-    (partial orthoscopic-projection R [long-0 lat-1]))
+    (partial orthographic-projection R [long-0 lat-1]))
   ([R long-0 lat-1]
-    (partial orthoscopic-projection R long-0 lat-1)))
+    (partial orthographic-projection R long-0 lat-1)))
 
-(defn reverse-orthoscopic-projector
-  "Returns a function for reverse stereoscopic projections."
+(defn reverse-orthographic-projector
+  "Returns a function for reverse orthographic projections."
   ([R]
-    (partial reverse-orthoscopic-projection R))
+    (partial reverse-orthographic-projection R))
   ([R [long-0 lat-1]]
-    (partial reverse-orthoscopic-projection R [long-0 lat-1]))
+    (partial reverse-orthographic-projection R [long-0 lat-1]))
   ([R long-0 lat-1]
-    (partial reverse-stereoscopic-projection R long-0 lat-1)))
+    (partial reverse-orthographic-projection R long-0 lat-1)))
 
 
 ;TODO implement other projections
