@@ -12,7 +12,6 @@
  :dependencies [["org.clojure/clojure, 1.6.0"]
                 ["org.clojure/data.csv, 0.1.2"]
                 ["org.soulspace.clj/CljAstronomyLibrary, 0.1.0"]
-                ["org.soulspace.clj/CljJavaLibrary, 0.2.0"]
                 ["org.soulspace.clj/CljSwingLibrary, 0.4.2"]
                 ["org.soulspace.clj/CljApplicationLibrary, 0.5.1"]]
  ]
