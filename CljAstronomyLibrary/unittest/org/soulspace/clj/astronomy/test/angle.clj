@@ -43,4 +43,4 @@
   (is (= (angle-to-dms-angle 18.5) {:sign 1 :deg 18 :min 30 :sec 0.0}))
   )
 
-(run-tests)
+;(run-tests)
