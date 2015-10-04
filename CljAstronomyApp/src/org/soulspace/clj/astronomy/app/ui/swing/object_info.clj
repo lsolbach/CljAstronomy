@@ -23,20 +23,13 @@
 (defn objectlist-table-model
   [coll]
   (mapseq-table-model
-    [{:label "A" ;(i18n "label.object.id")
-      :key :id :edit false :converter str}
-     {:label "B" ;(i18n "label.object.name")
-      :key :name :edit false :converter str} ; object-label
-     {:label "C" ;(i18n "label.object.constellation")
-      :key :constellation :edit false :converter constellation-label}
-     {:label "D" ;(i18n "label.object.type")
-      :key :type :edit false :converter type-label}
-     {:label "E" ;(i18n "label.object.ra")
-      :key :ra :edit false :converter ra-label}
-     {:label "F" ; (i18n "label.object.dec")
-      :key :dec :edit false :converter dec-label}
-     {:label "G" ;(i18n "label.object.mag")
-      :key :mag :edit false }]
+    [{:label (i18n "label.object.id") :key :id :edit false :converter str}
+     {:label (i18n "label.object.name") :key identity :edit false :converter object-label} ; object-label
+     {:label (i18n "label.object.constellation") :key :constellation :edit false :converter constellation-label}
+     {:label (i18n "label.object.type") :key :type :edit false :converter type-label}
+     {:label (i18n "label.object.ra") :key :ra :edit false :converter ra-label}
+     {:label (i18n "label.object.dec") :key :dec :edit false :converter dec-label}
+     {:label (i18n "label.object.mag") :key :mag :edit false }]
     coll))
 
 (defn catalog-list-model
@@ -84,19 +77,20 @@
 (defn object-filter-panel
   "Creates an object filter panel."
   []
-  (let [f-name (text-field {:text ""})
-        f-constellation (text-field {:text ""})
-        f-ra-min (number-field {:text ""})
-        f-ra-max (number-field {:text ""})
-        f-dec-min (number-field {:text ""})
-        f-dec-max (number-field {:text ""})
-        f-mag-min (number-field {:text ""})
-        f-mag-max (number-field {:text ""})
+  (let [f-name (text-field {:text "" :columns 20})
+        f-constellation (text-field {:text "" :columns 20})
+        f-ra-min (number-field {:text "" :columns 20})
+        f-ra-max (number-field {:text "" :columns 20})
+        f-dec-min (number-field {:text "" :columns 20})
+        f-dec-max (number-field {:text "" :columns 20})
+        f-mag-min (number-field {:text "" :columns 20})
+        f-mag-max (number-field {:text "" :columns 20})
         l-catalogs (j-list {:model (catalog-list-model)})
-        p (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+        b-apply (button {:text (i18n "button.apply")})
+        b-clear (button {:text (i18n "button.clear")})
+        p (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 4, fill"
                                        :columnConstraints "[left|grow]"})}
-                 [[(label {:text (i18n "label.object.filter.title") :font heading-font}) "left, wrap 10"]
-                  (label {:text (i18n "label.object.filter.name")}) f-name
+                 [(label {:text (i18n "label.object.filter.name")}) f-name
                   (label {:text (i18n "label.object.filter.constellation")}) f-constellation
                   (label {:text (i18n "label.object.filter.ra-min")}) f-ra-min
                   (label {:text (i18n "label.object.filter.ra-max")}) f-ra-max
@@ -105,28 +99,38 @@
                   (label {:text (i18n "label.object.filter.mag-min")}) f-mag-min
                   (label {:text (i18n "label.object.filter.mag-max")}) f-mag-max
                   ])]
+    (defn apply-filter
+      ""
+      [])
+    (defn clear-filter
+      ""
+      [])
     p
     ))
 
 (defn object-list-panel
   "Creates an object list panel."
-  [catalog]
-    (let [t-object-list (table {:model (objectlist-table-model catalog)})
-          p (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
-                                         :columnConstraints "[left|grow]"})}
-                   [t-object-list])]
+  [coll]
+    (let [t-object-list (table {:model (objectlist-table-model coll) :gridColor java.awt.Color/DARK_GRAY})
+          p (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill"
+                                         :columnConstraints "[left|grow]"
+                                         :rowConstraints "[grow]"})}
+                   [(scroll-pane t-object-list)])]
       p))
 
 (defn object-list-dialog
   ""
   ([coll]
     (let [b-ok (button {:text (i18n "button.ok")})
-          p (object-list-panel coll)
+          filter-panel (object-filter-panel)
+          list-panel (object-list-panel coll)
           d (dialog {:title (i18n "label.object.list.title")}
                     [(panel {:layout (mig-layout {:layoutConstraints "wrap 1"
                                                   :columnConstraints "[left|grow]"})}
-                            [[(label {:text (i18n "label.object.list.title") :font heading-font}) "left, wrap 10"]
-                             (scroll-pane p)
+                            [[(label {:text (i18n "label.object.filter.title") :font heading-font}) "left"]
+                             filter-panel
+                             [(label {:text (i18n "label.object.list.title") :font heading-font}) "left"]
+                             (scroll-pane list-panel)
                              [b-ok "span, tag ok"]])])]
       (.setVisible d true)
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
@@ -141,4 +145,3 @@
       (.setVisible d true)
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
       d)))
-

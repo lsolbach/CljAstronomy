@@ -116,13 +116,27 @@
 
 (def object-list-action
   (action (fn [_]
-            (let [;object-list (ref (take 30 (get-deep-sky-objects)))
-                  object-list (ref [])
-                  object-list-dialog (object-list-dialog object-list)]
-              (.setVisible object-list-dialog true)))
+            (let [object-list (ref (take 50 (get-deep-sky-objects)))
+                  ;object-list (ref [])
+                  dialog-object-list (object-list-dialog object-list)]
+              (.setVisible dialog-object-list true)))
           {:name (i18n "action.view.object-list")
            :accelerator (key-stroke \l :ctrl)
            :mnemonic nil}))
+
+(def observations-action
+  (action (fn [_]
+            (let [dialog-observations (observations-dialog ui-frame)]
+              (.setVisible dialog-observations true)))
+          {:name (i18n "action.observation.observations")
+           }))
+
+(def optics-action
+  (action (fn [_]
+            (let [dialog-optics (optics-dialog ui-frame)]
+              (.setVisible dialog-optics true)))
+          {:name (i18n "action.equipment.optics")
+           }))
 
 (defn time-panel
   []
@@ -131,7 +145,7 @@
         f-julian-day (text-field {:text (str @current-jd) :editable false})]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
-           [[(label {:text (i18n "label.time.title") :font heading-font}) "left, wrap 10"]
+           [[(label {:text (i18n "label.time.title") :font heading-font}) "left, wrap 1"]
             (label {:text (i18n "label.time.local-time")}) f-local-time
             (label {:text (i18n "label.time.universal-time")}) f-universal-time
             (label {:text (i18n "label.time.julian-day")}) f-julian-day])))
@@ -143,7 +157,7 @@
         f-lat (text-field {:columns 10 :editable false :text (:latitude @location)})]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
-           [[(label {:text (i18n "label.location.title") :font heading-font}) "left, wrap 10"]
+           [[(label {:text (i18n "label.location.title") :font heading-font}) "left, wrap 1"]
             (label {:text (i18n "label.location.name")}) f-name
             (label {:text (i18n "label.location.longitude")}) f-long
             (label {:text (i18n "label.location.latitude")}) f-lat])))
@@ -166,6 +180,10 @@
                     (menu-item {:action planetarium-action})
                     (menu-item {:action orrery-action})
                     (menu-item {:action object-list-action})])
+             (menu {:text (i18n "menu.observation")}
+                   [(menu-item {:action observations-action})])
+             (menu {:text (i18n "menu.equipment")}
+                   [(menu-item {:action optics-action})])
              (menu {:text (i18n "menu.settings")}
                    [(menu {:text (i18n "menu.settings.layout")}
                           [(menu-item {:action (action (fn [_] (set-look-and-feel ui-frame :metal))

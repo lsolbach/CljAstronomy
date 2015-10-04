@@ -5,6 +5,10 @@
         [org.soulspace.clj.astronomy.app i18n]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
 
+(defn optics-table-model
+  [coll]
+  )
+
 (defn optic-panel
   "Creates the optic panel."
   []
@@ -19,8 +23,24 @@
         f-available (check-box)]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
-           [[(label {:text (i18n "label.optic.title") :font heading-font}) "left, wrap 10"]
-            (label (i18n "label.optics.name")) f-name])))
+           [[(label {:text (i18n "label.equipment.optic.title") :font heading-font}) "left, wrap 10"]
+            (label {:text (i18n "label.equipment.optic.name")}) f-name
+            (label {:text (i18n "label.equipment.optic.type")}) f-type
+            (label {:text (i18n "label.equipment.optic.aperture")}) f-aperture
+            (label {:text (i18n "label.equipment.optic.focal-length")}) f-focal-length
+            (label {:text (i18n "label.equipment.optic.effectiveness")}) f-effectiveness
+            (label {:text (i18n "label.equipment.optic.fixed-magnification")}) f-fixed-magnification
+            (label {:text (i18n "label.equipment.optic.field-of-view")}) f-field-of-view
+            (label {:text (i18n "label.equipment.optic.available")}) f-available
+            ])))
+
+(defn optics-panel
+  "Creates the optics panel."
+  []
+  (let []
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
+                                 :columnConstraints "[left|grow]"})}
+           [])))
 
 (defn eyepiece-panel
   "Creates the eyepiece panel."
@@ -31,7 +51,11 @@
         f-available (check-box)]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
-           [[(label {:text (i18n "label.eyepiece.title") :font heading-font}) "left, wrap 10"]
+           [[(label {:text (i18n "label.equipment.eyepiece.title") :font heading-font}) "left, wrap 10"]
+            (label {:text (i18n "label.equipment.eyepiece.name")}) f-name
+            (label {:text (i18n "label.equipment.eyepiece.focal-length")}) f-focal-length
+            (label {:text (i18n "label.equipment.eyepiece.field-of-view")}) f-field-of-view
+            (label {:text (i18n "label.equipment.eyepiece.available")}) f-available
             ])))
 
 (defn filter-panel
@@ -43,15 +67,20 @@
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.filter.title") :font heading-font}) "left, wrap 10"]
+            (label {:text (i18n "label.equipment.filter.name")}) f-name
+            (label {:text (i18n "label.equipment.filter.type")}) f-type
             ])))
 
 (defn barlow-reducer-panel
   "Creates the barlow/reducer panel."
   []
-  (let []
+  (let [f-name (text-field)
+        f-type (text-field)]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.barlow-reducer.title") :font heading-font}) "left, wrap 10"]
+            (label {:text (i18n "label.equipment.barlow-reducer.name")}) f-name
+            (label {:text (i18n "label.equipment.barlow-reducer.type")}) f-type
             ])))
 
 (defn equipment-panel
@@ -62,3 +91,12 @@
                                    :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.equipment.title") :font heading-font}) "left, wrap 10"]
             ])))
+
+(defn optics-dialog
+  "Creates the optics dialog"
+  ([]
+    )
+  ([parent]
+    (let [d (dialog parent {:title (i18n "label.equipment.optics.title")}
+                    [(optics-panel)])]))
+  )

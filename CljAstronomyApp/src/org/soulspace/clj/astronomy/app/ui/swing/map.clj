@@ -12,15 +12,15 @@
 (def moon-image (buffered-image (as-file (str data-dir moon-texture))))
 
 (def jupiter-texture "textures/albers/jupiter.jpg")
-(def jupiter-image (buffered-image (as-file (str data-dir jupiter-texture))))
+;(def jupiter-image (buffered-image (as-file (str data-dir jupiter-texture))))
 
-(def map-panel-spec {:x-max 180 :y-max 180})
+(def map-panel-spec {:x-max 360 :y-max 360})
 
 (def azimutal-user-coordinates (user-coordinate-transformer [(:x-max map-panel-spec) (:y-max map-panel-spec)]))
 (def reverse-azimutal-user-coordinates (reverse-user-coordinate-transformer [(:x-max map-panel-spec) (:y-max map-panel-spec)]))
 
-(def source-scale (relative-scale-transformer [0 (/ pi -2)] [(* pi 2) (/ pi 2)]))
 (def source-coordinates (user-coordinate-transformer [4096 2048]))
+(def source-scale (relative-scale-transformer [0 (/ pi -2)] [(* pi 2) (/ pi 2)]))
 
 (defn orthographic-scale
   "Scales ra/dec coordinates into user coordinates for drawing using an orthographic projection."
@@ -39,15 +39,17 @@
         pixels (for [x (range 0 w) y (range 0 h)]
                  [x y])]
       (doseq [pixel pixels]
-        (set-rgb bi pixel (get-rgb img pixel)))
+        (set-rgb bi pixel (get-rgb img (reverse-orthographic-scale pixel))))
+;        (set-rgb bi pixel (get-rgb img (reverse-orthographic-scale pixel))))
+;        (set-rgb bi pixel (get-rgb img pixel)))
       bi))
 
-(def projected-moon-image (projected-image moon-image (:x-max map-panel-spec) (:y-max map-panel-spec)))
+(defn projected-moon-image [] (projected-image moon-image (:x-max map-panel-spec) (:y-max map-panel-spec)))
 
 (defn draw-map
   "Draws an orthoscopic map projection of the image."
   ([^java.awt.Graphics2D gfx]
-    (draw-image gfx moon-image 0 0))
+    (draw-image gfx (projected-moon-image) 0 0))
   ([^java.awt.Graphics2D gfx image]
     ; map pixel
     ))
@@ -58,6 +60,6 @@
     (let [p (canvas-panel draw-map {:preferredSize (dimension (:x-max map-panel-spec) (:y-max map-panel-spec))
                                     :maximumSize (dimension (:x-max map-panel-spec) (:y-max map-panel-spec))}
                           [])
-          d (dialog {} [p])]
+          d (dialog {} [(scroll-pane p)])]
       (.setVisible d true)
       )))

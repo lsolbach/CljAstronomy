@@ -35,7 +35,8 @@
 (defn parse-messier
   "Parse a line of Messier data."
   [[id type ra dec mag size ngc constellation detailed-type common-name]]
-  {:messier (parse-messier-id id)
+  {:id id
+   :messier (parse-messier-id id)
    :type (messier-type type detailed-type)
    :ra (java.lang.Double/valueOf ra)
    :dec (java.lang.Double/valueOf dec)

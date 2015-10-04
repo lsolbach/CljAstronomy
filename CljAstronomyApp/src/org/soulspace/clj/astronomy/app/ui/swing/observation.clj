@@ -5,6 +5,15 @@
         [org.soulspace.clj.astronomy.app i18n]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
 
+(defn observations-table-model
+  ""
+  [coll]
+  (mapseq-table-model
+    [{:label (i18n "label.observation.time.start")}
+     {:label (i18n "label.observation.time.end")}
+     {:label (i18n "label.observation.location.name")}]
+    coll))
+
 (defn observation-conditions-panel
   []
   (let [f-time-start (text-field)
@@ -20,6 +29,16 @@
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.observation.conditions.title") :font heading-font}) "left, wrap 10"]
+            (label {:text (i18n "label.observation.time.start")}) f-time-start
+            (label {:text (i18n "label.observation.time.end")}) f-time-end
+            (label {:text (i18n "label.observation.location.name")}) f-location-name
+            (label {:text (i18n "label.observation.location.latitude")}) f-location-latitude
+            (label {:text (i18n "label.observation.location.longitude")}) f-location-longitude
+            (label {:text (i18n "label.observation.conditions.seeing")}) f-seeing
+            (label {:text (i18n "label.observation.conditions.transparency")}) f-transparency
+            (label {:text (i18n "label.observation.conditions.fainteststar")}) f-faintest-star
+            (label {:text (i18n "label.observation.conditions.sqm")}) f-sky-quality-meter
+            (label {:text (i18n "label.observation.conditions.notes")}) f-condition-notes
             ])))
 
 (defn observation-equipment-panel
@@ -53,3 +72,23 @@
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.observation.title") :font heading-font}) "left, wrap 10"]
             ])))
+
+(defn observations-panel
+  []
+  (let [table-model (observations-table-model [])
+        table (table {:model table-model
+                      :gridColor java.awt.Color/DARK_GRAY})]
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})}
+           [[(label {:text (i18n "label.observations.title") :font heading-font}) "left, wrap 10"]
+            ])))
+
+(defn observations-dialog
+  "The observations dialog shows a list of all observations."
+  [parent]
+  (let [d (dialog parent {:title (i18n "label.observations.title")}
+                  [(observations-panel)])]
+    (.setVisible d true)
+    d
+    ) 
+  )
