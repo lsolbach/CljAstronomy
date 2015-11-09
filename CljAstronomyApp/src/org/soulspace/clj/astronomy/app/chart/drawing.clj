@@ -21,7 +21,6 @@
   ([mag min-mag]
     (+ 1 (* -1.5 (- mag min-mag)))))
 
-
 ;"Draws a deep sky object."
 (defmulti draw-dso (fn [gfx scale dso] (:type dso)) :hierarchy #'object-hierarchy)
 
