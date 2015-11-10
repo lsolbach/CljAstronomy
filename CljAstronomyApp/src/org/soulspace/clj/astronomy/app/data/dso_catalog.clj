@@ -5,7 +5,7 @@
         [clojure.data.csv]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
-(def dso-file (str data-dir "dso.csv"))
+(def dso-file (str data-dir "/catalogs/dso.csv"))
 
 (def dso-source-map {"0" "miscellaneous, limited detail (e.g. Wikipedia)."
                      "1" "NGC 2000 (Sinott, 1988)."

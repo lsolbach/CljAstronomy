@@ -5,7 +5,7 @@
         [clojure.data.csv]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
-(def hyg-file (str data-dir "hygdata_v3.csv"))
+(def hyg-file (str data-dir "/catalogs/hygdata_v3.csv"))
 
 (defn bayer-flamsteed-designations
   "Extract the Flamsteed number, Bayer letter, Bayer superscript and Constellation from the string s."

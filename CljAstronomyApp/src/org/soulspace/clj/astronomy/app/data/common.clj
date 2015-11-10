@@ -3,7 +3,7 @@
         [org.soulspace.clj.astronomy.coordinates.coordinates :only [angular-distance]]
         [org.soulspace.clj.astronomy.app.data constellations greek]))
 
-(def data-dir "/home/soulman/devel/tmp/astro/")
+(def data-dir "data")
 
 (def catalog-name {:hip "Hipparchos Catalog"
                    :hd "Henry Draper Catalog"

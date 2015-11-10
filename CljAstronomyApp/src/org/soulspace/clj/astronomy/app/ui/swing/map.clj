@@ -8,11 +8,11 @@
         [org.soulspace.clj.astronomy.app.data common]
         [org.soulspace.clj.astronomy.app.chart scaling]))
 
-(def moon-texture "textures/albers/moon.jpg")
+(def moon-texture "/textures/albers/moon.jpg")
 (def moon-image (buffered-image (as-file (str data-dir moon-texture))))
 
-(def jupiter-texture "textures/albers/jupiter.jpg")
-;(def jupiter-image (buffered-image (as-file (str data-dir jupiter-texture))))
+(def jupiter-texture "/textures/albers/jupiter.jpg")
+(def jupiter-image (buffered-image (as-file (str data-dir jupiter-texture))))
 
 (def map-panel-spec {:x-max 360 :y-max 360})
 

@@ -5,7 +5,7 @@
         [org.soulspace.clj.math java-math]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
-(def messier-file (str data-dir "messier.csv"))
+(def messier-file (str data-dir "/catalogs/messier.csv"))
 
 (defn messier-type
   "Determines the type of the messier object."

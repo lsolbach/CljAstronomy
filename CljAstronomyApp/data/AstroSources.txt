@@ -1,0 +1,34 @@
+Astro Sources
+=============
+
+HYG (Hipparchos, Yale, Gliese), DSO
+-----------------------------------
+http://astronexus.com/node/34
+
+Stardroid
+---------
+https://code.google.com/p/stardroid/source/browse/trunk/tools/src/com/google/android/stardroid/data/?r=5
+(messier.csv)
+
+Excel files of various catalogs
+-------------------------------
+http://www.nexstarsite.com/Book/DSO.htm 
+
+Constellation Data
+------------------
+ftp://cdsarc.u-strasbg.fr/cats/VI/49/
+
+Star Colours
+------------
+http://www.vendian.org/mncharity/dir3/starcolor/
+
+
+Moon and Planet Textures
+-----------------------
+NOAA Steve Albers
+http://laps.noaa.gov/albers/sos/celestia/
+
+NASA Visible Earth
+http://visibleearth.nasa.gov/view_cat.php?categoryID=1484
+
+
