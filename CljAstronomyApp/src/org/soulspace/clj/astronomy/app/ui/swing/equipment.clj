@@ -95,7 +95,8 @@
 (defn optics-dialog
   "Creates the optics dialog"
   ([]
-    )
+    (let [d (dialog {:title (i18n "label.equipment.optics.title")}
+                    [(optics-panel)])]))
   ([parent]
     (let [d (dialog parent {:title (i18n "label.equipment.optics.title")}
                     [(optics-panel)])]))

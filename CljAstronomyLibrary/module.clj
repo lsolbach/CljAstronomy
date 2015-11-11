@@ -5,7 +5,6 @@
  :version "0.1.1"
  :description "A library of astronomical algorithms in clojure"
  :plugins ["global"
-           ["org.soulspace.baumeister/DependencyPlugin"]
            ["org.soulspace.baumeister/ClojurePlugin"]
            ["org.soulspace.baumeister/ClojureTestPlugin"]
            ["org.soulspace.baumeister/PackagePlugin"]]
