@@ -40,7 +40,8 @@
   (let []
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
                                  :columnConstraints "[left|grow]"})}
-           [])))
+           [[(label {:text (i18n "label.equipment.optics.title") :font heading-font}) "left, wrap 10"]
+            ])))
 
 (defn eyepiece-panel
   "Creates the eyepiece panel."
@@ -96,8 +97,10 @@
   "Creates the optics dialog"
   ([]
     (let [d (dialog {:title (i18n "label.equipment.optics.title")}
-                    [(optics-panel)])]))
+                    [(optics-panel)])]
+      d))
   ([parent]
     (let [d (dialog parent {:title (i18n "label.equipment.optics.title")}
-                    [(optics-panel)])]))
+                    [(optics-panel)])]
+      d))
   )
