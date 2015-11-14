@@ -104,4 +104,5 @@
 (defn find-object-by-coordinates
   "Returns the object nearest to the coordinates."
   [[ra dec] coll]
-  (reduce (partial object-with-smaller-angular-distance [ra dec]) coll))
+  (if (seq coll)
+    (reduce (partial object-with-smaller-angular-distance [ra dec]) coll)))
