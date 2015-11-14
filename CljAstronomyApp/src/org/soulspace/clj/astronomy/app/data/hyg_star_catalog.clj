@@ -27,9 +27,6 @@
      :hr (if (seq hr) hr)
      :hip (if (seq hip) hip)
      :gliese (if (seq gliese) gliese)
-     ;:bayer bayer
-     ;:flamsteed flamsteed
-     ;:constellation (if (seq constellation) (keyword constellation))
      :bayer (if (seq bayer) bayer)
      :bayer-superscript (if (not (= superscript " ")) superscript)
      :flamsteed (if (seq flam) flam)

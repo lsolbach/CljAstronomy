@@ -77,7 +77,6 @@
    :dec (java.lang.Double/valueOf dec)  ; TODO store rad angle
    :type (hyg-dso-type type)
    :constellation (keyword const)
-;   :const const
    :mag (if (seq mag) (java.lang.Double/valueOf mag) 100.0)
    :common-name (if (seq common-name) common-name)
    :ra-rad (java.lang.Double/valueOf ra-rad)  ; TODO store rad angle
@@ -122,11 +121,8 @@
       (drop 1)
       (map parse-hyg-dso)
       (filter #(< (:mag %) 16))
-      (#(do (println (count %)) %))
       (filter #(not= (:type %) :unknown))
-      (#(do (println (count %)) %))
       ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
       (filter #(not= (:messier %) "40")) ; filter messier 40 double star
-      (#(do (println (count %)) %))
       ; force the sequence because the stream is closed when leaving the macro
       (doall))))
