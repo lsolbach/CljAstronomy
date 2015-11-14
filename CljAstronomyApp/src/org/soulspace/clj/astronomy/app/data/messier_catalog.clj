@@ -56,4 +56,5 @@
       (read-csv in-file)
       (drop 1)
       (map parse-messier)
+      ; force the sequence because the stream is closed when leaving the macro
       (doall))))

@@ -67,8 +67,9 @@
   (with-open [in-file (reader hyg-file)]
     (->>
       (read-csv in-file :separator \,)
-      (drop 2)
+      (drop 2) ; line 0 are the headers, line 1 is sol, our own star
       (map parse-hyg)
+      ; force the sequence because the stream is closed when leaving the macro
       (doall))))
 
 (defn write-star-catalog

@@ -13,5 +13,13 @@
 	<classpathentry kind="lib" path="build/lib/runtime/miglayout.jar"/>
 	<classpathentry kind="lib" path="build/lib/runtime/swing-utils.jar"/>
 	<classpathentry kind="lib" path="build/lib/runtime/data.csv.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/asm-all.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/core.async.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/core.cache.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/core.memoize.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/data.priority-map.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/tools.analyzer.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/tools.analyzer.jvm.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/tools.reader.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

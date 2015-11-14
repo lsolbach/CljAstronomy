@@ -117,6 +117,5 @@
       ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
       (filter #(not (:dupcat %)))
       (filter #(not= (:messier %) "40"))
+      ; force the sequence because the stream is closed when leaving the macro
       (doall))))
-
-;(def dso-cat (read-dso))
