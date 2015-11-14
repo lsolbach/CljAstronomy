@@ -18,7 +18,7 @@
         [org.soulspace.clj.astronomy.app common i18n]
         [org.soulspace.clj.astronomy.app.data catalogs]
         [org.soulspace.clj.astronomy.app.ui.swing common equipment observation]
-        [org.soulspace.clj.astronomy.app.ui.swing.objects object-info]
+        [org.soulspace.clj.astronomy.app.ui.swing.objects object-info object-list]
         [org.soulspace.clj.astronomy.app.ui.swing.charts equirectangular stereographic orthographic]
         )
   (:import [javax.swing Action BorderFactory JFrame]))
@@ -119,7 +119,7 @@
 
 (def object-list-action
   (action (fn [_]
-            (let [object-list (ref (take 50 (get-deep-sky-objects)))
+            (let [object-list (get-deep-sky-objects)
                   ;object-list (ref [])
                   dialog-object-list (object-list-dialog object-list)]
               (.setVisible dialog-object-list true)))
