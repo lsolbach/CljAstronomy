@@ -64,6 +64,21 @@
   [o]
   (not (empty? (:pk o))))
 
+(defn c-object?
+  "Returns true if the object is listed in the Cadwell Catalog."
+  [o]
+  (not (empty? (:c o))))
+
+(defn col-object?
+  "Returns true if the object is listed in the Collinder Catalog."
+  [o]
+  (not (empty? (:col o))))
+
+(defn mel-object?
+  "Returns true if the object is listed in the Melotte Catalog."
+  [o]
+  (not (empty? (:mel o))))
+
 (defn pgc-object?
   "Returns true if the object is listed in the PGC Catalog."
   [o]
@@ -143,3 +158,9 @@
   ([common-name]
     (fn [obj] (re-matches (re-pattern common-name) (:common-name obj)))))
 
+(defn type-filter
+  "Returns a filter for typed objects."
+  ([]
+    #(and (:type %) (not= (:type %) :unknown)))
+  ([type]
+    #(and (:type %) (not= (:type %) (keyword type)))))

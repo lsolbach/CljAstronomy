@@ -26,8 +26,11 @@
     (common-name? dso) (:common-name dso)
     (messier-object? dso) (str "M" (:messier dso))
     (ngc-object? dso) (str "NGC" (:ngc dso))
-    (ic-object? dso) (str "IC" (:ngc dso))
-    (pk-object? dso) (str "IC" (:ngc dso))
+    (ic-object? dso) (str "IC" (:ic dso))
+    (pk-object? dso) (str "PK" (:pk dso))
+    (c-object? dso) (str "C" (:c dso))
+    (col-object? dso) (str "Col" (:col dso))
+    (mel-object? dso) (str "Mel" (:mel dso))
     :default ""))
 
 (defn ra-label
