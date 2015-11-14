@@ -1,45 +1,44 @@
-(ns org.soulspace.clj.astronomy.app.data.dso-catalog
+(ns org.soulspace.clj.astronomy.app.data.hyg-dso-catalog
   (:require [clojure.string :as str])
   (:use [clojure.set :only [map-invert]]
         [clojure.java.io]
         [clojure.data.csv]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
-(def dso-file (str data-dir "/catalogs/dso.csv"))
+(def hyg-dso-file (str data-dir "/catalogs/dso.csv"))
 
-(def dso-source-map {"0" "miscellaneous, limited detail (e.g. Wikipedia)."
-                     "1" "NGC 2000 (Sinott, 1988)."
-                     "2" "Historically Corrected New General Catalogue from the NGC/IC project (http://www.ngcic.org)."
-                     "3" "PGC galaxy catalog (http://leda.univ-lyon1.fr/)."
-                     "4" "Collinder open cluster catalog, items not already in Messier,Caldwell,NGC,IC and with defined size and magnitude (http://www.cloudynights.com/item.php?item_id=2544)."
-                     "5" "Perek-Kohoutek catalog IDs, from original (Perek + Kouhoutek, 1967) and update (Perek + Kohoutek, 2001)."
-                     "6" "Faint globulars (Palomar + Terzian) from http://www.astronomy-mall.com/Adventures.In.Deep.Space/obscure.htm and http://www.astronomy-mall.com/Adventures.In.Deep.Space/palglob.htm."
-                     })
+(def hyg-dso-source-map {"0" "miscellaneous, limited detail (e.g. Wikipedia)."
+                         "1" "NGC 2000 (Sinott, 1988)."
+                         "2" "Historically Corrected New General Catalogue from the NGC/IC project (http://www.ngcic.org)."
+                         "3" "PGC galaxy catalog (http://leda.univ-lyon1.fr/)."
+                         "4" "Collinder open cluster catalog, items not already in Messier,Caldwell,NGC,IC and with defined size and magnitude (http://www.cloudynights.com/item.php?item_id=2544)."
+                         "5" "Perek-Kohoutek catalog IDs, from original (Perek + Kouhoutek, 1967) and update (Perek + Kohoutek, 2001)."
+                         "6" "Faint globulars (Palomar + Terzian) from http://www.astronomy-mall.com/Adventures.In.Deep.Space/obscure.htm and http://www.astronomy-mall.com/Adventures.In.Deep.Space/palglob.htm."
+                         })
 
-(def dso-type-map {"*" "Single Star"
-                   "**" "Double Star"
-                   "***" "Triple Star"
-                   "Ast" "Asterism"
-                   "Gxy" "Galaxy"
-                   "GxyCld" "Bright cloud/knot in a galaxy"
-                   "GC" "Globular Cluster"
-                   "HIIRgn" "HII Region"
-                   "Neb" "Nebula (emission or reflection)"
-                   "NF" "Not Found"
-                   "OC" "Open Cluster"
-                   "PN" "Planetary Nebula"
-                   "DN" "Dark Nebula"
-                   "SNR" "Supernova Remnant"
-                   "MWSC" "Milky Way Star Cloud"
-                   "Neb?" "Nebula?"
-                   "?" "Unknown"
-                   "" "Unknown"
-                   })
+(def hyg-dso-type-map {"*" "Single Star"
+                       "**" "Double Star"
+                       "***" "Triple Star"
+                       "Ast" "Asterism"
+                       "Gxy" "Galaxy"
+                       "GxyCld" "Bright cloud/knot in a galaxy"
+                       "GC" "Globular Cluster"
+                       "HIIRgn" "HII Region"
+                       "Neb" "Nebula (emission or reflection)"
+                       "NF" "Not Found"
+                       "OC" "Open Cluster"
+                       "PN" "Planetary Nebula"
+                       "DN" "Dark Nebula"
+                       "SNR" "Supernova Remnant"
+                       "MWSC" "Milky Way Star Cloud"
+                       "Neb?" "Nebula?"
+                       "?" "Unknown"
+                       "" "Unknown"
+                       })
 
-(defn dso-type
+(defn hyg-dso-type
   "Returns the type of the dso object."
   [type]
-  ;type ; TODO parse type
   (cond
     (= type "*") :star
     (= type "**") :double-star
@@ -61,7 +60,7 @@
     (= type "PD") :unknown
     (= type "?") :unknown
     (= type "") :unknown
-    :default (do (println type) :unknown)
+    :default (do (println "Unknown type in HYG DSO catalog:" type) :unknown)
     ))
 
 (defn catalog-id
@@ -71,14 +70,14 @@
     (= cat1 catalog) id1
     (= cat2 catalog) id2))
 
-(defn parse-dso
-  "Parse a line of Messier data."
+(defn parse-hyg-dso
+  "Parse a line of hyg dso catalog data."
   [[ra dec type const mag common-name ra-rad dec-rad id r1 r2 angle dso-source id1 cat1 id2 cat2 dupid dupcat display-mag]]
   {:ra (java.lang.Double/valueOf ra)  ; TODO store rad angle
    :dec (java.lang.Double/valueOf dec)  ; TODO store rad angle
-   :type (dso-type type)
+   :type (hyg-dso-type type)
    :constellation (keyword const)
-   :const const
+;   :const const
    :mag (if (seq mag) (java.lang.Double/valueOf mag) 100.0)
    :common-name (if (seq common-name) common-name)
    :ra-rad (java.lang.Double/valueOf ra-rad)  ; TODO store rad angle
@@ -105,17 +104,29 @@
    :pgc (catalog-id "PGC" id1 cat1 id2 cat2)
    })
 
-(defn read-dso
+(defn parse-hyg-dso-mapping-transformer
+  "Creates a mapping transformation from csv vector to hyg catalog deep sky object."
+  []
+  (map #(parse-hyg-dso %)))
+
+(defn filter-transducer
+  [f]
+  (filter f))
+
+(defn read-hyg-dso
   "Read the messier catalog."
   []
-  (with-open [in-file (reader dso-file)]
+  (with-open [in-file (reader hyg-dso-file)]
     (->>
       (read-csv in-file)
       (drop 1)
-      (map parse-dso)
+      (map parse-hyg-dso)
+      (filter #(< (:mag %) 16))
+      (#(do (println (count %)) %))
       (filter #(not= (:type %) :unknown))
+      (#(do (println (count %)) %))
       ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
-      (filter #(not (:dupcat %)))
-      (filter #(not= (:messier %) "40"))
+      (filter #(not= (:messier %) "40")) ; filter messier 40 double star
+      (#(do (println (count %)) %))
       ; force the sequence because the stream is closed when leaving the macro
       (doall))))

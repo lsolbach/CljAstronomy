@@ -1,11 +1,11 @@
-(ns org.soulspace.clj.astronomy.app.data.hyg-catalog
+(ns org.soulspace.clj.astronomy.app.data.hyg-star-catalog
   (:require [clojure.string :as str])
   (:use [clojure.set :only [map-invert]]
         [clojure.java.io]
         [clojure.data.csv]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
-(def hyg-file (str data-dir "/catalogs/hygdata_v3.csv"))
+(def hyg-star-file (str data-dir "/catalogs/hygdata_v3.csv"))
 
 (defn bayer-flamsteed-designations
   "Extract the Flamsteed number, Bayer letter, Bayer superscript and Constellation from the string s."
@@ -14,8 +14,8 @@
     (re-matches #"(\d+)?(\s|[A-Za-z]+)?(\s|\d+)?([A-Za-z]{3})" s)
     [nil nil nil nil nil]))
 
-(defn parse-hyg
-  "Parse a line of HYP 3.0 data."
+(defn parse-hyg-star
+  "Parse a line of HYG 3.0 star catalog data."
   [[id hip hd hr gliese bayer-flamsteed proper-name ra dec distance
     pm-ra pm-deg rv mag abs-mag spectral-type color-index
     x y z v-x v-y v-z ra-rad dec-rad pm-ra-rad pm-dec-rad
@@ -61,14 +61,19 @@
      :base (if (seq base) base)
      }))
 
-(defn read-hyg
-  "Read the star data."
+(defn parse-hyg-star-mapping-transformer
+  "Creates a mapping transformation from csv vector to hyg catalog star."
   []
-  (with-open [in-file (reader hyg-file)]
+  (map #(parse-hyg-star %)))
+
+(defn read-hyg-star
+  "Read and parse the HYG star data."
+  []
+  (with-open [in-file (reader hyg-star-file)]
     (->>
       (read-csv in-file :separator \,)
       (drop 2) ; line 0 are the headers, line 1 is sol, our own star
-      (map parse-hyg)
+      (map parse-hyg-star)
       ; force the sequence because the stream is closed when leaving the macro
       (doall))))
 

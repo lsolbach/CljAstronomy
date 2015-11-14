@@ -48,6 +48,11 @@
    :constellation (constellation-by-name-map constellation)
    :common-name common-name})
 
+(defn parse-messier-mapping-transformer
+  "Creates a mapping transformation from csv vector to messier object."
+  []
+  (map #(parse-messier %)))
+
 (defn read-messier
   "Read the messier catalog."
   []

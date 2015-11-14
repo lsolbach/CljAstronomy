@@ -6,7 +6,7 @@
 (defn -main
   "Main function to start the application"
   [& args]
-  (load-hyg-catalog)
+  (load-hyg-star-catalog)
   ;(load-messier-catalog)
-  (load-dso-catalog)
+  (load-hyg-dso-catalog)
   (start))
