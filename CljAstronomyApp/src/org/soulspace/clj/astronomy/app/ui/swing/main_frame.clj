@@ -17,7 +17,10 @@
         [org.soulspace.clj.astronomy.time time]
         [org.soulspace.clj.astronomy.app common i18n]
         [org.soulspace.clj.astronomy.app.data catalogs]
-        [org.soulspace.clj.astronomy.app.ui.swing common chart object-info equipment observation])
+        [org.soulspace.clj.astronomy.app.ui.swing common equipment observation]
+        [org.soulspace.clj.astronomy.app.ui.swing.objects object-info]
+        [org.soulspace.clj.astronomy.app.ui.swing.charts equirectangular stereographic orthographic]
+        )
   (:import [javax.swing Action BorderFactory JFrame]))
 
 (declare ui-frame)

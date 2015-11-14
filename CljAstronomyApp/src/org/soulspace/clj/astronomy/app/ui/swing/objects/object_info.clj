@@ -1,4 +1,4 @@
-(ns org.soulspace.clj.astronomy.app.ui.swing.object-info
+(ns org.soulspace.clj.astronomy.app.ui.swing.objects.object-info
   (:use [org.soulspace.clj.java awt]
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
