@@ -9,4 +9,4 @@
   (load-hyg-star-catalog)
   ;(load-messier-catalog)
   (load-hyg-dso-catalog)
-  (start))
+  (start-ui))

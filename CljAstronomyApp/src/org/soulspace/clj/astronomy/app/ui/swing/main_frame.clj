@@ -138,29 +138,24 @@
           {:name (i18n "action.equipment.optics")
            }))
 
-(defn time-panel
+(defn location-time-panel
   []
-  (let [f-local-time (text-field {:editable false})
-        f-universal-time (text-field {:editable false})
-        f-julian-day (text-field {:text (str @current-jd) :editable false})]
-    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
-                                 :columnConstraints "[left|grow]"})}
-           [[(label {:text (i18n "label.time.title") :font heading-font}) "left, wrap 1"]
-            (label {:text (i18n "label.time.local-time")}) f-local-time
-            (label {:text (i18n "label.time.universal-time")}) f-universal-time
-            (label {:text (i18n "label.time.julian-day")}) f-julian-day])))
-
-(defn location-panel
-  []
-  (let [f-name (text-field {:columns 10 :editable false :text (:name @location)})
-        f-long (text-field {:columns 10 :editable false :text (:longitude @location)})
-        f-lat (text-field {:columns 10 :editable false :text (:latitude @location)})]
+  (let [f-name (text-field {:columns 15 :editable false :text (:name @location)})
+        f-long (text-field {:columns 15 :editable false :text (:longitude @location)})
+        f-lat (text-field {:columns 15 :editable false :text (:latitude @location)})
+        f-local-time (text-field {:text "" :columns 15 :editable false})
+        f-universal-time (text-field {:text "" :columns 15 :editable false})
+        f-julian-day (text-field {:text (str @current-jd) :columns 15 :editable false})]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.location.title") :font heading-font}) "left, wrap 1"]
             (label {:text (i18n "label.location.name")}) f-name
             (label {:text (i18n "label.location.longitude")}) f-long
-            (label {:text (i18n "label.location.latitude")}) f-lat])))
+            (label {:text (i18n "label.location.latitude")}) f-lat
+            [(label {:text (i18n "label.time.title") :font heading-font}) "left, wrap 1"]
+            (label {:text (i18n "label.time.local-time")}) f-local-time
+            (label {:text (i18n "label.time.universal-time")}) f-universal-time
+            (label {:text (i18n "label.time.julian-day")}) f-julian-day])))
 
 (defn main-menu
   []
@@ -215,11 +210,9 @@
           :defaultCloseOperation JFrame/DISPOSE_ON_CLOSE}
          [(panel
             {:layout (mig-layout {:layoutConstraints "wrap 1"})}
-            [(tool-bar {} [new-action open-action save-action saveas-action quit-action])
-             (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 0, fill, top"})}
-                    [(location-panel)])
+            [(tool-bar {} [equirectangular-star-chart-action stereographic-star-chart-action orthographic-star-chart-action quit-action])
              (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
-                    [(time-panel)])])]))
+                    [(location-time-panel)])])]))
 
 (defn init-ui []
   (def ui-frame (main-frame))
@@ -227,5 +220,5 @@
     (.pack)
     (.setVisible true)))
 
-(defn start []
+(defn start-ui []
   (do-swing-and-wait (init-ui)))
