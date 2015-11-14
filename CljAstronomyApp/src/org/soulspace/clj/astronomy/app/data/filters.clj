@@ -47,12 +47,12 @@
 (defn ngc-object?
   "Returns true if the object is listed in the New General Catalog."
   [o]
-  (not (empty? (:messier o))))
+  (not (empty? (:ngc o))))
 
 (defn ic-object?
   "Returns true if the object is listed in the Index Catalog."
   [o]
-  (not (empty? (:messier o))))
+  (not (empty? (:ic o))))
 
 (defn ngc-ic-object
   "Returns true if the object is listed in the New General Catalog or Index Catalog."
