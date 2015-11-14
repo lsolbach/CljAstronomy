@@ -32,8 +32,8 @@
      :flamsteed (if (seq flam) flam)
      :constellation (if (and (seq con) (= (count con) 3)) (keyword con))
      :common-name (str/trim proper-name)
-     :ra (java.lang.Double/valueOf ra) ; TODO store rad angle
-     :dec (java.lang.Double/valueOf dec) ; TODO store rad angle
+     :ra (java.lang.Double/valueOf ra)
+     :dec (java.lang.Double/valueOf dec)
      :distance distance
      :mag (java.lang.Double/valueOf mag)
      :mag-abs (java.lang.Double/valueOf abs-mag)
@@ -67,12 +67,11 @@
   "Read and parse the HYG star data."
   []
   (with-open [in-file (reader hyg-star-file)]
-    (->>
-      (read-csv in-file :separator \,)
-      (drop 2) ; line 0 are the headers, line 1 is sol, our own star
-      (map parse-hyg-star)
-      ; force the sequence because the stream is closed when leaving the macro
-      (doall))))
+    (into []
+      (comp
+        (drop 2) ; line 0 are the headers, line 1 is sol, our own star
+        (map parse-hyg-star))
+      (read-csv in-file :separator \,))))
 
 (defn write-star-catalog
   "Writes the stars to a file."

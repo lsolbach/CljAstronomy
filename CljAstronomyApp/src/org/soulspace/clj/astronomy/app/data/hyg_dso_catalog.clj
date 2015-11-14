@@ -79,8 +79,8 @@
    :constellation (keyword const)
    :mag (if (seq mag) (java.lang.Double/valueOf mag) 100.0)
    :common-name (if (seq common-name) common-name)
-   :ra-rad (java.lang.Double/valueOf ra-rad)  ; TODO store rad angle
-   :dec-rad (java.lang.Double/valueOf dec-rad)  ; TODO store rad angle
+   :ra-rad (java.lang.Double/valueOf ra-rad)
+   :dec-rad (java.lang.Double/valueOf dec-rad)
    :id id
    :r1 (if (seq r1) (java.lang.Double/valueOf r1))
    :r2 (if (seq r2) (java.lang.Double/valueOf r2))
@@ -103,26 +103,18 @@
    :pgc (catalog-id "PGC" id1 cat1 id2 cat2)
    })
 
-(defn parse-hyg-dso-mapping-transformer
-  "Creates a mapping transformation from csv vector to hyg catalog deep sky object."
-  []
-  (map #(parse-hyg-dso %)))
-
-(defn filter-transducer
-  [f]
-  (filter f))
-
 (defn read-hyg-dso
   "Read the messier catalog."
   []
   (with-open [in-file (reader hyg-dso-file)]
-    (->>
-      (read-csv in-file)
-      (drop 1)
-      (map parse-hyg-dso)
-      (filter #(< (:mag %) 16))
-      (filter #(not= (:type %) :unknown))
-      ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
-      (filter #(not= (:messier %) "40")) ; filter messier 40 double star
-      ; force the sequence because the stream is closed when leaving the macro
-      (doall))))
+    (into []
+          (comp
+            (drop 1)
+            (map parse-hyg-dso)
+            (filter #(< (:mag %) 16))
+            (filter #(not= (:type %) :unknown))
+            ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
+            ; filter messier 40 double star
+            (filter #(not= (:messier %) "40"))
+            )
+          (read-csv in-file))))

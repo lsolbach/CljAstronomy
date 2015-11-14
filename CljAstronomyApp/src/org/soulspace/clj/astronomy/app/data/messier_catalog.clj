@@ -57,9 +57,8 @@
   "Read the messier catalog."
   []
   (with-open [in-file (reader messier-file)]
-    (->>
-      (read-csv in-file)
-      (drop 1)
-      (map parse-messier)
-      ; force the sequence because the stream is closed when leaving the macro
-      (doall))))
+    (into []
+          (comp
+            (drop 1)
+            (map parse-messier))
+          (read-csv in-file))))
