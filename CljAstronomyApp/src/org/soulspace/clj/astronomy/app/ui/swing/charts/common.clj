@@ -22,7 +22,9 @@
 (def left-action (action (fn [_] (println "LEFT"))))
 (def right-action (action (fn [_] (println "RIGHT"))))
 
-(comment
+(def chart-filter-action (action (fn [e] (println "filter")) {:text (i18n "action.chart.filter")}))
+(def chart-info-action (action (fn [e] (println "info")) {:text (i18n "action.chart.info")}))
+
 (defn chart-popup-menu
   "Creates a popup menu for the star charts."
   []
@@ -31,7 +33,6 @@
     [(menu-item {:action chart-info-action})
      (menu-item {:action chart-filter-action})
      ]))
-)
 
 (defn chart-panel-mouse-clicked
   "Called when a mouse click happens in the chart panel."
@@ -79,6 +80,5 @@
     (add-key-binding panel "srcoll-down" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_DOWN 0) down-action)
     (add-key-binding panel "srcoll-left" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_LEFT 0) left-action)
     (add-key-binding panel "srcoll-right" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_RIGHT 0) right-action)
+    (.setComponentPopupMenu panel (chart-popup-menu))
     panel))
-
-
