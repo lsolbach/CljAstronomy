@@ -14,14 +14,14 @@
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
         [org.soulspace.clj.application classpath]
-        [org.soulspace.clj.astronomy.time time]
+        [org.soulspace.clj.astronomy.time instant time]
         [org.soulspace.clj.astronomy.app common i18n]
         [org.soulspace.clj.astronomy.app.data catalogs]
         [org.soulspace.clj.astronomy.app.ui.swing common equipment observation]
         [org.soulspace.clj.astronomy.app.ui.swing.objects object-info object-list]
-        [org.soulspace.clj.astronomy.app.ui.swing.charts equirectangular stereographic orthographic]
-        )
-  (:import [javax.swing Action BorderFactory JFrame]))
+        [org.soulspace.clj.astronomy.app.ui.swing.charts equirectangular stereographic orthographic])
+  (:import [javax.swing Action BorderFactory JFrame]
+           [org.soulspace.clj.astronomy.time.instant JulianDay]))
 
 (declare ui-frame)
 (def chart-frame) ; TODO use atom or ref here
@@ -120,7 +120,6 @@
 (def object-list-action
   (action (fn [_]
             (let [object-list (get-deep-sky-objects)
-                  ;object-list (ref [])
                   dialog-object-list (object-list-dialog object-list)]
               (.setVisible dialog-object-list true)))
           {:name (i18n "action.view.object-list")
@@ -143,12 +142,12 @@
 
 (defn location-time-panel
   []
-  (let [f-name (text-field {:columns 15 :editable false :text (:name @location)})
-        f-long (text-field {:columns 15 :editable false :text (:longitude @location)})
-        f-lat (text-field {:columns 15 :editable false :text (:latitude @location)})
+  (let [f-name (text-field {:columns 15 :editable false :text (:name @current-location)})
+        f-long (text-field {:columns 15 :editable false :text (:longitude @current-location)})
+        f-lat (text-field {:columns 15 :editable false :text (:latitude @current-location)})
         f-local-time (text-field {:text "" :columns 15 :editable false})
         f-universal-time (text-field {:text "" :columns 15 :editable false})
-        f-julian-day (text-field {:text (str @current-jd) :columns 15 :editable false})]
+        f-julian-day (text-field {:text (str (as-julian-day @current-time)) :columns 15 :editable false})]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.location.title") :font heading-font}) "left, wrap 1"]
