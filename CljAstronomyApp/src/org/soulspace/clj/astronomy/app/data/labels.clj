@@ -11,7 +11,7 @@
   [star]
   (cond
     (common-name? star) (:common-name star)
-    (bayer-letter? star) ((:bayer star) greek-letters)
+    (bayer-letter? star) (greek-letters (:bayer star))
     (flamsteed-object? star) (:flamsteed star)
     (hd-object? star) (str "HD" (:hd star))
     (hr-object? star) (str "HR" (:hr star))

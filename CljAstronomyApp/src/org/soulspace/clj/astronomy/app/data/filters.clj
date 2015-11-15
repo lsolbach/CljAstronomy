@@ -12,7 +12,7 @@
 (defn bayer-letter?
   "Returns true if the object has a bayer letter."
   [o]
-  (not (empty? (:bayer o))))
+  (not (nil? (:bayer o))))
 
 (defn flamsteed-object?
   "Returns true if the object has a flamsteed."

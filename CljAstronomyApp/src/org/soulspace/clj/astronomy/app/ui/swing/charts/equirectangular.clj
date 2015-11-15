@@ -62,7 +62,7 @@
   (set-rendering-hint gfx (rendering-hint-keys :antialialising) (antialias-hints :on))
   (draw-equirectangular-chart-background gfx)
   (draw-chart-grid gfx equirectangular-scale)
-  (draw-dso-labels gfx equirectangular-scale (filter common-name? (filter (mag-filter 4) (get-stars))))
+  (draw-dso-labels gfx equirectangular-scale (filter (mag-filter 4) (get-stars)))
   (draw-dso-labels gfx equirectangular-scale (filter common-name? (filter (mag-filter 6) (get-deep-sky-objects))))
   (draw-dsos gfx equirectangular-scale (filter (mag-filter 10.5) (get-deep-sky-objects)))
   (draw-dsos gfx equirectangular-scale (filter (mag-filter 6.5) (get-stars))))
