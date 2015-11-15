@@ -1,19 +1,22 @@
 (ns org.soulspace.clj.astronomy.app.common
   (import [java.util Date])
-  (:use [org.soulspace.clj.astronomy.time time]))
+  (:use [org.soulspace.clj.astronomy.time instant time]))
 
-(def current-jd (ref (java-date-to-julian-day (Date.))))
 
-(def location (ref {:name "Ostfildern"
-                    :longitude "9°17'"
-                    :latitude "48°42'"}))
+(def current-time (ref (new-julian-day)))
 
-(defn update-time
+(def current-location (ref {:name "Ostfildern"
+                            :longitude "9°17'"
+                            :latitude "48°42'"}))
+
+(defn set-time
   "Updates the time."
-  [jd]
-  (dosync (ref-set current-jd jd)))
+  ([]
+    (set-time (new-julian-day)))
+  ([datetime]
+    (dosync (ref-set current-time (new-julian-day datetime)))))
 
-(defn update-location
+(defn set-location
   "Updates the location."
   [loc]
-  (dosync (ref-set location loc)))
+  (dosync (ref-set current-location)))

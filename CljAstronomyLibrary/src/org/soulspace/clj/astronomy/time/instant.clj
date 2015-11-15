@@ -12,13 +12,13 @@
   (:import [java.util Date TimeZone]))
 
 (defprotocol Instant
-  (julianDay [date] "Returns the julian day of this point in time.")
-  (date [date]))
+  (as-julian-day [date] "Returns the julian day of this point in time.")
+  (as-date [date]))
 
 (defrecord JulianDay [jd timezone]
   Instant
-  (julianDay [this] jd)
-  (date [this] (julian-day-to-date jd)))
+  (as-julian-day [this] jd)
+  (as-date [this] (julian-day-to-date jd)))
 
 (defn new-julian-day
   "Creates a new julian day instant."
