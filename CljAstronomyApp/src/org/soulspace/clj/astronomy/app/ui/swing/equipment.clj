@@ -37,10 +37,11 @@
 (defn optics-panel
   "Creates the optics panel."
   []
-  (let []
+  (let [l-optics (j-list)]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.equipment.optics.title") :font heading-font}) "left, wrap 10"]
+            
             ])))
 
 (defn eyepiece-panel
@@ -76,12 +77,14 @@
   "Creates the barlow/reducer panel."
   []
   (let [f-name (text-field)
-        f-type (text-field)]
+        f-type (text-field)
+        f-factor (numeric-field)]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.barlow-reducer.title") :font heading-font}) "left, wrap 10"]
             (label {:text (i18n "label.equipment.barlow-reducer.name")}) f-name
             (label {:text (i18n "label.equipment.barlow-reducer.type")}) f-type
+            (label {:text (i18n "label.equipment.barlow-reducer.type")}) f-factor
             ])))
 
 (defn equipment-panel
