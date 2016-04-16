@@ -78,7 +78,7 @@
   []
   (let [f-name (text-field)
         f-type (text-field)
-        f-factor (numeric-field)]
+        f-factor (number-field)]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.barlow-reducer.title") :font heading-font}) "left, wrap 10"]

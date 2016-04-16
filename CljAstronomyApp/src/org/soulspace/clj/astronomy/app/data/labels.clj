@@ -33,6 +33,11 @@
     (mel-object? dso) (str "Mel" (:mel dso))
     :default ""))
 
+(defmethod object-label nil
+  [obj]
+  (println (:id obj) (:type obj))
+  "")
+
 (defn ra-label
   "Returns the right ascension as string."
   [ra]
