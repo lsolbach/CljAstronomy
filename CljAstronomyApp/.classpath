@@ -21,5 +21,6 @@
 	<classpathentry kind="lib" path="build/lib/runtime/tools.analyzer.jar"/>
 	<classpathentry kind="lib" path="build/lib/runtime/tools.analyzer.jvm.jar"/>
 	<classpathentry kind="lib" path="build/lib/runtime/tools.reader.jar"/>
+	<classpathentry kind="lib" path="build/lib/runtime/reagi.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

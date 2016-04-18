@@ -11,7 +11,7 @@
  ["CMi" "Canis Minor" "Canis Minoris"]
  ["CVn" "Canes Venatici" "Canum Venaticorum"]
  ["Cae" "Caelum" "Caeli"]
- ["Cam" "Camelopadis" "Camelopardalis"]
+ ["Cam" "Camelopardalis" "Camelopardalis"]
  ["Cap" "Capricornus" "Capricorni"]
  ["Car" "Carina" "Carinae"]
  ["Cas" "Cassiopeia" "Cassiopeiae"]

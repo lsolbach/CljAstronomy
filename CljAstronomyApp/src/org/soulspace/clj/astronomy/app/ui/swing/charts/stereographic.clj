@@ -98,3 +98,11 @@
     (add-mouse-listener panel
                         (mouse-clicked-listener chart-panel-mouse-clicked d reverse-stereographic-scale (filter (mag-filter 10.5) (get-deep-sky-objects))))
     d))
+
+(def stereographic-star-chart-action
+  (action (fn [_]
+            (let [chart-dialog (stereographic-star-chart-dialog)]
+              (.setVisible chart-dialog true)))
+          {:name (i18n "action.view.starchart.stereographic")
+           :accelerator (key-stroke \c :ctrl)
+           :mnemonic nil}))

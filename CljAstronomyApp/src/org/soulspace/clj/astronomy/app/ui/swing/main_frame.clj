@@ -77,30 +77,6 @@
            ;:icon (image-icon (system-resource-url "images/Quit.gif") {})
            }))
 
-(def equirectangular-star-chart-action
-  (action (fn [_]
-            (let [chart-dialog (equirectangular-star-chart-dialog)]
-              (.setVisible chart-dialog true)))
-          {:name (i18n "action.view.starchart.equirectangular")
-           :accelerator (key-stroke \c :ctrl)
-           :mnemonic nil}))
-
-(def stereographic-star-chart-action
-  (action (fn [_]
-            (let [chart-dialog (stereographic-star-chart-dialog)]
-              (.setVisible chart-dialog true)))
-          {:name (i18n "action.view.starchart.stereographic")
-           :accelerator (key-stroke \c :ctrl)
-           :mnemonic nil}))
-
-(def orthographic-star-chart-action
-  (action (fn [_]
-            (let [chart-dialog (orthographic-star-chart-dialog)]
-              (.setVisible chart-dialog true)))
-          {:name (i18n "action.view.starchart.orthographic")
-           :accelerator (key-stroke \c :ctrl)
-           :mnemonic nil}))
-
 (def planetarium-action
   (action (fn [_]
             (let [chart-dialog (orthographic-star-chart-dialog)]
@@ -117,28 +93,39 @@
            :accelerator (key-stroke \y :ctrl)
            :mnemonic nil}))
 
-(def object-list-action
-  (action (fn [_]
-            (let [object-list (get-deep-sky-objects)
-                  dialog-object-list (object-list-dialog object-list)]
-              (.setVisible dialog-object-list true)))
-          {:name (i18n "action.view.object-list")
-           :accelerator (key-stroke \l :ctrl)
-           :mnemonic nil}))
+(defn location-panel
+  []
+  (let [f-name (text-field {:columns 15 :editable false :text (:name @current-location)})
+        f-long (text-field {:columns 15 :editable false :text (:longitude @current-location)})
+        f-lat (text-field {:columns 15 :editable false :text (:latitude @current-location)})]
+    (defn update-location-panel
+      [location]
+      )
+    (defn clear-location-panel
+      [])
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                     :columnConstraints "[left|grow]"})}
+               [[(label {:text (i18n "label.location.title") :font heading-font}) "left, wrap 1"]
+                (label {:text (i18n "label.location.name")}) f-name
+                (label {:text (i18n "label.location.longitude")}) f-long
+                (label {:text (i18n "label.location.latitude")}) f-lat])))
 
-(def observations-action
-  (action (fn [_]
-            (let [dialog-observations (observations-dialog ui-frame)]
-              (.setVisible dialog-observations true)))
-          {:name (i18n "action.observation.observations")
-           }))
-
-(def optics-action
-  (action (fn [_]
-            (let [dialog-optics (optics-dialog ui-frame)]
-              (.setVisible dialog-optics true)))
-          {:name (i18n "action.equipment.optics")
-           }))
+(defn time-panel
+  []
+  (let [f-local-time (text-field {:text "" :columns 15 :editable false})
+        f-universal-time (text-field {:text "" :columns 15 :editable false})
+        f-julian-day (text-field {:text (str (as-julian-day @current-time)) :columns 15 :editable false})]
+    (defn update-time-panel
+      [time]
+      )
+    (defn clear-time-panel
+      [])
+    (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                 :columnConstraints "[left|grow]"})}
+           [[(label {:text (i18n "label.time.title") :font heading-font}) "left, wrap 1"]
+            (label {:text (i18n "label.time.local-time")}) f-local-time
+            (label {:text (i18n "label.time.universal-time")}) f-universal-time
+            (label {:text (i18n "label.time.julian-day")}) f-julian-day])))
 
 (defn location-time-panel
   []
@@ -177,10 +164,13 @@
                     (menu-item {:action planetarium-action})
                     (menu-item {:action orrery-action})
                     (menu-item {:action object-list-action})])
+             (menu {:text (i18n "menu.equipment")}
+                   [(menu-item {:action optics-action})
+                    (menu-item {:action eyepieces-action})
+                    (menu-item {:action barlows-reducers-action})
+                    (menu-item {:action filters-action})])
              (menu {:text (i18n "menu.observation")}
                    [(menu-item {:action observations-action})])
-             (menu {:text (i18n "menu.equipment")}
-                   [(menu-item {:action optics-action})])
              (menu {:text (i18n "menu.settings")}
                    [(menu {:text (i18n "menu.settings.layout")}
                           [(menu-item {:action (action (fn [_] (set-look-and-feel ui-frame :metal))

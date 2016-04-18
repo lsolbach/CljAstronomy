@@ -322,4 +322,3 @@ Celestial Model
 
  * Searching
   * Indexing and full text search (Lucene?)
-

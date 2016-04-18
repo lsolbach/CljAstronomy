@@ -24,6 +24,12 @@
                   (label {:text (i18n "label.object.ra")}) f-ra
                   (label {:text (i18n "label.object.dec")}) f-dec
                   (label {:text (i18n "label.object.mag")}) f-mag])]
+    (defn update-object-panel
+      [object]
+      )
+    (defn clear-object-panel
+      []
+      )
     p))
 
 (defn object-info-dialog
@@ -37,4 +43,3 @@
     (.setVisible d true)
     (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
     d))
-

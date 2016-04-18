@@ -49,7 +49,7 @@
 
 ; TODO add aspect-ratio parameter
 (defn relative-scale-transformer
-  "Returns a scaling transformer function which scales the coordinates to the intervall [0,1].
+  "Returns a scaling transformer function which scales the coordinates between [x-min y-min] [x-max y-max] to the intervall [0,1] in x and y.
    Takes the minimum and maximum coordinates as input."
   ([[x-min y-min] [x-max y-max]]
     (relative-scale-transformer x-min y-min x-max y-max))
@@ -59,7 +59,7 @@
        (/ (- y y-min) (- y-max y-min))])))
 
 (defn reverse-relative-scale-transformer
-  "Returns a scaling transformer function which scales the intervall [0,1] to the coordinates [x-min y-min] [x-max y-max].
+  "Returns a scaling transformer function which scales the intervall [0,1] in x and y to the coordinates between [x-min y-min] [x-max y-max].
    Takes the minimum and maximum coordinates as input."
   ([[x-min y-min] [x-max y-max]]
     (reverse-relative-scale-transformer x-min y-min x-max y-max))
@@ -93,3 +93,4 @@
   (relative-scale-transformer [-1.0 -1.0] [1.0 1.0]))
 (def reverse-orthographic-relative-coordinates
   (reverse-relative-scale-transformer [-1.0 -1.0] [1.0 1.0]))
+

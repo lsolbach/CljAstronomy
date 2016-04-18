@@ -93,16 +93,8 @@
   [[ra dec] o]
   (angular-distance [ra dec] [(:ra-rad o) (:dec-rad o)]))
 
-(defn object-with-smaller-angular-distance
-  "Returns of the two objects the object with the smaller distance from the coordinates."
-  [[ra dec] o1 o2]
-  (if (<= (angular-distance-of-object-and-coords [ra dec] o1)
-          (angular-distance-of-object-and-coords [ra dec] o2))
-    o1
-    o2))
-
 (defn find-object-by-coordinates
   "Returns the object nearest to the coordinates."
   [[ra dec] coll]
   (if (seq coll)
-    (reduce (partial object-with-smaller-angular-distance [ra dec]) coll)))
+    (apply min-key (partial angular-distance-of-object-and-coords [ra dec]) coll)))

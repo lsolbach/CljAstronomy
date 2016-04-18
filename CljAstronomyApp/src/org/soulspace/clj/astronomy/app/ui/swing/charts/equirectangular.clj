@@ -88,3 +88,12 @@
     (add-mouse-listener panel 
                         (mouse-clicked-listener chart-panel-mouse-clicked d reverse-equirectangular-scale (filter (mag-filter 10.5) (get-deep-sky-objects))))
     d))
+
+(def equirectangular-star-chart-action
+  (action (fn [_]
+            (let [chart-dialog (equirectangular-star-chart-dialog)]
+              (.setVisible chart-dialog true)))
+          {:name (i18n "action.view.starchart.equirectangular")
+           :accelerator (key-stroke \c :ctrl)
+           :mnemonic nil}))
+

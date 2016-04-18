@@ -2,7 +2,7 @@
   (:import [javax.swing Action BorderFactory])
   (:use [org.soulspace.clj.java.awt]
         [org.soulspace.clj.java.swing constants swinglib]
-        [org.soulspace.clj.astronomy.app i18n]
+        [org.soulspace.clj.astronomy.app i18n observation]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
 
 (defn observations-table-model
@@ -74,21 +74,33 @@
             ])))
 
 (defn observations-panel
-  []
-  (let [table-model (observations-table-model [])
+  [observations]
+  (let [table-model (observations-table-model observations)
         table (table {:model table-model
                       :gridColor java.awt.Color/DARK_GRAY})]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.observations.title") :font heading-font}) "left, wrap 10"]
+            table
             ])))
 
 (defn observations-dialog
   "The observations dialog shows a list of all observations."
-  [parent]
-  (let [d (dialog parent {:title (i18n "label.observations.title")}
-                  [(observations-panel)])]
-    (.setVisible d true)
-    d
-    ) 
-  )
+  ([observations]
+    (let [d (dialog {:title (i18n "label.observations.title")}
+                    [(observations-panel observations)])]
+      (.setVisible d true)
+      d))
+  ([parent observations]
+    (let [d (dialog parent {:title (i18n "label.observations.title")}
+                    [(observations-panel observations)])]
+      (.setVisible d true)
+      d)))
+
+(def observations-action
+  (action (fn [_]
+            (let [dialog-observations (observations-dialog @observations-list)]
+              (.setVisible dialog-observations true)))
+          {:name (i18n "action.observation.observations")
+           }))
+

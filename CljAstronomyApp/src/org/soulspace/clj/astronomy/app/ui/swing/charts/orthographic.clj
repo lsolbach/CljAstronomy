@@ -98,3 +98,10 @@
                         (mouse-clicked-listener chart-panel-mouse-clicked d reverse-orthographic-scale (filter (mag-filter 10.5) (get-deep-sky-objects))))
     d))
 
+(def orthographic-star-chart-action
+  (action (fn [_]
+            (let [chart-dialog (orthographic-star-chart-dialog)]
+              (.setVisible chart-dialog true)))
+          {:name (i18n "action.view.starchart.orthographic")
+           :accelerator (key-stroke \c :ctrl)
+           :mnemonic nil}))

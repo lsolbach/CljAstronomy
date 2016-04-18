@@ -3,7 +3,7 @@
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
         [org.soulspace.clj.astronomy.app i18n]
-        [org.soulspace.clj.astronomy.app.data common labels filters constellations]
+        [org.soulspace.clj.astronomy.app.data catalogs common labels filters constellations]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
 
 (def object-list (ref []))
@@ -50,11 +50,15 @@
         f-mag-max (number-field {:text "" :columns 20})
         l-catalogs (j-list {:model (catalog-list-model)})
         ]
-    (defn apply-filter
-      "Applies the specified filter to the data."
+    (defn update-object-filter-panel
+      "Updates the filter panel."
+      [object-filter]
+      )
+    (defn read-object-filter-panel
+      "Reads the filter panel."
       [])
-    (defn clear-filter
-      "Clears the specified filter."
+    (defn clear-object-filter-panel
+      "Clears the filter panel."
       [])
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 4, fill"
                                  :columnConstraints "[left|grow]"})}
@@ -80,6 +84,12 @@
                                          :columnConstraints "[left|grow]"
                                          :rowConstraints "[grow]"})}
                    [(scroll-pane t-object-list)])]
+      (defn update-object-list-panel
+        [object-list]
+        )
+      (defn clear-object-list-panel
+        [object-list]
+        )
       p)))
 
 (defn object-list-dialog
@@ -114,4 +124,13 @@
       (.setVisible d true)
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
       d)))
+
+(def object-list-action
+  (action (fn [_]
+            (let [object-list (get-deep-sky-objects)
+                  dialog-object-list (object-list-dialog object-list)]
+              (.setVisible dialog-object-list true)))
+          {:name (i18n "action.view.object-list")
+           :accelerator (key-stroke \l :ctrl)
+           :mnemonic nil}))
 
