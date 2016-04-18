@@ -30,7 +30,6 @@
         ;[x y h-stroke k-stroke]
         [x y])))
 
-; TODO fix quadrant problem in atans; maybe implement atan2 
 (defn reverse-stereographic-projection
   "Calculates the coordinates in a reversed stereographic projection."
   ([R k-0 [long-0 lat-1] [x y]]
@@ -46,9 +45,7 @@
                              rho))))
           long (cond
                  (= rho 0.0) long-0
-                 ; (= lat-1 (/ pi 2)) (+ long-0 (atan (/ x (* -1 y))))
                  (= lat-1 (/ pi 2)) (+ long-0 (atan2 x (* -1 y)))
-                 ; (= lat-1 (/ pi -2)) (+ long-0 (atan (/ x y)))
                  (= lat-1 (/ pi -2)) (+ long-0 (atan2 x y))
                  :default (+ long-0 (atan (* x (sin (/ c 
                                                        (- (* rho (cos lat-1) (cos c))
@@ -105,9 +102,7 @@
                              rho))))
           long (cond
                  (= rho 0.0) long-0
-                 ; (= lat-1 (/ pi 2)) (+ long-0 (atan (/ x (* -1 y))))
                  (= lat-1 (/ pi 2)) (+ long-0 (atan2 x (* -1 y)))
-                 ; (= lat-1 (/ pi -2)) (+ long-0 (atan (/ x y)))
                  (= lat-1 (/ pi -2)) (+ long-0 (atan2 x y))
                  :default (+ long-0 (atan (* x (sin (/ c
                                                        (- (* rho (cos lat-1) (cos c))
