@@ -14,25 +14,17 @@
         [org.soulspace.clj.astronomy.app common i18n]
         [org.soulspace.clj.astronomy.app.data common filters catalogs]
         [org.soulspace.clj.astronomy.app.ui.swing common]
-        [org.soulspace.clj.astronomy.app.ui.swing.objects object-info]
-        ))
+        [org.soulspace.clj.astronomy.app.ui.swing.objects object-info])
+  (:import [java.awt.event MouseAdapter])
+  )
  
+(def chart-spec (ref {:faintest-stellar-mag 6.0
+                                      :faintest-dso-mag 10.0}))
+
 (def up-action (action (fn [_] (println "UP"))))
 (def down-action (action (fn [_] (println "DOWN"))))
 (def left-action (action (fn [_] (println "LEFT"))))
 (def right-action (action (fn [_] (println "RIGHT"))))
-
-(def chart-filter-action (action (fn [e] (println "filter")) {:text (i18n "action.chart.filter")}))
-(def chart-info-action (action (fn [e] (println "info")) {:text (i18n "action.chart.info")}))
-
-(defn chart-popup-menu
-  "Creates a popup menu for the star charts."
-  []
-  (popup-menu
-    {}
-    [(menu-item {:action chart-info-action})
-     (menu-item {:action chart-filter-action})
-     ]))
 
 (defn chart-panel-mouse-clicked
   "Called when a mouse click happens in the chart panel."
@@ -47,6 +39,28 @@
   [event args]
   (println "Resize" event))
 
+(def chart-filter-action (action (fn [e] (println "filter")) {:name (i18n "action.chart.filter")}))
+(def chart-info-action (action (fn [e] (println "info")) {:name (i18n "action.chart.info")}))
+
+(defn chart-popup-menu
+  "Creates a popup menu for the star charts."
+  []
+  (popup-menu
+    {}
+    [(menu-item {:action chart-info-action})
+     (menu-item {:action chart-filter-action})]))
+
+(defn- show-popup
+  [popup event]
+  (if (.isPopupTrigger event)
+     (.show popup (.getComponent event) (.getX event) (.getY event))))
+
+(defn popup-listener
+  [popup]
+  (proxy [MouseAdapter] []
+    (mousePressed [event] (show-popup popup event))
+    (mouseReleased [event] (show-popup popup event))))
+
 (defn chart-filter-dialog
   "Creates the chart filter panel."
   [chart-spec]
@@ -60,14 +74,28 @@
                   (label {:text (i18n "label.chart.filter.mag-faintest-stars")}) f-faintest-stellar-mag
                   (label {:text (i18n "label.chart.filter.mag-faintest-dsos")}) f-faintest-dso-mag])
         filter-dialog (dialog {}
-                              [p])])
-  (defn chart-filter-ok
-    ""
-    [])
-  (defn chart-filter-cancel
-    ""
-    [])
-  )
+                              [p])]
+    (defn update-chart-filter-panel
+      "Updates the panel with the given chart spec."
+      [chart-spec]
+      (.setText f-faintest-stellar-mag (chart-spec :faintest-stellar-mag))
+      (.setText f-faintest-dso-mag (chart-spec :faintest-dso-mag)))
+
+    (defn read-chart-filter-panel
+      "Reads the panel values and returns a chart spec."
+      []
+      {:faintest-stellar-mag (get-number f-faintest-stellar-mag)
+       :faintest-dso-mag (get-number f-faintest-dso-mag)})
+
+    (defn chart-filter-ok
+      "Ok behaviour of the filter dialog."
+      [])
+
+    (defn chart-filter-cancel
+      "Cancel behaviour of the filter dialog."
+      []
+      (.setVisible filter-dialog false))
+    filter-dialog))
 
 (defn star-chart-panel
   "Creates the star chart panel."
@@ -75,10 +103,11 @@
   (let [panel (canvas-panel f {:minimumSize (dimension 360 180)
                                :maximumSize (dimension (:x-max panel-spec) (:y-max panel-spec))
                                :preferredSize (dimension (:x-max panel-spec) (:y-max panel-spec))}
-                            [])]
+                            [])
+        popup-menu (chart-popup-menu)]
     (add-key-binding panel "srcoll-up" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_UP 0) up-action)
     (add-key-binding panel "srcoll-down" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_DOWN 0) down-action)
     (add-key-binding panel "srcoll-left" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_LEFT 0) left-action)
     (add-key-binding panel "srcoll-right" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_RIGHT 0) right-action)
-    (.setComponentPopupMenu panel (chart-popup-menu))
+    (.setComponentPopupMenu panel popup-menu)
     panel))

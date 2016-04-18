@@ -21,19 +21,11 @@
         ))
 
 ; references to the chart data
-(def equirectangular-chart-spec (ref {:ra 0.0
-                                      :dec pi
-                                      :scale 1
-                                      :aspect 1
-                                      :star-mag-brightest -30.0
-                                      :star-mag-faintest 6.0
-                                      :ds-mag-brightest 0.0
-                                      :ds-mag-faintest 10.0}))
 (def equirectangular-chart-objects (ref []))
-(def equirectangular-panel-spec (ref {:x-max 5760 :y-max 2880}))
+
+(def equirectangular-panel-spec (ref {:x-max 2880 :y-max 1440}))
 
 ; accessors for the chart data
-(defn- chart-spec [] @equirectangular-chart-spec)
 (defn- panel-spec [] @equirectangular-panel-spec)
 (defn- panel-dimension [] (let [{:keys [x-max y-max]} @equirectangular-panel-spec]
                             [x-max y-max]))
@@ -62,10 +54,10 @@
   (set-rendering-hint gfx (rendering-hint-keys :antialialising) (antialias-hints :on))
   (draw-equirectangular-chart-background gfx)
   (draw-chart-grid gfx equirectangular-scale)
-  (draw-dso-labels gfx equirectangular-scale (filter (mag-filter 4) (get-stars)))
+  (draw-dso-labels gfx equirectangular-scale (filter (mag-filter 3) (get-stars)))
   (draw-dso-labels gfx equirectangular-scale (filter common-name? (filter (mag-filter 6) (get-deep-sky-objects))))
-  (draw-dsos gfx equirectangular-scale (filter (mag-filter 10.5) (get-deep-sky-objects)))
-  (draw-dsos gfx equirectangular-scale (filter (mag-filter 6.5) (get-stars))))
+  (draw-dsos gfx equirectangular-scale (filter (mag-filter 8) (get-deep-sky-objects)))
+  (draw-dsos gfx equirectangular-scale (filter (mag-filter 6) (get-stars))))
 
 (defn equirectangular-star-chart-panel
   "Creates the star chart panel."
@@ -84,9 +76,12 @@
   "Creates the star chart dialog."
   []
   (let [panel (equirectangular-star-chart-panel draw-equirectangular-chart (panel-spec))
+        popup-menu (chart-popup-menu)
         d (dialog {:title (i18n "label.chart.equirectangular.title")} [(scroll-pane panel)])]
     (add-mouse-listener panel 
                         (mouse-clicked-listener chart-panel-mouse-clicked d reverse-equirectangular-scale (filter (mag-filter 10.5) (get-deep-sky-objects))))
+    (.setComponentPopupMenu panel popup-menu)
+    (add-mouse-listener panel (popup-listener popup-menu))
     d))
 
 (def equirectangular-star-chart-action
@@ -96,4 +91,3 @@
           {:name (i18n "action.view.starchart.equirectangular")
            :accelerator (key-stroke \c :ctrl)
            :mnemonic nil}))
-

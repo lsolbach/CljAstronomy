@@ -21,19 +21,10 @@
         ))
 
 ; references to the chart data
-(def orthographic-chart-spec (ref {:ra 0.0
-                                  :dec pi
-                                  :scale 1
-                                  :aspect 1
-                                  :star-mag-brightest -30.0
-                                  :star-mag-faintest 6.0
-                                  :ds-mag-brightest 0.0
-                                  :ds-mag-faintest 10.0}))
 (def orthographic-panel-spec (ref {:x-max 1440 :y-max 1440}))
 (def orthographic-chart-objects (ref []))
 
 ; accessors for the chart data
-(defn- chart-spec [] @orthographic-chart-spec)
 (defn- panel-spec [] @orthographic-panel-spec)
 (defn- panel-dimension [] (let [{:keys [x-max y-max]} @orthographic-panel-spec]
                             [x-max y-max]))

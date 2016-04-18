@@ -8,6 +8,7 @@
 ;   You must not remove this notice, or any other, from this software.
 ;
 (ns org.soulspace.clj.astronomy.app.ui.swing.main-frame
+  (:require [reagi.core :as r])
   (:use [clojure.java.io]
         [clojure.tools.swing-utils :only [do-swing-and-wait]]
         [org.soulspace.clj.java awt]
@@ -112,12 +113,12 @@
 
 (defn time-panel
   []
-  (let [f-local-time (text-field {:text "" :columns 15 :editable false})
-        f-universal-time (text-field {:text "" :columns 15 :editable false})
-        f-julian-day (text-field {:text (str (as-julian-day @current-time)) :columns 15 :editable false})]
+  (let [f-local-time (text-field {:columns 15 :text "" :editable false})
+        f-universal-time (text-field {:columns 15 :text "" :editable false})
+        f-julian-day (text-field {:columns 15 :text (str (as-julian-day @current-time)) :editable false})]
     (defn update-time-panel
       [time]
-      )
+      (.setText f-julian-day (str (as-julian-day time))))
     (defn clear-time-panel
       [])
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
@@ -135,6 +136,11 @@
         f-local-time (text-field {:text "" :columns 15 :editable false})
         f-universal-time (text-field {:text "" :columns 15 :editable false})
         f-julian-day (text-field {:text (str (as-julian-day @current-time)) :columns 15 :editable false})]
+    (defn update-time-panel
+      [time]
+      (.setText f-julian-day (str (as-julian-day time))))
+    (defn clear-time-panel
+      [])
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.location.title") :font heading-font}) "left, wrap 1"]
