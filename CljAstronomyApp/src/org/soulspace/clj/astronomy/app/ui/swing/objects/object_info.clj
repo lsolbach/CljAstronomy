@@ -35,11 +35,12 @@
 (defn object-info-dialog
   "Creates an object info dialog"
   [parent o]
-  (let [b-ok (button {:text (i18n "button.ok")})
-        d (dialog parent {:title (i18n "label.object.info.title")}
-                  [(panel {:layout (mig-layout {:layoutConstraints "wrap 1"})}
-                         [(object-panel o)
-                          [b-ok "span, tag ok"]])])]
-    (.setVisible d true)
-    (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
-    d))
+  (if (seq o)
+    (let [b-ok (button {:text (i18n "button.ok")})
+          d (dialog parent {:title (i18n "label.object.info.title")}
+                    [(panel {:layout (mig-layout {:layoutConstraints "wrap 1"})}
+                           [(object-panel o)
+                            [b-ok "span, tag ok"]])])]
+      (.setVisible d true)
+      (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
+      d)))

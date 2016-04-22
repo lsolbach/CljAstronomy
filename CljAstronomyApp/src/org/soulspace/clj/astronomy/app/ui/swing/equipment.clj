@@ -1,7 +1,7 @@
 (ns org.soulspace.clj.astronomy.app.ui.swing.equipment
   (:import [javax.swing Action BorderFactory])
   (:use [org.soulspace.clj.java.awt]
-        [org.soulspace.clj.java.swing constants swinglib]
+        [org.soulspace.clj.java.swing constants event swinglib]
         [org.soulspace.clj.astronomy.app i18n equipment]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
 
@@ -12,21 +12,24 @@
 (defn optic-panel
   "Creates the optic panel."
   []
-  (let [f-name (text-field {})
-        f-type (text-field {})
-        f-aperture (number-field {})
-        f-focal-length (number-field {})
-        f-effectiveness (number-field {})
-        f-fixed-magnification (check-box {}) ; TODO Radio buttons
-        f-magnification (number-field {})
-        f-field-of-view (number-field {})
+  (let [f-name (text-field {:columns 15})
+        f-type (text-field {:columns 15})
+        f-aperture (number-field {:columns 15})
+        f-focal-length (number-field {:columns 15})
+        f-effectiveness (number-field {:columns 15})
+        f-fixed-magnification (check-box {:columns 15}) ; TODO Radio buttons
+        f-magnification (number-field {:columns 15})
+        f-field-of-view (number-field {:columns 15})
         f-available (check-box {})]
     (defn update-optic-panel
-      [optic])
+      [optic]
+      )
     (defn clear-optic-panel
-      [])
+      []
+      )
     (defn get-optic-panel
-      [])
+      []
+      )
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.equipment.optic.title") :font heading-font}) "left, wrap 10"]
@@ -48,7 +51,9 @@
   "Creates the optics panel."
   [optics]
   (let [l-optics (j-list {:model (optics-list-model optics)
-                          :selctionMode (list-selection-keys :single)})]
+                          :selectionMode (list-selection-keys :single)})
+        ;l-selection-listener (list-selection-listener )
+        ]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.equipment.optics.title") :font heading-font}) "left, wrap 10"]
@@ -73,9 +78,9 @@
 (defn eyepiece-panel
   "Creates the eyepiece panel."
   []
-  (let [f-name (text-field {})
-        f-focal-length (number-field {})
-        f-field-of-view (number-field {})
+  (let [f-name (text-field {:columns 15})
+        f-focal-length (number-field {:columns 15})
+        f-field-of-view (number-field {:columns 15})
         f-available (check-box {})]
     (defn update-eyepiece-panel
       [eyepiece])
@@ -100,7 +105,7 @@
   "Creates the eyepieces panel."
   [eyepieces]
   (let [l-eyepieces (j-list {:model (eyepieces-list-model eyepieces)
-                             :selctionMode (list-selection-keys :single)})]
+                             :selectionMode (list-selection-keys :single)})]
         (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.equipment.eyepieces.title") :font heading-font}) "left, wrap 10"]
@@ -127,14 +132,21 @@
 (defn barlow-reducer-panel
   "Creates the barlow/reducer panel."
   []
-  (let [f-name (text-field {})
-        f-type (text-field {})
-        f-factor (number-field {})
+  (let [f-name (text-field {:columns 15})
+        f-type (text-field {:columns 15})
+        f-factor (number-field {:columns 15})
         f-available (check-box {})]
     (defn update-barlow-reducer-panel
-      [barlow-reducer])
+      [barlow-reducer]
+      (.setText f-name (:name barlow-reducer))
+      (.setText f-type (:type barlow-reducer))
+      (.setText f-factor (:type barlow-reducer))
+      )
     (defn clear-barlow-reducer-panel
-      [])
+      []
+      (.setText f-name "")
+      (.setText f-type "")
+      )
     (defn get-barlow-reducer-panel
       [])
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
@@ -153,7 +165,7 @@
   "Creates the barlows/reducers panel."
   [barlows-reducers]
   (let [l-barlows-reducers (j-list {:model (barlows-reducers-list-model barlows-reducers)
-                                    :selctionMode (list-selection-keys :single)})]
+                                    :selectionMode (list-selection-keys :single)})]
         (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.equipment.barlows-reducers.title") :font heading-font}) "left, wrap 10"]
@@ -180,16 +192,22 @@
 (defn filter-panel
   "Creates the filter panel."
   []
-  (let [f-name (text-field {})
-        f-type (text-field {}) ; TODO combo box SKYGLOW/UHC/LINE/NEUTRAL DENSITY
+  (let [f-name (text-field {:columns 15})
+        f-type (text-field {:columns 15}) ; TODO combo box SKYGLOW/UHC/LINE/NEUTRAL DENSITY
         f-available (check-box {})]
     (defn update-filter-panel
       [filter]
+      (.setText f-name (:name filter))
+      (.setText f-type (:type filter))
       )
     (defn clear-filter-panel
-      [])
+      []
+      (.setText f-name "")
+      (.setText f-type "")
+      )
     (defn get-filter-panel
-      [])
+      []
+      )
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.equipment.filter.title") :font heading-font}) "left, wrap 10"]
@@ -206,7 +224,7 @@
   "Creates the filters panel."
   [filters]
   (let [l-filters (j-list {:model (filters-list-model filters)
-                           :selctionMode (list-selection-keys :single)})]
+                           :selectionMode (list-selection-keys :single)})]
         (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
                                  :columnConstraints "[left|grow]"})}
            [[(label {:text (i18n "label.equipment.filters.title") :font heading-font}) "left, wrap 10"]
