@@ -8,7 +8,7 @@ Ludger Solbach
 
 Copyright
 ---------
-Â© 2011-2013 Ludger Solbach
+© 2011-2016 Ludger Solbach
 
 License
 -------

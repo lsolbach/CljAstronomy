@@ -5,6 +5,10 @@
         [org.soulspace.clj.astronomy.app i18n equipment]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
 
+
+; TODO wire and show ok and cancel buttons
+; TODO create an equipment subpackage and move the different dialogs into their own namespaces
+
 (defn optics-table-model
   [coll]
   )
@@ -63,10 +67,14 @@
 (defn optics-dialog
   "Creates the optics dialog"
   ([optics]
-    (let [d (dialog {:title (i18n "label.equipment.optics.title")}
+    (let [b-ok (button {:text (i18n "button.ok")})
+          b-cancel (button {:text (i18n "button.cancel")})
+          d (dialog {:title (i18n "label.equipment.optics.title")}
                     [(vertical-split-pane {}
                        [(optics-panel optics)
                         (optic-panel)])])]
+      (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
+      (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))
   ([parent optics]
     (let [d (dialog parent {:title (i18n "label.equipment.optics.title")}
@@ -117,10 +125,14 @@
   ([]
     (eyepieces-dialog @eyepieces-list))
   ([eyepieces]
-    (let [d (dialog {:title (i18n "label.equipment.eyepieces.title")}
+    (let [b-ok (button {:text (i18n "button.ok")})
+          b-cancel (button {:text (i18n "button.cancel")})
+          d (dialog {:title (i18n "label.equipment.eyepieces.title")}
                     [(vertical-split-pane {}
                        [(eyepieces-panel eyepieces)
                         (eyepiece-panel)])])]
+      (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
+      (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))
   ([parent eyepieces]
     (let [d (dialog parent {:title (i18n "label.equipment.eyepieces.title")}
@@ -177,10 +189,14 @@
   ([]
     (barlows-reducers-dialog @barlows-reducers-list))
   ([barlows-reducers]
-    (let [d (dialog {:title (i18n "label.equipment.barlows-reducers.title")}
+    (let [b-ok (button {:text (i18n "button.ok")})
+          b-cancel (button {:text (i18n "button.cancel")})
+          d (dialog {:title (i18n "label.equipment.barlows-reducers.title")}
                     [(vertical-split-pane {}
                        [(barlows-reducers-panel barlows-reducers)
                         (barlow-reducer-panel)])])]
+      (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
+      (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))
   ([parent barlows-reducers]
     (let [d (dialog parent {:title (i18n "label.equipment.barlows-reducers.title")}
@@ -236,10 +252,14 @@
   ([]
     (filters-dialog @filters-list))
   ([filters]
-    (let [d (dialog {:title (i18n "label.equipment.filters.title")}
+    (let [b-ok (button {:text (i18n "button.ok")})
+          b-cancel (button {:text (i18n "button.cancel")})
+          d (dialog {:title (i18n "label.equipment.filters.title")}
                     [(vertical-split-pane {}
                        [(filters-panel filters)
                         (filter-panel)])])]
+      (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
+      (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))
   ([parent filters]
     (let [d (dialog parent {:title (i18n "label.equipment.filters.title")}
