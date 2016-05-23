@@ -1,6 +1,7 @@
 (ns org.soulspace.clj.astronomy.app.ui.swing.equipment
   (:import [javax.swing Action BorderFactory])
   (:use [org.soulspace.clj.java.awt]
+        [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants event swinglib]
         [org.soulspace.clj.astronomy.app i18n equipment]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
@@ -21,7 +22,7 @@
         f-aperture (number-field {:columns 15})
         f-focal-length (number-field {:columns 15})
         f-effectiveness (number-field {:columns 15})
-        f-fixed-magnification (check-box {:columns 15}) ; TODO Radio buttons
+        f-fixed-magnification (check-box {}) ; TODO Radio buttons
         f-magnification (number-field {:columns 15})
         f-field-of-view (number-field {:columns 15})
         f-available (check-box {})]
