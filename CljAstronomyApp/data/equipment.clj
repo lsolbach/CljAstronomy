@@ -1,5 +1,6 @@
-{:optics [{:name "Celestron Edge HD 925" :aperture 235 :focal-length 2350 :effectiveness 95 :available true}
-          {:name "8\" Dobson" :aperture 203 :focal-length 1220 :effectiveness 85  :available true}
+{
+ :optics [{:name "Celestron Edge HD 925" :aperture 235 :focal-length 2350 :effectiveness 95 :available true}
+          {:name "8\" GAT Dobson" :aperture 203 :focal-length 1220 :effectiveness 85  :available true}
           ]
  :eyepieces [{:name "Baader Hyperion Aspheric 36mm" :zoom true :focal-length 36  :fov 72 :available true}
              {:name "Baader Hyperion Zoom 8-24mm" :zoom true :focal-length 8  :focal-length-zoom 24 :fov 70 :available true}
@@ -19,6 +20,9 @@
            {:name "Baader OIII 2\"" :barrel 2 :available true}
            {:name "Baader H-beta 2\"" :barrel 2 :available true}
            {:name "Baader UV\IR Cut 2\"" :barrel 2 :available true}
+           {:name "Lumicon UHC 1 1/4\"" :barrel 1.25 :available true}
+           {:name "Lumicon OIII 1 1/4\"" :barrel 1.25 :available true}
+           {:name "Lumicon H-beta 1 1/4\"" :barrel 1.25 :available true}
            ]
  :cameras [{:name "Canon EOS 600 D" :type "DLSR" :size-y 0 :size-y 0 :size-pixel 0}
            ]
