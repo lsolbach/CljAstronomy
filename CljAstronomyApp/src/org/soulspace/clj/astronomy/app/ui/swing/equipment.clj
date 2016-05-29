@@ -74,6 +74,7 @@
                     [(vertical-split-pane {}
                        [(optics-panel optics)
                         (optic-panel)])])]
+      ; TODO add selection listener to update the optic panel on list selections
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
       (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))

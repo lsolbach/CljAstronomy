@@ -136,6 +136,7 @@
         f-local-time (text-field {:text "" :columns 15 :editable false})
         f-universal-time (text-field {:text "" :columns 15 :editable false})
         f-julian-day (text-field {:text (str (as-julian-day @current-time)) :columns 15 :editable false})]
+    (println (as-date @current-time))
     (defn update-time-panel
       [time]
       (.setText f-julian-day (str (as-julian-day time))))
