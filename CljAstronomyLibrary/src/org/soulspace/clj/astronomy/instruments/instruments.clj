@@ -1,6 +1,18 @@
+;
+;   Copyright (c) Ludger Solbach. All rights reserved.
+;   The use and distribution terms for this software are covered by the
+;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;   which can be found in the file license.txt at the root of this distribution.
+;   By using this software in any fashion, you are agreeing to be bound by
+;   the terms of this license.
+;   You must not remove this notice, or any other, from this software.
+;
 (ns org.soulspace.clj.astronomy.instruments.instruments
   (:use [org.soulspace.clj.math math java-math]))
 
+;
+; optics
+;
 (defn magnification
   "Calculates the magnification from the focal length of the optic and the focal length of the ocular."
   [optic-focal-length ocular-focal-length]
@@ -95,3 +107,32 @@
   "Calculates the resolution by the Rayleigh formula."
   [aperture]
   (/ 138.4 aperture))
+
+;
+; photographic
+;
+(defn exposure-value
+  "Calculates the exposure value for the given f-stop and shutter speed."
+  ([f-stop shutter-speed]
+    (log2 (/ (* f-stop f-stop) shutter-speed)))
+  ([f-factor shutter-speed iso]
+    (log2 (/ (* 100 f-stop f-stop) (* iso shutter-speed)))))
+
+(defn f-stop
+  "Calculates the aperture for the given exposure value and shutter speed (with the optional iso value)."
+  ([exposure-value shutter-speed]
+    )
+  ([exposure-value shutter-speed iso]
+    ))
+
+(defn shutter-speed
+  "Calculates the aperture for the given exposure value and f-stop (with the optional iso value)."
+  ([exposure-value f-stop]
+    )
+  ([exposure-value f-stop iso]
+    ))
+
+(defn shutter-speed
+  "Calculates the iso value given exposure value, f-stop and shutter speed."
+  [exposure-value f-stop shutter-speed]
+    )
