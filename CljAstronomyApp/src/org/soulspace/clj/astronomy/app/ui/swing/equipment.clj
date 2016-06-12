@@ -79,6 +79,7 @@
                         (optic-panel)])
                      (panel {} [[b-cancel "tag cancel"]
                                 [b-ok "span, tag ok"]])])]
+      ; TODO add selection listener to update the optic panel on list selections
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
       (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))

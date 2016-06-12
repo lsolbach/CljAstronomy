@@ -18,6 +18,14 @@
   (:import [java.awt.event MouseAdapter])
   )
  
+
+; TODO
+; define protocol for charts
+; ref fields for changeable stuff like chart specs, current objects and scaling functions, etc.
+; functions for chart actions like scrolling, zooming, etc.
+
+; implementation of common functions here in common and usage in protocol implementations
+
 (def chart-spec (ref {:faintest-stellar-mag 6.0
                                       :faintest-dso-mag 10.0}))
 
@@ -25,6 +33,11 @@
 (def down-action (action (fn [_] (println "DOWN"))))
 (def left-action (action (fn [_] (println "LEFT"))))
 (def right-action (action (fn [_] (println "RIGHT"))))
+(def zoom-in-action (action (fn [_] (println "ZOOM IN"))))
+(def zoom-out-action (action (fn [_] (println "ZOOM OUT"))))
+
+; TODO actions for toggling stars, deep sky objects, solar system objects, etc
+; TODO actions for raising/lowering brightness limits
 
 (defn chart-panel-mouse-clicked
   "Called when a mouse click happens in the chart panel."
@@ -109,5 +122,7 @@
     (add-key-binding panel "srcoll-down" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_DOWN 0) down-action)
     (add-key-binding panel "srcoll-left" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_LEFT 0) left-action)
     (add-key-binding panel "srcoll-right" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_RIGHT 0) right-action)
+    (add-key-binding panel "zoom-in" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_PLUS 0) zoom-in-action)
+    (add-key-binding panel "zoom-out" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_MINUS 0) zoom-out-action)    
     (.setComponentPopupMenu panel popup-menu)
     panel))
