@@ -1,6 +1,7 @@
 (ns org.soulspace.clj.astronomy.app.ui.swing.equipment
   (:import [javax.swing Action BorderFactory])
-  (:use [org.soulspace.clj.java.awt]
+  (:use [org.soulspace.clj.java awt]
+        [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants event swinglib]
         [org.soulspace.clj.astronomy.app i18n equipment]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
@@ -21,7 +22,7 @@
         f-aperture (number-field {:columns 15})
         f-focal-length (number-field {:columns 15})
         f-effectiveness (number-field {:columns 15})
-        f-fixed-magnification (check-box {:columns 15}) ; TODO Radio buttons
+        f-fixed-magnification (check-box {}) ; TODO Radio buttons
         f-magnification (number-field {:columns 15})
         f-field-of-view (number-field {:columns 15})
         f-available (check-box {})]
@@ -56,6 +57,9 @@
   [optics]
   (let [l-optics (j-list {:model (optics-list-model optics)
                           :selectionMode (list-selection-keys :single)})
+        b-add (button {:text (i18n "button.add")})
+        b-edit (button {:text (i18n "button.edit")})
+        b-remove (button {:text (i18n "button.remove")})
         ;l-selection-listener (list-selection-listener )
         ]
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
@@ -72,15 +76,21 @@
           d (dialog {:title (i18n "label.equipment.optics.title")}
                     [(vertical-split-pane {}
                        [(optics-panel optics)
-                        (optic-panel)])])]
+                        (optic-panel)])
+                     (panel {} [[b-cancel "tag cancel"]
+                                [b-ok "span, tag ok"]])])]
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
       (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))
   ([parent optics]
-    (let [d (dialog parent {:title (i18n "label.equipment.optics.title")}
+    (let [b-ok (button {:text (i18n "button.ok")})
+          b-cancel (button {:text (i18n "button.cancel")})
+          d (dialog parent {:title (i18n "label.equipment.optics.title")}
                     [(vertical-split-pane {}
                        [(optics-panel optics)
-                        (optic-panel)])])]
+                        (optic-panel)])
+                     (panel {} [[b-cancel "tag cancel"]
+                                [b-ok "span, tag ok"]])])]
       d)))
 
 (defn eyepiece-panel
@@ -130,15 +140,21 @@
           d (dialog {:title (i18n "label.equipment.eyepieces.title")}
                     [(vertical-split-pane {}
                        [(eyepieces-panel eyepieces)
-                        (eyepiece-panel)])])]
+                        (eyepiece-panel)])
+                     (panel {} [[b-cancel "tag cancel"]
+                                [b-ok "span, tag ok"]])])]
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
       (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))
   ([parent eyepieces]
-    (let [d (dialog parent {:title (i18n "label.equipment.eyepieces.title")}
+    (let [b-ok (button {:text (i18n "button.ok")})
+          b-cancel (button {:text (i18n "button.cancel")})
+          d (dialog parent {:title (i18n "label.equipment.eyepieces.title")}
                     [(vertical-split-pane {}
                        [(eyepieces-panel eyepieces)
-                        (eyepiece-panel)])])]
+                        (eyepiece-panel)])
+                     (panel {} [[b-cancel "tag cancel"]
+                                [b-ok "span, tag ok"]])])]
       d)))
 
 (defn barlow-reducer-panel
@@ -194,15 +210,21 @@
           d (dialog {:title (i18n "label.equipment.barlows-reducers.title")}
                     [(vertical-split-pane {}
                        [(barlows-reducers-panel barlows-reducers)
-                        (barlow-reducer-panel)])])]
+                        (barlow-reducer-panel)])
+                     (panel {} [[b-cancel "tag cancel"]
+                                [b-ok "span, tag ok"]])])]
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
       (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))
   ([parent barlows-reducers]
-    (let [d (dialog parent {:title (i18n "label.equipment.barlows-reducers.title")}
+    (let [b-ok (button {:text (i18n "button.ok")})
+          b-cancel (button {:text (i18n "button.cancel")})
+          d (dialog parent {:title (i18n "label.equipment.barlows-reducers.title")}
                     [(vertical-split-pane {}
                        [(barlows-reducers-panel barlows-reducers)
-                        (barlow-reducer-panel)])])]
+                        (barlow-reducer-panel)])
+                     (panel {} [[b-cancel "tag cancel"]
+                                [b-ok "span, tag ok"]])])]
       d)))
 
 (defn filter-panel
@@ -257,15 +279,21 @@
           d (dialog {:title (i18n "label.equipment.filters.title")}
                     [(vertical-split-pane {}
                        [(filters-panel filters)
-                        (filter-panel)])])]
+                        (filter-panel)])
+                     (panel {} [[b-cancel "tag cancel"]
+                                [b-ok "span, tag ok"]])])]
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
       (add-action-listener b-cancel (action-listener (fn [_] (.setVisible d false))))
       d))
   ([parent filters]
-    (let [d (dialog parent {:title (i18n "label.equipment.filters.title")}
+    (let [b-ok (button {:text (i18n "button.ok")})
+          b-cancel (button {:text (i18n "button.cancel")})
+          d (dialog parent {:title (i18n "label.equipment.filters.title")}
                     [(vertical-split-pane {}
                        [(filters-panel filters)
-                        (filter-panel)])])]
+                        (filter-panel)])
+                     (panel {} [[b-cancel "tag cancel"]
+                                [b-ok "span, tag ok"]])])]
       d)))
 
 (defn equipment-panel

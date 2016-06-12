@@ -12,6 +12,6 @@
                 ["org.clojure/data.csv, 0.1.2"]
                 ["reagi/reagi, 0.10.1"]
                 ["org.soulspace.clj/CljAstronomyLibrary, 0.1.2"]
-                ["org.soulspace.clj/CljSwingLibrary, 0.5.0"]
+                ["org.soulspace.clj/CljSwingLibrary, 0.5.1"]
                 ["org.soulspace.clj/CljApplicationLibrary, 0.6.0"]]
  ]
