@@ -115,24 +115,25 @@
   "Calculates the exposure value for the given f-stop and shutter speed."
   ([f-stop shutter-speed]
     (log2 (/ (* f-stop f-stop) shutter-speed)))
-  ([f-factor shutter-speed iso]
+  ([f-stop shutter-speed iso]
     (log2 (/ (* 100 f-stop f-stop) (* iso shutter-speed)))))
 
 (defn f-stop
   "Calculates the aperture for the given exposure value and shutter speed (with the optional iso value)."
   ([exposure-value shutter-speed]
-    )
+    (sqrt (* shutter-speed (pow 2 exposure-value))))
   ([exposure-value shutter-speed iso]
-    ))
+    (sqrt (/ (* shutter-speed (pow 2 exposure-value) iso) 100))))
 
 (defn shutter-speed
   "Calculates the aperture for the given exposure value and f-stop (with the optional iso value)."
   ([exposure-value f-stop]
-    )
+    (/ (* f-stop f-stop) (pow 2 exposure-value)))
   ([exposure-value f-stop iso]
-    ))
+    (/ (* 100 f-stop f-stop) (* (pow 2 exposure-value) iso))))
 
-(defn shutter-speed
+(defn iso
   "Calculates the iso value given exposure value, f-stop and shutter speed."
   [exposure-value f-stop shutter-speed]
-    )
+    (/ (* 100 f-stop f-stop) (* (pow 2 exposure-value) shutter-speed)))
+
