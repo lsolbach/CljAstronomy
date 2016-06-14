@@ -3,7 +3,8 @@
   (:use [org.soulspace.clj.java awt]
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants event swinglib]
-        [org.soulspace.clj.astronomy.app i18n equipment]
+        [org.soulspace.clj.astronomy.app i18n]
+        [org.soulspace.clj.astronomy.app.instruments equipment]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
 
 
