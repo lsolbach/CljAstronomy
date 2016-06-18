@@ -1,7 +1,7 @@
 (ns org.soulspace.clj.astronomy.app.ui.swing.objects.object-list
   (:use [org.soulspace.clj.java awt]
         [org.soulspace.clj.java.awt event]
-        [org.soulspace.clj.java.swing constants swinglib]
+        [org.soulspace.clj.java.swing constants event swinglib]
         [org.soulspace.clj.astronomy.app i18n]
         [org.soulspace.clj.astronomy.app.data catalogs common labels filters constellations]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
@@ -9,7 +9,7 @@
 (def object-list (ref []))
 
 (defn set-object-list
-  "Updates the object list."
+  "Sets the object list."
   [coll]
   (dosync (ref-set object-list coll)))
 
@@ -17,7 +17,7 @@
   [coll]
   (mapseq-table-model
     [{:label (i18n "label.object.id") :key :id :edit false :converter str}
-     {:label (i18n "label.object.name") :key :name :edit false :converter str} ; object-label
+     {:label (i18n "label.object.name") :key identity :edit false :converter object-label} ; object-label
      {:label (i18n "label.object.constellation") :key :constellation :edit false :converter constellation-label}
      {:label (i18n "label.object.type") :key :type :edit false :converter type-label}
      {:label (i18n "label.object.ra") :key :ra :edit false :converter ra-label}
@@ -62,7 +62,8 @@
       [])
     (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 4, fill"
                                  :columnConstraints "[left|grow]"})}
-           [(label {:text (i18n "label.object.filter.name")}) f-name
+           [[(label {:text (i18n "label.object.filter.title") :font heading-font}) "left, wrap"]
+            (label {:text (i18n "label.object.filter.name")}) f-name
             (label {:text (i18n "label.object.filter.constellation")}) f-constellation
             (label {:text (i18n "label.object.filter.ra-min")}) f-ra-min
             (label {:text (i18n "label.object.filter.ra-max")}) f-ra-max
@@ -79,17 +80,31 @@
   ([]
     (object-list-panel @object-list))
   ([coll]
+    (set-object-list coll)
     (let [t-object-list (table {:model (objectlist-table-model coll) :gridColor java.awt.Color/DARK_GRAY})
+     t-selection-model (get-selection-model t-object-list)
           p (panel {:layout (mig-layout {:layoutConstraints "wrap 1, insets 10, fill"
                                          :columnConstraints "[left|grow]"
                                          :rowConstraints "[grow]"})}
-                   [(scroll-pane t-object-list)])]
+              [[(label {:text (i18n "label.object.list.title") :font heading-font}) "left, wrap"]
+                    [(scroll-pane t-object-list) "span, grow"]
+               ])]
+
+      (defn show-object
+        [e]
+        (when-not (.getValueIsAdjusting e)
+          (println (nth coll (.getFirstIndex e)))))
+      
       (defn update-object-list-panel
         [object-list]
         )
       (defn clear-object-list-panel
         [object-list]
         )
+      
+      (set-selection-mode t-selection-model (list-selection-keys :single))
+      (add-list-selection-listener t-selection-model (list-selection-listener show-object))
+      
       p)))
 
 (defn object-list-dialog
@@ -102,12 +117,10 @@
           filter-panel (object-filter-panel)
           list-panel (object-list-panel)
           d (dialog {:title (i18n "label.object.list.title")}
-                    [(panel {:layout (mig-layout {:layoutConstraints "wrap 1"
+                    [(panel {:layout (mig-layout {:layoutConstraints "fill, wrap 1"
                                                   :columnConstraints "[left|grow]"})}
-                            [[(label {:text (i18n "label.object.filter.title") :font heading-font}) "left"]
-                             filter-panel
-                             [(label {:text (i18n "label.object.list.title") :font heading-font}) "left"]
-                             (scroll-pane list-panel)
+                            [filter-panel
+                             [list-panel "span, grow"]
                              [b-ok "span, tag ok"]])])]
       (.setVisible d true)
       (add-action-listener b-ok (action-listener (fn [_] (.setVisible d false))))
