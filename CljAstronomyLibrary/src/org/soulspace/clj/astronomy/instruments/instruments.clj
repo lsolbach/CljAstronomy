@@ -111,12 +111,14 @@
 ;
 ; photographic
 ;
+(def pixel-size-eos600d (/ 0.0222 5184))
+
 (defn exposure-value
-  "Calculates the exposure value for the given f-stop and shutter speed."
-  ([f-stop shutter-speed]
-    (log2 (/ (* f-stop f-stop) shutter-speed)))
-  ([f-stop shutter-speed iso]
-    (log2 (/ (* 100 f-stop f-stop) (* iso shutter-speed)))))
+"Calculates the exposure value for the given f-stop and shutter speed."
+([f-stop shutter-speed]
+  (log2 (/ (* f-stop f-stop) shutter-speed)))
+([f-stop shutter-speed iso]
+  (log2 (/ (* 100 f-stop f-stop) (* iso shutter-speed)))))
 
 (defn f-stop
   "Calculates the aperture for the given exposure value and shutter speed (with the optional iso value)."
@@ -136,4 +138,18 @@
   "Calculates the iso value given exposure value, f-stop and shutter speed."
   [exposure-value f-stop shutter-speed]
     (/ (* 100 f-stop f-stop) (* (pow 2 exposure-value) shutter-speed)))
+
+(defn hyperfocal-distance
+  "Calculates the hyperfocal distance."
+  ([focal-length f-stop]
+    (hyperfocal-distance focal-length f-stop 1/1500))
+  ([focal-length f-stop circle-of-confusion]
+    (+ (/ (* focal-length focal-length) (* f-stop circle-of-confusion)) focal-length)))
+
+(defn hyperfocal-distance-approximation
+  "Calculates the hyperfocal distance."
+  ([focal-length f-stop]
+    (hyperfocal-distance-approximation focal-length f-stop 1/1500))
+  ([focal-length f-stop circle-of-confusion]
+    (/ (* focal-length focal-length) (* f-stop circle-of-confusion))))
 
