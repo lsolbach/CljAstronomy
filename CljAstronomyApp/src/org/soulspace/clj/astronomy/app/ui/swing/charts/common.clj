@@ -39,6 +39,45 @@
 ; TODO actions for toggling stars, deep sky objects, solar system objects, etc
 ; TODO actions for raising/lowering brightness limits
 
+(defn chart-filter-dialog
+  "Creates the chart filter panel."
+  ([]
+    (chart-filter-dialog chart-spec))
+  ([chart-spec]
+    (let [f-faintest-stellar-mag (number-field {:columns 5})
+          f-faintest-dso-mag (number-field {:columns 5})
+          b-ok (button {})
+          b-cancel (button {})
+          p (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                         :columnConstraints "[left|grow]"})}
+                   [[(label {:text (i18n "label.chart.filter.title") :font heading-font}) "left, wrap 10"]
+                    (label {:text (i18n "label.chart.filter.mag-faintest-stars")}) f-faintest-stellar-mag
+                    (label {:text (i18n "label.chart.filter.mag-faintest-dsos")}) f-faintest-dso-mag])
+          filter-dialog (dialog {}
+                                [p])]
+      (defn update-chart-filter-panel
+        "Updates the panel with the given chart spec."
+        [chart-spec]
+        (.setText f-faintest-stellar-mag (chart-spec :faintest-stellar-mag))
+        (.setText f-faintest-dso-mag (chart-spec :faintest-dso-mag)))
+      
+      (defn read-chart-filter-panel
+        "Reads the panel values and returns a chart spec."
+        []
+        {:faintest-stellar-mag (get-number f-faintest-stellar-mag)
+         :faintest-dso-mag (get-number f-faintest-dso-mag)})
+      
+      (defn chart-filter-ok
+        "Ok behaviour of the filter dialog."
+        [])
+      
+      (defn chart-filter-cancel
+        "Cancel behaviour of the filter dialog."
+        []
+        (.setVisible filter-dialog false))
+      (.setVisible filter-dialog true)
+      filter-dialog)))
+  
 (defn chart-panel-mouse-clicked
   "Called when a mouse click happens in the chart panel."
   [event parent reverse-scale objects]
@@ -52,7 +91,7 @@
   [event args]
   (println "Resize" event))
 
-(def chart-filter-action (action (fn [e] (println "filter")) {:name (i18n "action.chart.filter")}))
+(def chart-filter-action (action (fn [e] (println "filter") (chart-filter-dialog)) {:name (i18n "action.chart.filter")}))
 (def chart-info-action (action (fn [e] (println "info")) {:name (i18n "action.chart.info")}))
 
 (defn chart-popup-menu
@@ -73,42 +112,6 @@
   (proxy [MouseAdapter] []
     (mousePressed [event] (show-popup popup event))
     (mouseReleased [event] (show-popup popup event))))
-
-(defn chart-filter-dialog
-  "Creates the chart filter panel."
-  [chart-spec]
-  (let [f-faintest-stellar-mag (number-field {:columns 5})
-        f-faintest-dso-mag (number-field {:columns 5})
-        b-ok (button {})
-        b-cancel (button {})
-        p (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
-                                       :columnConstraints "[left|grow]"})}
-                 [[(label {:text (i18n "label.chart.filter.title") :font heading-font}) "left, wrap 10"]
-                  (label {:text (i18n "label.chart.filter.mag-faintest-stars")}) f-faintest-stellar-mag
-                  (label {:text (i18n "label.chart.filter.mag-faintest-dsos")}) f-faintest-dso-mag])
-        filter-dialog (dialog {}
-                              [p])]
-    (defn update-chart-filter-panel
-      "Updates the panel with the given chart spec."
-      [chart-spec]
-      (.setText f-faintest-stellar-mag (chart-spec :faintest-stellar-mag))
-      (.setText f-faintest-dso-mag (chart-spec :faintest-dso-mag)))
-
-    (defn read-chart-filter-panel
-      "Reads the panel values and returns a chart spec."
-      []
-      {:faintest-stellar-mag (get-number f-faintest-stellar-mag)
-       :faintest-dso-mag (get-number f-faintest-dso-mag)})
-
-    (defn chart-filter-ok
-      "Ok behaviour of the filter dialog."
-      [])
-
-    (defn chart-filter-cancel
-      "Cancel behaviour of the filter dialog."
-      []
-      (.setVisible filter-dialog false))
-    filter-dialog))
 
 (defn star-chart-panel
   "Creates the star chart panel."
