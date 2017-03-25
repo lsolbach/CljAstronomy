@@ -153,3 +153,23 @@
   ([focal-length f-stop circle-of-confusion]
     (/ (* focal-length focal-length) (* f-stop circle-of-confusion))))
 
+(defn angle-of-view
+  "Calculates the angle of view"
+  [focal-length size]
+  (* 2 (atan (/ size (* 2 focal-length)))))
+
+(defn diagonal
+  "Calculates the diagonal of a rectangle."
+  ([a]
+    (sqrt (* 2 a a)))
+  ([a b]
+    (sqrt (+ (* a a) (* b b)))))
+
+(defn panoramic-images
+  ([focal-length size]
+    )
+  ([focal-length size overlap]
+    )
+  ([focal-length size arc-size overlap]
+    (/ arc-size
+       (* (angle-of-view focal-length size) (- 1 overlap)))))
