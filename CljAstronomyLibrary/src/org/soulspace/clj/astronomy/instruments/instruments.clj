@@ -166,6 +166,7 @@
     (sqrt (+ (* a a) (* b b)))))
 
 (defn panoramic-images
+  "Calculates the number of images needed for a panorama."
   ([focal-length size]
     )
   ([focal-length size overlap]
