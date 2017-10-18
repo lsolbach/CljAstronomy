@@ -3,7 +3,8 @@
  :project "org.soulspace.clj"
  :type :library
  :version "0.2.0"
- :description "A library of astronomical algorithms in clojure."
+ :description "CljAstronomyLibrary is a library of astronomical algorithms in clojure"
+ :license ["Eclipse Public License 1.0" "http://www.eclipse.org/legal/epl-v10.html"]
  :scm-url "https://github.com/lsolbach/CljAstronomy"
  :license ["Eclipse Public License 1.0" "http://www.eclipse.org/legal/epl-v10.html"]
  :plugins [["org.soulspace.baumeister/ClojurePlugin"]

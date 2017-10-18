@@ -3,7 +3,9 @@
  :project "org.soulspace.clj.astronomy"
  :type :appfrontend
  :version "0.2.0"
- :description "An Astronomical Application written in Clojure."
+ :description "The CljAstronomyApp is an astronomical application written in Clojure"
+ :license ["Eclipse Public License 1.0" "http://www.eclipse.org/legal/epl-v10.html"]
+ :scm-url "https://github.com/lsolbach/CljAstronomy"
  :main "org.soulspace.clj.astronomy.app.application"
  :plugins [["org.soulspace.baumeister/ClojurePlugin"]
            ["org.soulspace.baumeister/PackagePlugin"]]
