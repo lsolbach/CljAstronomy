@@ -135,7 +135,7 @@
     (/ (* 100 f-stop f-stop) (* (pow 2 exposure-value) iso))))
 
 (defn iso
-  "Calculates the iso value given exposure value, f-stop and shutter speed."
+  "Calculates the iso value for the given exposure value, f-stop and shutter speed."
   [exposure-value f-stop shutter-speed]
     (/ (* 100 f-stop f-stop) (* (pow 2 exposure-value) shutter-speed)))
 
@@ -154,7 +154,7 @@
     (/ (* focal-length focal-length) (* f-stop circle-of-confusion))))
 
 (defn angle-of-view
-  "Calculates the angle of view"
+  "Calculates the angle of view of an image for the given focal length and sensor size."
   [focal-length size]
   (* 2 (atan (/ size (* 2 focal-length)))))
 
@@ -165,12 +165,12 @@
   ([a b]
     (sqrt (+ (* a a) (* b b)))))
 
-(defn panoramic-images
-  "Calculates the number of images needed for a panorama."
+(defn panoramic-image-count
+  "Calculates the number of images needed for a panorama given the focal length, sensor size, panorama arc and overlap."
   ([focal-length size]
-    )
+    (panoramic-images focal-length size (* 2 pi) 0))
   ([focal-length size overlap]
-    )
+    (panoramic-images focal-length size (* 2 pi) overlap))
   ([focal-length size arc-size overlap]
     (/ arc-size
        (* (angle-of-view focal-length size) (- 1 overlap)))))
