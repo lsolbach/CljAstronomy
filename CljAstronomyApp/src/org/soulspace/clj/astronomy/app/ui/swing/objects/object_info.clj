@@ -25,11 +25,11 @@
                   (label {:text (i18n "label.object.dec")}) f-dec
                   (label {:text (i18n "label.object.mag")}) f-mag])]
     (defn update-object-panel
-      [object]
-      )
+      [object])
+
     (defn clear-object-panel
-      []
-      )
+      [])
+
     p))
 
 (defn object-info-dialog

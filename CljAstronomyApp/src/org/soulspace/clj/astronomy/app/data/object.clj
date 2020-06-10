@@ -2,10 +2,8 @@
 
 ; astronomical objects
 
-(defprotocol AstronomicalObject
-  )
+(defprotocol AstronomicalObject)
 
 
-(defprotocol Coordinates ; positional object?
-  
-  )
+
+(defprotocol Coordinates) ; positional object?

@@ -13,7 +13,7 @@
 ; TODO define an angle protocol?
 ; TODO angle operations: +, - (*, /)?
 
-; pattern for parsing an angle given in signed degrees, minutes and seconds (e.g. -80° 7' 30")
+; pattern for parsing an angle given in signed degrees, minutes and seconds, e.g. -80° 7' 30''
 (def dms-pattern #"(\+|-)?(\d+)°\s*(?:(\d+)'\s*(?:(\d+(?:\.\d+)?)\")?)?")
 (def ha-pattern #"(\d+)h\s*(?:(\d+)'\s*(?:(\d+(?:\.\d+)?)\")?)?")
 
@@ -27,7 +27,7 @@
 (defn- parse-double
   "Resilient double conversion."
   [x]
-  (try 
+  (try
     (Double/parseDouble x)
     (catch Exception e 0.0)))
 

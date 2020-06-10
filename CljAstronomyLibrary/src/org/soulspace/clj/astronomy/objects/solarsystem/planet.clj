@@ -19,40 +19,40 @@
   (planetocentric-latitude
     [planet planetographic-latitude]
     "Calculates the distance of the center of the planet in equatorial radiuses.")
-  
+
   (parallel-radius
     [planet planetographic-latitude]
     "Calculates the radius of the parallel circle at the given planetographic latitude.")
-  
+
   (longitude-distance-per-degree
     [planet planetographic-latitude]
     "Calculates the distance per degree of longitude for the given planetographic latitude.")
-  
+
   (curvature-radius
     [planet planetographic-latitude]
     "Calculates the curvature radius for the given planetographic latitude.")
-  
+
   (latitude-distance-per-degree
     [planet planetographic-latitude]
     "Calculates the distance per degree of latitude for the given planetographic latitude.")
-  
+
   (linear-velocity
     [planet planetographic-latitude]
     "Calculates The linear velocity with respect to the stars at the given latitude in meters per second.")
-  
+
   (planetocentric-parameters-by-height
     [planet planetographic-latitude height]
     "Calculates values needed for the planetocentric distance.")
-  
+
   (planetocentric-distance
     [planet geographic-latitude height]
     "Calculates the distance of the center of the earth in equatorial radiuses.")
-  
+
   (planetodesic-distance
     [planet long1 lat1 long2 lat2]
-    "Calculates the planetodesic distance between 2 positions on the planet.")
-  
-  )
+    "Calculates the planetodesic distance between 2 positions on the planet."))
+
+
 
 (defrecord PlanetImpl
   [equatorial-radius flattening polar-radius eccentricity omega]
@@ -61,7 +61,7 @@
     [planet planetographic-latitude]
     (atan (* (/ (sqr (:equatorial-radius planet)) (sqr (:polar-radius planet)))
            (tan planetographic-latitude))))
-  
+
   (parallel-radius
     [planet planetographic-latitude]
     (/ (* (:equatorial-radius planet)
@@ -69,12 +69,12 @@
        (sqrt (- 1
                 (* (sqr (:eccentricity planet))
                    (sqr (sin planetographic-latitude)))))))
-  
+
   (longitude-distance-per-degree
     [planet planetographic-latitude]
     (* (/ pi 180)
        (parallel-radius planet planetographic-latitude)))
-  
+
   (curvature-radius
     [planet planetographic-latitude]
     (/ (* (:equatorial-radius planet)
@@ -83,16 +83,16 @@
                (* (sqr (:eccentricity planet))
                   (sqr (sin planetographic-latitude))))
             3/2)))
-  
+
   (latitude-distance-per-degree
     [planet planetographic-latitude]
     (* (/ pi 180)
        (curvature-radius planet planetographic-latitude)))
-  
+
   (linear-velocity
     [planet planetographic-latitude]
     (* (:omega planet) (parallel-radius planet planetographic-latitude)))
-  
+
   (planetocentric-parameters-by-height
     [planet planetographic-latitude height]
     (let [u (atan (* (/ (:polar-radius planet)
@@ -117,11 +117,11 @@
        :rho rho
        :rho-sin-planetocentric-lat rho-sin-gc-lat
        :rho-cos-planetocentric-lat rho-cos-gc-lat}))
-  
+
   (planetocentric-distance
     [planet geographic-latitude height]
     (:rho (planetocentric-parameters-by-height planet geographic-latitude height)))
-  
+
   (planetodesic-distance
     [planet long1 lat1 long2 lat2]
     (let [F (/ (+ lat1 lat2)
@@ -147,6 +147,4 @@
                (+ 1
                   (* (:flattening planet) H1 (sqr (sin F)) (sqr (cos G)))
                   (* -1 (:flattening planet) H2 (sqr (cos F)) (sqr (sin G)))))]
-      s))
-  )
-
+      s)))

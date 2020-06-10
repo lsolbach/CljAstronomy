@@ -9,5 +9,4 @@
 ;
 (ns org.soulspace.clj.astronomy.objects.orbital-elements)
 
-(defprotocol OrbitalElements
-  )
+(defprotocol OrbitalElements)

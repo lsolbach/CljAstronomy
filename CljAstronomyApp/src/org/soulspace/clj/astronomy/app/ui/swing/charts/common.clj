@@ -15,9 +15,9 @@
         [org.soulspace.clj.astronomy.app.data common filters catalogs]
         [org.soulspace.clj.astronomy.app.ui.swing common]
         [org.soulspace.clj.astronomy.app.ui.swing.objects object-info])
-  (:import [java.awt.event MouseAdapter])
-  )
- 
+  (:import [java.awt.event MouseAdapter]))
+
+
 
 ; TODO
 ; define protocol for charts
@@ -42,47 +42,47 @@
 (defn chart-filter-dialog
   "Creates the chart filter panel."
   ([]
-    (chart-filter-dialog chart-spec))
+   (chart-filter-dialog chart-spec))
   ([chart-spec]
-    (let [f-faintest-stellar-mag (number-field {:columns 5})
-          f-faintest-dso-mag (number-field {:columns 5})
-          b-ok (button {})
-          b-cancel (button {})
-          p (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
-                                         :columnConstraints "[left|grow]"})}
-                   [[(label {:text (i18n "label.chart.filter.title") :font heading-font}) "left, wrap 10"]
-                    (label {:text (i18n "label.chart.filter.mag-faintest-stars")}) f-faintest-stellar-mag
-                    (label {:text (i18n "label.chart.filter.mag-faintest-dsos")}) f-faintest-dso-mag])
-          filter-dialog (dialog {}
-                                [p])]
-      (defn update-chart-filter-panel
-        "Updates the panel with the given chart spec."
-        [chart-spec]
-        (.setText f-faintest-stellar-mag (chart-spec :faintest-stellar-mag))
-        (.setText f-faintest-dso-mag (chart-spec :faintest-dso-mag)))
-      
-      (defn read-chart-filter-panel
-        "Reads the panel values and returns a chart spec."
-        []
-        {:faintest-stellar-mag (get-number f-faintest-stellar-mag)
-         :faintest-dso-mag (get-number f-faintest-dso-mag)})
-      
-      (defn chart-filter-ok
-        "Ok behaviour of the filter dialog."
-        [])
-      
-      (defn chart-filter-cancel
-        "Cancel behaviour of the filter dialog."
-        []
-        (.setVisible filter-dialog false))
-      (.setVisible filter-dialog true)
-      filter-dialog)))
-  
+   (let [f-faintest-stellar-mag (number-field {:columns 5})
+         f-faintest-dso-mag (number-field {:columns 5})
+         b-ok (button {})
+         b-cancel (button {})
+         p (panel {:layout (mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
+                                        :columnConstraints "[left|grow]"})}
+                  [[(label {:text (i18n "label.chart.filter.title") :font heading-font}) "left, wrap 10"]
+                   (label {:text (i18n "label.chart.filter.mag-faintest-stars")}) f-faintest-stellar-mag
+                   (label {:text (i18n "label.chart.filter.mag-faintest-dsos")}) f-faintest-dso-mag])
+         filter-dialog (dialog {}
+                               [p])]
+     (defn update-chart-filter-panel
+       "Updates the panel with the given chart spec."
+       [chart-spec]
+       (.setText f-faintest-stellar-mag (chart-spec :faintest-stellar-mag))
+       (.setText f-faintest-dso-mag (chart-spec :faintest-dso-mag)))
+
+     (defn read-chart-filter-panel
+       "Reads the panel values and returns a chart spec."
+       []
+       {:faintest-stellar-mag (get-number f-faintest-stellar-mag)
+        :faintest-dso-mag (get-number f-faintest-dso-mag)})
+
+     (defn chart-filter-ok
+       "Ok behaviour of the filter dialog."
+       [])
+
+     (defn chart-filter-cancel
+       "Cancel behaviour of the filter dialog."
+       []
+       (.setVisible filter-dialog false))
+     (.setVisible filter-dialog true)
+     filter-dialog)))
+
 (defn chart-panel-mouse-clicked
   "Called when a mouse click happens in the chart panel."
   [event parent reverse-scale objects]
   (let [o (find-object-by-coordinates (reverse-scale (point-coordinates (.getPoint event)))
-                                                 (filter (mag-filter 10.5) objects))]
+                                      (filter (mag-filter 10.5) objects))]
     (println o)
     (object-info-dialog parent o)))
 
@@ -126,6 +126,6 @@
     (add-key-binding panel "srcoll-left" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_LEFT 0) left-action)
     (add-key-binding panel "srcoll-right" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_RIGHT 0) right-action)
     (add-key-binding panel "zoom-in" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_PLUS 0) zoom-in-action)
-    (add-key-binding panel "zoom-out" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_MINUS 0) zoom-out-action)    
+    (add-key-binding panel "zoom-out" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_MINUS 0) zoom-out-action)
     (.setComponentPopupMenu panel popup-menu)
     panel))

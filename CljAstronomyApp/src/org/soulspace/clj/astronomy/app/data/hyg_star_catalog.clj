@@ -55,8 +55,8 @@
      :mag-var-max (if (seq var-max) (java.lang.Double/valueOf var-max))
      :comp (if (seq comp) comp)
      :comp-primary (if (seq comp-primary) comp-primary)
-     :base (if (seq base) base)
-     }))
+     :base (if (seq base) base)}))
+
 
 (defn parse-hyg-star-mapping-transformer
   "Creates a mapping transformation from csv vector to hyg catalog star."

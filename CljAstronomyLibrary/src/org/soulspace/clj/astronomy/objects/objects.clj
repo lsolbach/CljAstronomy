@@ -11,49 +11,49 @@
 
 ; basic protocol for all astronomical objects (e.g. stars, galaxies, clusters)
 (defprotocol AstronomicalObject
-  "Base protocol for all astronomical objects (e.g. stars, galaxies, clusters)."
-  )
+  "Base protocol for all astronomical objects (e.g. stars, galaxies, clusters).")
+
 
 (defprotocol StellarObject
-  "Protocol for stellar objects (e.g. stars)."
-  )
+  "Protocol for stellar objects (e.g. stars).")
+
 
 (defprotocol NonStellarObject
-  "Protocol for non stellar objects (e.g. galaxies, clusters and nebulars)"
-  )
+  "Protocol for non stellar objects (e.g. galaxies, clusters and nebulars).")
+
 
 (defprotocol Star
-  "Protocol for stars."
-  )
+  "Protocol for stars.")
+
 
 (defprotocol EmissionNebula
-  "Protocol for ."
-  )
+  "Protocol for emission nebulae.")
+
 
 (defprotocol ReflectionNebula
-  "Protocol for ."
-  )
+  "Protocol for reflection nebulae.")
+
 
 (defprotocol PlanetaryNebula
-  "Protocol for ."
-  )
+  "Protocol for planetary nebulae.")
+
 
 (defprotocol DarkNebula
-  "Protocol for ."
-  )
+  "Protocol for dark nebula.")
+
 
 (defprotocol OpenCluster
-  "Protocol for ."
-  )
+  "Protocol for open clusters.")
+
 
 (defprotocol GlobularCluster
-  "Protocol for ."
-  )
+  "Protocol for globular clusters.")
+
 
 (defprotocol Galaxy
-  "Protocol for ."
-  )
+  "Protocol for galaxies.")
+
 
 (defprotocol GalaxyCluster
-  "Protocol for ."
-  )
+  "Protocol for galaxy clusters.")
+  

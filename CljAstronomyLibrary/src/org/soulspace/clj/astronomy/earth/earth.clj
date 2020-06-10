@@ -27,29 +27,29 @@
 (defprotocol Position
   (longitude [position] "Returns the longitude of this position.")
   (latitude [position] "Returns the latitude of this position.")
-  (height [position] "Returns the height of this position.")
-  )
+  (height [position] "Returns the height of this position."))
+
 
 (defprotocol GeographicPosition
-  (geocentric-position [position] "Returns the geocentric position of this geographic position.")
-  )
+  (geocentric-position [position] "Returns the geocentric position of this geographic position."))
+
 
 (defrecord GeographicPositionImpl
   [longitude latitude height]
   Position
   (longitude [position] (:longitude position))
   (latitude [position] (:latitude position))
-  (height [position] (:height position))  
+  (height [position] (:height position))
   GeographicPosition
-  (geocentric-position [position])
-  )
+  (geocentric-position [position]))
+
 
 (defprotocol GeocentricPosition)
 
 (defrecord GeocentricPositionImpl
   [longitude latitude height]
-  GeocentricPosition
-  )
+  GeocentricPosition)
+
 
 (defn geocentric-latitude
   "Calculates the geocentric latitude for the given geographic latitude."
@@ -70,9 +70,9 @@
 (defn geocentric-distance
   "Calculates the distance of the center of the earth in equatorial radiuses."
   ([geographic-latitude]
-    (+ 0.9983271 (* 0.0016764 (cos (* 2 geographic-latitude))) (* -0.0000035 (cos (* 4 geographic-latitude)))))
+   (+ 0.9983271 (* 0.0016764 (cos (* 2 geographic-latitude))) (* -0.0000035 (cos (* 4 geographic-latitude)))))
   ([geographic-latitude height]
-    (:rho (geocentric-parameters-by-height geographic-latitude height))))
+   (:rho (geocentric-parameters-by-height geographic-latitude height))))
 
 (defn parallel-radius [geographic-latitude]
   "Calculates the radius of the parallel circle at the given geographic latitude."
@@ -158,5 +158,3 @@
         l-moon (mean-longitude-moon t)]
     ; TODO test
     (+ (* 9.20 (cos omega)) (* 0.57 (cos (* 2 l-sun))) (* 0.10 (cos (* 2 l-moon))) (* 0.09 (cos (* 2 omega))))))
-
-

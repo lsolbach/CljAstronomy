@@ -24,12 +24,12 @@
   (angular-resolution [optic wave-length] "Calculates the resolution for the wave length, if given, by the Dawes formula.")
   (dawes-resolution [optic] "Calculates the resolution by the Dawes formula.")
   (rayleigh-resolution [optic] "Calculates the resolution by the Rayleigh formula.")
-  (fixed-magnification? [optic] "Returns true if the magnification cannot be changed, false otherwise.")
-  )
+  (fixed-magnification? [optic] "Returns true if the magnification cannot be changed, false otherwise."))
+
 
 (defprotocol FixedMagnificationOptic
-  (fixed-exit-pupil [optic] "Calculates the exit pupil of the optic.")
-  )
+  (fixed-exit-pupil [optic] "Calculates the exit pupil of the optic."))
+
 
 (defprotocol VariableMagnificationOptic
   (magnification [optic ocular] "Calculates the magnification of the optic with the given ocular.")
@@ -38,8 +38,8 @@
   (minimal-magnification [optic] "Calculates the minimal useful magnification for the telescope.")
   (normal-magnification [optic] "Calculates the normal magnification for the telescope.")
   (beneficial-magnification [optic] "Calculates the normal magnification for the telescope.")
-  (comfortable-magnification [optic] "Calculates the maximal useful magnification for the telescope.")
-  )
+  (comfortable-magnification [optic] "Calculates the maximal useful magnification for the telescope."))
+
 
 (defrecord VariableOpticImpl
   [name type aperture focal-length obstruction effectiveness magnification available]
@@ -58,7 +58,7 @@
   (angular-resolution [optic wave-length]
     (i/angular-resolution (:aperture optic) wave-length))
   (dawes-resolution [optic]
-    (i/dawes-resolution (:aperture optic)))  
+    (i/dawes-resolution (:aperture optic)))
   (rayleigh-resolution [optic]
     (i/rayleigh-resolution (:aperture optic)))
   (fixed-magnification? [optic] false)
@@ -77,29 +77,29 @@
   (beneficial-magnification [optic]
     (ocular-focal-length optic 1))
   (comfortable-magnification [optic]
-    (ocular-focal-length optic 2/3))
-  )
+    (ocular-focal-length optic 2/3)))
+
 
 (defprotocol Ocular
-  "Protocol for oculars."
-  )
+  "Protocol for oculars.")
+
 
 (defrecord OcularImpl
   [name type focal-length field-of-view]
-  Ocular
-  )
+  Ocular)
+
 
 (defprotocol BarlowReducer
-  "Protocol for barlows and reducers."
-  )
+  "Protocol for barlows and reducers.")
+
 
 (defrecord BarlowReducerImpl
-  [name type]
-  )
+  [name type])
+
 
 (defprotocol Filter
-  "Protocol for filters."
-  )
+  "Protocol for filters.")
+
 
 (defrecord FilterImpl
   [name type])
@@ -111,16 +111,14 @@
 (defn create-optic
   "Constructor for optic instances."
   ([value-map]
-    (->OpticImpl value-map))
+   (->OpticImpl value-map))
   ([name type aperture focal-length obstruction effectiveness fixed-magnification available]
-    (OpticImpl. name type aperture focal-length obstruction effectiveness fixed-magnification magnification available)))
+   (OpticImpl. name type aperture focal-length obstruction effectiveness fixed-magnification magnification available)))
 
 (defn create-ocular
   "Constructor for ocular instances."
   ([value-map]
-    (OcularImpl. (get value-map :name "Ocular") (get value-map :type "Unknown")
-                    (get value-map :focal-length 20) (get value-map :field-of-view 50)))
+   (OcularImpl. (get value-map :name "Ocular") (get value-map :type "Unknown")
+                   (get value-map :focal-length 20) (get value-map :field-of-view 50)))
   ([name type focal-length field-of-view]
-    (OcularImpl. name type focal-length field-of-view)))
-
-
+   (OcularImpl. name type focal-length field-of-view)))

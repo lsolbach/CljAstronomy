@@ -39,7 +39,7 @@
 
 (defn- gregorian-b
   [y]
-  (let [a (floor (/ y 100))] 
+  (let [a (floor (/ y 100))]
     (+ 2 (- a) (floor (/ a 4)))))
 
 (defn- jd-a
@@ -152,11 +152,11 @@
 (defn day-of-year
   "Calculates the index of the day in the year for the given julian day instant."
   ([jd]
-    (let [{year :year month :month day :day} (julian-day-to-date jd)]
-      (day-of-year year month day)))
+   (let [{year :year month :month day :day} (julian-day-to-date jd)]
+     (day-of-year year month day)))
   ([year month day]
-    (let [k (if (leap-year? year) 1 2)]
-      (+ (floor (/ (* 275 month) 9)) (* (- k) (floor (/ (+ month 9) 12))) day -30))))
+   (let [k (if (leap-year? year) 1 2)]
+     (+ (floor (/ (* 275 month) 9)) (* (- k) (floor (/ (+ month 9) 12))) day -30))))
 
 (defn time-by-julian-day
   "Calculates the time for the given julian day instant."
@@ -184,8 +184,8 @@
         l (rem (+ 32 (* 2 e) (* 2 i) (- h) (- k)) 7)
         m (quot (+ a (* 11 h) (* 22 l)) 451)
         n (quot (+ h l (* -7 m) 114) 31)
-        p (rem (+ h l (* -7 m) 114) 31)
-        ]
+        p (rem (+ h l (* -7 m) 114) 31)]
+
     {:year year :month n :day (+ p 1)}))
 
 (defn easter-date-by-julian-date
@@ -197,8 +197,8 @@
         d (rem (+ (* 19 c) 15) 30)
         e (rem (+ (* 2 a) (* 4 b) (- d) 34) 7)
         f (quot (+ d e 114) 31)
-        g (rem (+ d e 114) 31)
-        ]
+        g (rem (+ d e 114) 31)]
+
     {:year year :month f :day (+ g 1)}))
 
 (defn easter-date
@@ -273,7 +273,7 @@
       (< year 2151) (let [u (/ (- y 1820M) 100M)]
                       (+ -20M (* 32M u u) (* -0.5628M (- 2150 y))))
       :default (let [u (/ (- y 1820M) 100M)]
-                      (+ -20M (* 32M u u))))))
+                    (+ -20M (* 32M u u))))))
 
 (def delta-t delta-t-nasa)
 
@@ -290,14 +290,14 @@
 (defn julian-ephemeris-day
   "Calculates the julian ephemeris day (JDE) from the given julian day instant."
   [jd]
-  (+ jd (delta-t )))
+  (+ jd (delta-t)))
 
 (defn julian-centuries
   "Calculates the julian centuries since the epoch (default J2000.0)."
   ([jd]
-    (julian-centuries jd J2000))
+   (julian-centuries jd J2000))
   ([jd epoch]
-    (/ (- jd epoch) julian-century)))
+   (/ (- jd epoch) julian-century)))
 
 ;
 ; Epoch calculations

@@ -23,8 +23,8 @@
 (defn new-julian-day
   "Creates a new julian day instant."
   ([]
-    (new-julian-day (Date.) (TimeZone/getDefault)))
+   (new-julian-day (Date.) (TimeZone/getDefault)))
   ([date]
-    (new-julian-day date (TimeZone/getDefault)))
+   (new-julian-day date (TimeZone/getDefault)))
   ([date timezone]
-    (JulianDay. (java-date-to-julian-day date) timezone)))
+   (JulianDay. (java-date-to-julian-day date) timezone)))

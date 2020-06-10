@@ -33,22 +33,22 @@
 (defn cartesian-to-spherical
   "Converts cartesian to spherical coordinates."
   ([cartesian-coords]
-    (let [[x y z] cartesian-coords]
-      (cartesian-to-spherical x y z)))
+   (let [[x y z] cartesian-coords]
+     (cartesian-to-spherical x y z)))
   ([x y z]
-    (let [r (sqrt (+ (sqr x) (sqr y) (sqr z)))
-          rho (sqrt (+ (sqr x) (sqr y)))
-          beta (calc-beta z rho)
-          phi (* 2 (atan (/ y (+ (abs x) rho))))
-          lambda (calc-lambda x y phi)]
-      [r beta lambda])))
+   (let [r (sqrt (+ (sqr x) (sqr y) (sqr z)))
+         rho (sqrt (+ (sqr x) (sqr y)))
+         beta (calc-beta z rho)
+         phi (* 2 (atan (/ y (+ (abs x) rho))))
+         lambda (calc-lambda x y phi)]
+     [r beta lambda])))
 
 (defn spherical-to-cartesian
   "Converts spherical to cartesian coordinates."
   ([spherical-coords]
-    (let [[r beta lambda] spherical-coords]
-      (spherical-to-cartesian r beta lambda)))
+   (let [[r beta lambda] spherical-coords]
+     (spherical-to-cartesian r beta lambda)))
   ([r beta lambda]
-    [(* r (cos beta) (cos lambda))
-     (* r (cos beta) (sin lambda))
-     (* r (sin beta))]))
+   [(* r (cos beta) (cos lambda))
+    (* r (cos beta) (sin lambda))
+    (* r (sin beta))]))

@@ -17,8 +17,8 @@
         [org.soulspace.clj.astronomy.app.chart common drawing scaling]
         [org.soulspace.clj.astronomy.app.data catalogs filters common constellations greek]
         [org.soulspace.clj.astronomy.app.ui.swing common]
-        [org.soulspace.clj.astronomy.app.ui.swing.charts common]
-        ))
+        [org.soulspace.clj.astronomy.app.ui.swing.charts common]))
+
 
 ; references to the chart data
 (def orthographic-panel-spec (ref {:x-max 1440 :y-max 1440}))
@@ -35,12 +35,20 @@
 (defn orthographic-scale
   "Scales ra/dec coordinates into user coordinates for drawing using an orthographic projection."
   [[long lat]]
-  (orthographic-user-coordinates (orthographic-relative-coordinates (north-pole-orthographic-projector [long lat]))))
+;  (orthographic-user-coordinates (orthographic-relative-coordinates (north-pole-orthographic-projector [long lat])))
+  (-> [long lat]
+    north-pole-orthographic-projector
+    orthographic-relative-coordinates
+    orthographic-user-coordinates))
 
 (defn reverse-orthographic-scale
   "Scales x/y coordinates into ra/dec coordinates using a reverse orthographic projection."
   [[x y]]
-  (north-pole-reverse-orthographic-projector (reverse-orthographic-relative-coordinates (reverse-orthographic-user-coordinates [x y]))))
+;  (north-pole-reverse-orthographic-projector (reverse-orthographic-relative-coordinates (reverse-orthographic-user-coordinates [x y])))
+  (-> [x y]
+    reverse-orthographic-user-coordinates
+    reverse-orthographic-relative-coordinates
+    north-pole-reverse-orthographic-projector))
 
 (defn draw-orthographic-chart-background
   "Draws the chart background."
@@ -53,17 +61,17 @@
   (set-rendering-hint gfx (rendering-hint-keys :antialialising) (antialias-hints :on))
   (draw-orthographic-chart-background gfx)
   (draw-dso-labels gfx orthographic-scale
-                   (filter common-name? 
-                           (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+                   (filter common-name?
+                           (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
                                    (filter (mag-filter 2) (get-stars)))))
   (draw-dso-labels gfx orthographic-scale
-                   (filter common-name? 
-                           (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+                   (filter common-name?
+                           (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
                                    (filter (mag-filter 6) (get-deep-sky-objects)))))
-  (draw-dsos gfx orthographic-scale 
+  (draw-dsos gfx orthographic-scale
              (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
                      (filter (mag-filter 10) (get-deep-sky-objects))))
-  (draw-dsos gfx orthographic-scale 
+  (draw-dsos gfx orthographic-scale
              (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
                      (filter (mag-filter 7) (get-stars)))))
 

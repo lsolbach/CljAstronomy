@@ -13,8 +13,8 @@
                          "3" "PGC galaxy catalog (http://leda.univ-lyon1.fr/)."
                          "4" "Collinder open cluster catalog, items not already in Messier,Caldwell,NGC,IC and with defined size and magnitude (http://www.cloudynights.com/item.php?item_id=2544)."
                          "5" "Perek-Kohoutek catalog IDs, from original (Perek + Kouhoutek, 1967) and update (Perek + Kohoutek, 2001)."
-                         "6" "Faint globulars (Palomar + Terzian) from http://www.astronomy-mall.com/Adventures.In.Deep.Space/obscure.htm and http://www.astronomy-mall.com/Adventures.In.Deep.Space/palglob.htm."
-                         })
+                         "6" "Faint globulars (Palomar + Terzian) from http://www.astronomy-mall.com/Adventures.In.Deep.Space/obscure.htm and http://www.astronomy-mall.com/Adventures.In.Deep.Space/palglob.htm."})
+
 
 (def hyg-dso-type-map {"*" "Single Star"
                        "**" "Double Star"
@@ -33,8 +33,8 @@
                        "MWSC" "Milky Way Star Cloud"
                        "Neb?" "Nebula?"
                        "?" "Unknown"
-                       "" "Unknown"
-                       })
+                       "" "Unknown"})
+
 
 (defn hyg-dso-type
   "Returns the type of the dso object."
@@ -60,8 +60,8 @@
     (= type "PD") :unknown
     (= type "?") :unknown
     (= type "") :unknown
-    :default (do (println "Unknown type in HYG DSO catalog:" type) :unknown)
-    ))
+    :default (do (println "Unknown type in HYG DSO catalog:" type) :unknown)))
+
 
 (defn catalog-id
   "Extracts the catalog id of the object."
@@ -100,8 +100,8 @@
    :col (catalog-id "Col" id1 cat1 id2 cat2)
    :mel (catalog-id "Mel" id1 cat1 id2 cat2)
    :pk (catalog-id "PK" id1 cat1 id2 cat2)
-   :pgc (catalog-id "PGC" id1 cat1 id2 cat2)
-   })
+   :pgc (catalog-id "PGC" id1 cat1 id2 cat2)})
+
 
 (defn read-hyg-dso
   "Read the messier catalog."
@@ -115,6 +115,6 @@
             (filter #(not= (:type %) :unknown))
             ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
             ; filter messier 40 double star
-            (filter #(not= (:messier %) "40"))
-            )
+            (filter #(not= (:messier %) "40")))
+
           (read-csv in-file))))

@@ -126,41 +126,41 @@
 (defn mag-filter
   "Returns a filter for magnification of objects. Faintest and optionally brightest can be given."
   ([faintest]
-    (mag-filter faintest -30))
+   (mag-filter faintest -30))
   ([faintest brightest]
-    (fn [obj] (and (<= (:mag obj) faintest) (>= (:mag obj) brightest)))))
+   (fn [obj] (and (<= (:mag obj) faintest) (>= (:mag obj) brightest)))))
 
 (defn ra-dec-filter
   "Returns a filter for the RA and Dec coordinates of an object."
   ([[ra-min dec-min] [ra-max dec-max]]
-    (ra-dec-filter ra-min dec-min ra-max dec-max))
+   (ra-dec-filter ra-min dec-min ra-max dec-max))
   ([ra-min dec-min ra-max dec-max]
-     (fn [obj] (and (>= (:ra obj) ra-min) (>= (:dec obj) dec-min) (<= (:ra obj) ra-max) (<= (:dec obj) dec-max)))))
+   (fn [obj] (and (>= (:ra obj) ra-min) (>= (:dec obj) dec-min) (<= (:ra obj) ra-max) (<= (:dec obj) dec-max)))))
 
 (defn rad-ra-dec-filter
   "Returns a filter for the RA and Dec coordinates of an object."
   ([[ra-min dec-min] [ra-max dec-max]]
-    (rad-ra-dec-filter ra-min dec-min ra-max dec-max))
+   (rad-ra-dec-filter ra-min dec-min ra-max dec-max))
   ([ra-min dec-min ra-max dec-max]
-     (fn [obj] (and (>= (:ra-rad obj) ra-min) (>= (:dec-rad obj) dec-min) (<= (:ra-rad obj) ra-max) (<= (:dec-rad obj) dec-max)))))
+   (fn [obj] (and (>= (:ra-rad obj) ra-min) (>= (:dec-rad obj) dec-min) (<= (:ra-rad obj) ra-max) (<= (:dec-rad obj) dec-max)))))
 
 (defn angular-distance-filter
   "Returns a filter for the angular distance of an object"
   ([dist [ra dec]]
-    (angular-distance-filter dist ra dec))
+   (angular-distance-filter dist ra dec))
   ([dist ra dec]
-    (fn [obj] (<= (angular-distance [(:ra-rad obj) (:dec-rad obj)] [ra dec]) dist))))
+   (fn [obj] (<= (angular-distance [(:ra-rad obj) (:dec-rad obj)] [ra dec]) dist))))
 
 (defn common-name-filter
   "Returns a filter for objects with a common name."
   ([]
-    (fn [obj] (seq (:common-name obj))))
+   (fn [obj] (seq (:common-name obj))))
   ([common-name]
-    (fn [obj] (re-matches (re-pattern common-name) (:common-name obj)))))
+   (fn [obj] (re-matches (re-pattern common-name) (:common-name obj)))))
 
 (defn type-filter
   "Returns a filter for typed objects."
   ([]
-    #(and (:type %) (not= (:type %) :unknown)))
+   #(and (:type %) (not= (:type %) :unknown)))
   ([type]
-    #(and (:type %) (not= (:type %) (keyword type)))))
+   #(and (:type %) (not= (:type %) (keyword type)))))

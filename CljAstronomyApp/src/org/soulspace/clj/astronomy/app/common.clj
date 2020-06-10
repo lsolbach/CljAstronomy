@@ -1,5 +1,5 @@
 (ns org.soulspace.clj.astronomy.app.common
-  (import [java.util Date])
+  (:import [java.util Date])
   (:use [org.soulspace.clj.astronomy.time instant time]))
 
 
@@ -12,9 +12,9 @@
 (defn set-time
   "Updates the time."
   ([]
-    (set-time (new-julian-day)))
+   (set-time (new-julian-day)))
   ([datetime]
-    (dosync (ref-set current-time (new-julian-day datetime)))))
+   (dosync (ref-set current-time (new-julian-day datetime)))))
 
 (defn set-location
   "Updates the location."

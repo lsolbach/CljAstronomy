@@ -17,8 +17,8 @@
         [org.soulspace.clj.astronomy.app.chart common drawing scaling]
         [org.soulspace.clj.astronomy.app.data catalogs filters common constellations greek]
         [org.soulspace.clj.astronomy.app.ui.swing common]
-        [org.soulspace.clj.astronomy.app.ui.swing.charts common]
-        ))
+        [org.soulspace.clj.astronomy.app.ui.swing.charts common]))
+
 
 ; references to the chart data
 (def equirectangular-chart-objects (ref []))
@@ -36,12 +36,18 @@
 (defn equirectangular-scale
   "Scales ra/dec coordinates into user coordinates for drawing using a rectangular mapping."
   [[long lat]]
-  (rectangular-user-coordinates (relative-coordinates [long lat])))
+;  (rectangular-user-coordinates (relative-coordinates [long lat]))
+  (-> [long lat]
+    relative-coordinates
+    rectangular-user-coordinates))
 
 (defn reverse-equirectangular-scale
   "Scales x/y coordinates into ra/dec coordinates using a reverse equirectangular projection."
   [[x y]]
-  (reverse-relative-coordinates (reverse-rectangular-user-coordinates [x y])))
+;  (reverse-relative-coordinates (reverse-rectangular-user-coordinates [x y]))
+  (-> [x y]
+    reverse-rectangular-user-coordinates
+    reverse-relative-coordinates))
 
 (defn- draw-equirectangular-chart-background
   "Draws the chart background."
@@ -78,7 +84,7 @@
   (let [panel (equirectangular-star-chart-panel draw-equirectangular-chart (panel-spec))
         popup-menu (chart-popup-menu)
         d (dialog {:title (i18n "label.chart.equirectangular.title")} [(scroll-pane panel)])]
-    (add-mouse-listener panel 
+    (add-mouse-listener panel
                         (mouse-clicked-listener chart-panel-mouse-clicked d reverse-equirectangular-scale (filter (mag-filter 10.5) (get-deep-sky-objects))))
     (.setComponentPopupMenu panel popup-menu)
     (add-mouse-listener panel (popup-listener popup-menu))

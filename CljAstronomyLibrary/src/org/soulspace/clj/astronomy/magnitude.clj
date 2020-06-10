@@ -18,52 +18,52 @@
 (defn brightness-ratio
   "Calculates the brightness ratio from the magnitudes or the magnitude difference."
   ([delta-mag]
-    (pow 10 (* 0.4 delta-mag)))
+   (pow 10 (* 0.4 delta-mag)))
   ([mag1 mag2]
-    (brightness-ratio (- mag2 mag1))))
+   (brightness-ratio (- mag2 mag1))))
 
 (defn contrast
   "Calculates the contrast from the magnitudes or the magnitude difference."
   ([delta-mag]
-    (* -0.4 delta-mag))
+   (* -0.4 delta-mag))
   ([mag1 mag2]
-    (* -0.4 (- mag1 mag2))))
+   (* -0.4 (- mag1 mag2))))
 
 (defn combined-magnitude
-  "Calculates the combined magnitude."
+  "Calculates the combined magnitude of the given magnitudes."
   ([coll]
-    (* -2.5 (log10 (apply + (map #(pow 10 (* -0.4 %)) coll)))))
+   (* -2.5 (log10 (apply + (map #(pow 10 (* -0.4 %)) coll)))))
   ([mag1 mag2]
-    (let [x (* 0.4 (- mag2 mag1))]
-      (println x)
-      (- mag2 (* 2.5 (log10 (+ (pow 10 x) 1)))))))
+   (let [x (* 0.4 (- mag2 mag1))]
+     (println x)
+     (- mag2 (* 2.5 (log10 (+ (pow 10 x) 1)))))))
 
 (defn mag-per-''²-to-mag-per-'²
-  "Calculates the magnitudes per square minute from the magnitudes per square second."
+  "Calculates the magnitudes per square arc minute from the magnitudes per square arc second."
   [mag-per-''²]
   (- mag-per-''² 8.89))
 
 (defn mag-per-''²-to-mag-per-°²
-  "Calculates the magnitudes per square degree from the magnitudes per square second."
+  "Calculates the magnitudes per square arc degree from the magnitudes per square arc second."
   [mag-per-''²]
   (- mag-per-''² 17.78))
 
 (defn mag-per-'²-to-mag-per-°²
-  "Calculates the magnitudes per square degree from the magnitudes per square minute."
+  "Calculates the magnitudes per square arc degree from the magnitudes per square arc minute."
   [mag-per-'²]
   (- mag-per-'² 8.89))
 
 (defn mag-per-'²-to-mag-per-''²
-  "Calculates the magnitudes per square second from the magnitudes per square minute."
+  "Calculates the magnitudes per square arc second from the magnitudes per square arc minute."
   [mag-per-'²]
   (+ mag-per-'² 8.89))
 
 (defn mag-per-°²-to-mag-per-''²
-  "Calculates the magnitudes per square second from the magnitudes per square degree."
+  "Calculates the magnitudes per square arc second from the magnitudes per square arc degree."
   [mag-per-°²]
   (+ mag-per-°² 17.78))
 
 (defn mag-per-°²-to-mag-per-'²
-  "Calculates the magnitudes per square minute from the magnitudes per square degree."
+  "Calculates the magnitudes per square arc minute from the magnitudes per square arc degree."
   [mag-per-°²]
   (+ mag-per-°² 8.89))

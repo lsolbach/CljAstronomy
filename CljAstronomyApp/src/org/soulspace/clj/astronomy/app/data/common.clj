@@ -82,8 +82,8 @@
     (derive :spiral-galaxy :galaxy)
     (derive :elliptical-galaxy :galaxy)
     (derive :lenticular-galaxy :galaxy)
-    (derive :irregular-galaxy :galaxy)
-    ))
+    (derive :irregular-galaxy :galaxy)))
+
 
 ;
 ; angular distance

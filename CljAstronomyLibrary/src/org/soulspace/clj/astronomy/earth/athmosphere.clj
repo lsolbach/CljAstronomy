@@ -30,41 +30,41 @@
   "Calculates the increase factor of the air mass of the atmosphere depending on the zenital distance of the source.
    The simplified formula may be used for zenital distances < 70°."
   [zenital-distance]
-  (/ 1 
+  (/ 1
      (cos zenital-distance)))
 
 (defn rayleigh-optical-depth
   "Calculates the optical depth (tau) of the rayleigh scattering."
   ([wave-length]
-    (/ 0.0084
-       (pow wave-length 4)))
+   (/ 0.0084
+      (pow wave-length 4)))
   ([zenital-distance wave-length]
-    (/ 0.0084
-       (* (cos zenital-distance) (pow wave-length 4)))))
+   (/ 0.0084
+      (* (cos zenital-distance) (pow wave-length 4)))))
 
 (defn rayleigh-extinction
   "Calculates the extinction by rayleigh scattering in magnitudes."
   ([wave-length]
-    (* 1.086 (rayleigh-optical-depth wave-length)))
+   (* 1.086 (rayleigh-optical-depth wave-length)))
   ([zenital-distance wave-length]
-    (* 1.086 (rayleigh-optical-depth zenital-distance wave-length))))
+   (* 1.086 (rayleigh-optical-depth zenital-distance wave-length))))
 
 ; TODO find formula and implement extiction by mie scattering
 (defn mie-extinction
   "Calculates the extinction by mie scattering in magnitudes."
-  ([wave-length]
-    )
-  ([wave-length condition]
-    ))
+  ([wave-length])
+
+  ([wave-length condition]))
+
 
 ; TODO add mie extinction to rayleigh extinction
 ; TODO add tests
 (defn extinction
   "Calculates the athmospheric extinction of an object in a given zenital distance."
   ([zenital-distance]
-    (extinction zenital-distance 550))
+   (extinction zenital-distance 550))
   ([zenital-distance wave-length]
-    (* (airmass zenital-distance) (+ (rayleigh-extinction wave-length)))))
+   (* (airmass zenital-distance) (+ (rayleigh-extinction wave-length)))))
 
 ;
 ; Refraction
@@ -78,21 +78,21 @@
   "Calculates the athmospheric refraction for an object at a given apparent altitude."
   ([altitude]
     ; TODO add simplified equations for altitudes above 10° and 30°
-    (/ 1
-       (tan (+ altitude (/ 7.31 
-                       (+ altitude 4.4))))))
+   (/ 1
+      (tan (+ altitude (/ 7.31
+                        (+ altitude 4.4))))))
   ([altitude temperature pressure]
-    (* (refraction-by-apparent-altitude altitude) (temperature-pressure-correction temperature pressure))))
+   (* (refraction-by-apparent-altitude altitude) (temperature-pressure-correction temperature pressure))))
 
 (defn refraction-by-true-altitude
   "Calculates the athmospheric refraction for an object at a given true altitude."
   ; TODO add simplified equations for altitudes above 10° and 30°
   ([altitude]
-    (* 1.02 (/ 1 
-               (tan (+ altitude (/ 10.3 
-                            (+ altitude 5.11)))))))
+   (* 1.02 (/ 1
+              (tan (+ altitude (/ 10.3
+                                (+ altitude 5.11)))))))
   ([altitude temperature pressure]
-    (* (refraction-by-true-altitude altitude) (temperature-pressure-correction temperature pressure))))
+   (* (refraction-by-true-altitude altitude) (temperature-pressure-correction temperature pressure))))
 
 ;
 ; Seeing

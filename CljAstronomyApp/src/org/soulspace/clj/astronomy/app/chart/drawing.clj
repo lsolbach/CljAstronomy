@@ -17,9 +17,9 @@
 (defn diameter-by-mag
   "Calculates the diameter in the chart based on the magnitude of the star."
   ([mag]
-    (diameter-by-mag mag 6.0))
+   (diameter-by-mag mag 6.0))
   ([mag min-mag]
-    (+ 1 (* -1.5 (- mag min-mag)))))
+   (+ 1 (* -1.5 (- mag min-mag)))))
 
 ;"Draws a deep sky object."
 (defmulti draw-dso (fn [gfx scale dso] (:type dso)) :hierarchy #'object-hierarchy)
@@ -132,7 +132,7 @@
         rad-270 (deg-to-rad 270)
         rad-315 (deg-to-rad 315)
         rad-360 (deg-to-rad 360)]
-    ; 
+    ;
     (draw-line gfx (scale [rad-0 rad--45]) (scale [rad-360 rad--45]) col)
     (draw-line gfx (scale [rad-0 rad-0]) (scale [rad-360 rad-0]) col)
     (draw-line gfx (scale [rad-0 rad-45]) (scale [rad-360 rad-45]) col)

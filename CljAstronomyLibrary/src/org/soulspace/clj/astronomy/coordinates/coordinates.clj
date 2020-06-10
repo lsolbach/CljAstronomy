@@ -14,16 +14,16 @@
 (defn angular-distance
   "Calculates the angular distance between the coordinates (given in rad)."
   ([[ra1 dec1] [ra2 dec2]]
-    (angular-distance ra1 dec1 ra2 dec2))
+   (angular-distance ra1 dec1 ra2 dec2))
   ([ra1 dec1 ra2 dec2]
-    (let [delta-ra (- ra1 ra2)
-          delta-dec (- dec1 dec2)
-          pi-half (/ pi 2) ; 180 degrees
-          pi-ninetieth (/ pi 90) ; 2 degrees
-          ]
-      (if (or (< (abs (- (abs dec1) pi-half)) pi-ninetieth) (< (abs (- (abs dec1) pi-half)) pi-ninetieth))
-        (ahav (+ (hav delta-dec) (* (cos dec1) (cos dec2) (hav delta-ra)))) ; use haversine if declinations are near the poles
-        (acos (+ (* (sin dec1) (sin dec2)) (* (cos dec1) (cos dec2) (cos delta-ra))))))))
+   (let [delta-ra (- ra1 ra2)
+         delta-dec (- dec1 dec2)
+         pi-half (/ pi 2) ; 180 degrees
+         pi-ninetieth (/ pi 90)] ; 2 degrees
+
+     (if (or (< (abs (- (abs dec1) pi-half)) pi-ninetieth) (< (abs (- (abs dec1) pi-half)) pi-ninetieth))
+       (ahav (+ (hav delta-dec) (* (cos dec1) (cos dec2) (hav delta-ra)))) ; use haversine if declinations are near the poles
+       (acos (+ (* (sin dec1) (sin dec2)) (* (cos dec1) (cos dec2) (cos delta-ra))))))))
 
 ; TODO use angle abstractions
 (defn zenit-distance-by-altitude
@@ -39,7 +39,7 @@
 (defn hour-angle
   "Calculates the hour angle of the right ascension at the given instant."
   ([instant ra]
-    (- (mean-siderial-time-greenwich instant) ra)))
+   (- (mean-siderial-time-greenwich instant) ra)))
 
 (defprotocol Horizontal
   "Protocol for horizontal coordinate system (Alt/Az).")

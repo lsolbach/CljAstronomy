@@ -11,14 +11,14 @@
   (:use [org.soulspace.clj.math math java-math]
         [org.soulspace.clj.java awt]
         [org.soulspace.clj.java.awt event graphics]
-        [org.soulspace.clj.java.swing constants event swinglib]        
+        [org.soulspace.clj.java.swing constants event swinglib]
         [org.soulspace.clj.astronomy.coordinates projection]
         [org.soulspace.clj.astronomy.app common i18n]
         [org.soulspace.clj.astronomy.app.chart common drawing scaling]
         [org.soulspace.clj.astronomy.app.data catalogs filters common constellations greek]
         [org.soulspace.clj.astronomy.app.ui.swing common]
-        [org.soulspace.clj.astronomy.app.ui.swing.charts common]
-        ))
+        [org.soulspace.clj.astronomy.app.ui.swing.charts common]))
+
 
 ; references to the chart data
 (def stereographic-panel-spec (ref {:x-max 1440 :y-max 1440}))
@@ -35,12 +35,21 @@
 (defn stereographic-scale
   "Scales ra/dec coordinates into user coordinates for drawing using a stereographic projection."
   [[long lat]]
-  (stereographic-user-coordinates (stereographic-relative-coordinates (north-pole-stereographic-projector [long lat]))))
+  ;(stereographic-user-coordinates (stereographic-relative-coordinates (north-pole-stereographic-projector [long lat])))
+  (-> [long lat]
+    north-pole-stereographic-projector
+    stereographic-relative-coordinates
+    stereographic-user-coordinates))
 
 (defn reverse-stereographic-scale
   "Scales x/y coordinates into ra/dec coordinates using a reverse stereographic projection."
   [[x y]]
-  (north-pole-reverse-stereographic-projector (reverse-stereographic-relative-coordinates (reverse-stereographic-user-coordinates [x y]))))
+  ;(north-pole-reverse-stereographic-projector (reverse-stereographic-relative-coordinates (reverse-stereographic-user-coordinates [x y])))
+  (-> [x y]
+    reverse-stereographic-user-coordinates
+    reverse-stereographic-relative-coordinates
+    north-pole-reverse-stereographic-projector))
+
 
 (defn draw-stereographic-chart-background
   "Draws the chart background."
@@ -54,18 +63,18 @@
   (draw-stereographic-chart-background gfx)
   ;(draw-chart-grid gfx)
   (draw-dso-labels gfx stereographic-scale
-                   (filter common-name? 
-                           (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)]) 
+                   (filter common-name?
+                           (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
                                    (filter (mag-filter 6) (get-deep-sky-objects)))))
   (draw-dso-labels gfx stereographic-scale
-                   (filter common-name? 
-                           (filter (ra-dec-filter [0.0 0.0] [360.0 90.0]) 
+                   (filter common-name?
+                           (filter (ra-dec-filter [0.0 0.0] [360.0 90.0])
                                    (filter (mag-filter 2) (get-stars)))))
-  (draw-dsos gfx stereographic-scale 
+  (draw-dsos gfx stereographic-scale
              (filter (ra-dec-filter [0.0 0.0] [360.0 90.0])
                      (filter (mag-filter 10) (get-deep-sky-objects))))
-  (draw-dsos gfx stereographic-scale 
-             (filter (ra-dec-filter [0.0 0.0] [360.0 90.0]) 
+  (draw-dsos gfx stereographic-scale
+             (filter (ra-dec-filter [0.0 0.0] [360.0 90.0])
                      (filter (mag-filter 7) (get-stars)))))
 
 (defn stereographic-star-chart-panel
