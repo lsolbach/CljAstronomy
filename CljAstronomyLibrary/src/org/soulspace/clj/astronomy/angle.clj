@@ -13,9 +13,10 @@
 ; TODO define an angle protocol?
 ; TODO angle operations: +, - (*, /)?
 
-; pattern for parsing an angle given in signed degrees, minutes and seconds, e.g. -80° 7' 30''
+; pattern for parsing an angle string given in signed degrees, minutes and seconds, e.g. -80° 7' 30\"
 (def dms-pattern #"(\+|-)?(\d+)°\s*(?:(\d+)'\s*(?:(\d+(?:\.\d+)?)\")?)?")
-(def ha-pattern #"(\d+)h\s*(?:(\d+)'\s*(?:(\d+(?:\.\d+)?)\")?)?")
+; pattern for parsing a hour angle string given in hours, minutes and seconds, e.g. 10h 7m 30s
+(def hms-pattern #"(\d+)h\s*(?:(\d+)m\s*(?:(\d+(?:\.\d+)?)s)?)?")
 
 (defn- parse-long
   "Resilient long conversion."
@@ -31,6 +32,20 @@
     (Double/parseDouble x)
     (catch Exception e 0.0)))
 
+(defn hms-to-ha
+  "Converts an hour angle given in hours minutes and seconds into a hour angle given in decimal hours."
+  ([hms]
+   (cond
+     (map? hms)
+     (hms-to-ha {:hours hms} {:min hms} {:sec hms})
+     (string? hms)
+     (let [[_ h min sec] (re-matches hms-pattern hms)]
+       (hms-to-ha (parse-long h) (parse-long min) (parse-long sec)))))
+  ([h min]
+   (hms-to-ha h min 0))
+  ([h min sec]
+   (+ h (/ min 60) (/ sec 3600))))
+
 (defn hour-angle-to-angle
   "Converts an hour angle to an angle."
   [ha]
@@ -42,18 +57,18 @@
   (/ a 15))
 
 (defn dms-angle-to-angle
-  "Converts an angle given in degrees, minutes and seconds into anangle given in decimal degrees."
+  "Converts an angle given in degrees, minutes and seconds into an angle given in decimal degrees."
   ([dms]
-    (cond
-      (map? dms)
-      (dms-angle-to-angle (:sign dms) (:deg dms) (:min dms) (:sec dms))
-      (string? dms)
-      (let [[_ sgn deg min sec] (re-matches dms-pattern dms)]
-        (dms-angle-to-angle (if (= sgn "-") -1 1) (parse-long deg) (parse-long min) (parse-double sec)))))
+   (cond
+     (map? dms)
+     (dms-angle-to-angle (:sign dms) (:deg dms) (:min dms) (:sec dms))
+     (string? dms)
+     (let [[_ sgn deg min sec] (re-matches dms-pattern dms)]
+       (dms-angle-to-angle (if (= sgn "-") -1 1) (parse-long deg) (parse-long min) (parse-double sec)))))
   ([sgn deg min]
-    (dms-angle-to-angle sgn deg min 0.0))
+   (dms-angle-to-angle sgn deg min 0.0))
   ([sgn deg min sec]
-    (* sgn (+ deg (/ min 60) (/ sec 3600)))))
+   (* sgn (+ deg (/ min 60) (/ sec 3600)))))
 
 (defn angle-to-dms-angle
   "Converts an angle given in decimal degrees into an angle given in degrees, minutes and seconds."

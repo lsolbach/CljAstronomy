@@ -25,7 +25,6 @@
        (ahav (+ (hav delta-dec) (* (cos dec1) (cos dec2) (hav delta-ra)))) ; use haversine if declinations are near the poles
        (acos (+ (* (sin dec1) (sin dec2)) (* (cos dec1) (cos dec2) (cos delta-ra))))))))
 
-; TODO use angle abstractions
 (defn zenit-distance-by-altitude
   "Calculates the zenit distance by altitude (given in rad)."
   [altitude]

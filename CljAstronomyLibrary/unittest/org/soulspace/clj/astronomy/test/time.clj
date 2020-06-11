@@ -29,8 +29,8 @@
   (is (= (date-to-julian-day 332 13 27.5) 1842713.0))
   (is (= (date-to-julian-day -123 12 31.0) 1676496.5))
   (is (= (date-to-julian-day -122 1 1.0) 1676497.5))
-  (is (= (date-to-julian-day -4712 1 1.5) 0.0))
-  )
+  (is (= (date-to-julian-day -4712 1 1.5) 0.0)))
+
 
 (deftest leap-year-test
   (is (= (leap-year? 4000) true))
@@ -53,26 +53,26 @@
   (is (= (leap-year? -400) true))
   (is (= (leap-year-by-julian-day? 2451545.0) true))
   (is (= (leap-year-by-julian-day? 2451179.5) false))
-  (is (= (leap-year-by-julian-day? 2268932.5) true))
-  )
+  (is (= (leap-year-by-julian-day? 2268932.5) true)))
+
 
 (deftest day-of-week-test
   (is (= (day-of-week 2434923.5) :wednesday))
   (is (= (day-of-week 2299159.5) :thursday))
-  (is (= (day-of-week 2299160.5) :friday))
-  )
+  (is (= (day-of-week 2299160.5) :friday)))
+
 
 (deftest easter-date-gregorian-test
-  (is (= (easter-date-by-gregorian-date 1991) {:year 1991 :month 3 :day 31}))
-  )
+  (is (= (easter-date-by-gregorian-date 1991) {:year 1991 :month 3 :day 31})))
+
 
 (deftest easter-date-julian-test
-  (is (= (easter-date-by-julian-date 179) {:year 179 :month 4 :day 12}))
-  )
+  (is (= (easter-date-by-julian-date 179) {:year 179 :month 4 :day 12})))
+
 
 (deftest day-of-year-test
   (is (== (day-of-year 2299160.5) 288))
-  (is (== (day-of-year 1582 10 15) 288))
-  )
+  (is (== (day-of-year 1582 10 15) 288)))
+
 
 ;(run-tests)
