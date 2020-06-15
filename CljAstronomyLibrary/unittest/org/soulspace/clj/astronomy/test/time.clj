@@ -10,7 +10,9 @@
 (ns org.soulspace.clj.astronomy.test.time
   (:use
     [clojure.test]
-    [org.soulspace.clj.astronomy.time.time]))
+    [org.soulspace.clj.astronomy.test]
+    [org.soulspace.clj.astronomy.time.time]
+    [org.soulspace.clj.astronomy.angle]))
 
 (deftest julian-day-test
   (is (= (date-to-julian-day 2000 1 1.5) 2451545.0))
@@ -69,10 +71,14 @@
 (deftest easter-date-julian-test
   (is (= (easter-date-by-julian-date 179) {:year 179 :month 4 :day 12})))
 
-
 (deftest day-of-year-test
   (is (== (day-of-year 2299160.5) 288))
   (is (== (day-of-year 1582 10 15) 288)))
 
+(deftest mean-siderial-time-greenwich-0ut-test
+  (is (about-equal (deg-to-ha (mean-siderial-time-greenwich-0ut 2446895.5)) 13.1795)))
+
+(deftest mean-siderial-time-greenwich-test
+  (is (about-equal (deg-to-ha (mean-siderial-time-greenwich 2446895.5)) 13.1795)))
 
 ;(run-tests)

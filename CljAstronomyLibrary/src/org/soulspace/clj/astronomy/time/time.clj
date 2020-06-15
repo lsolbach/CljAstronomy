@@ -319,10 +319,18 @@
   "Calculates the mean sidereal time in degrees at greenwich at 0h UT."
   [jd]
   (let [T (julian-centuries jd)]
-    (+ 100.46061837M (* 36000.770053608M T) (* 0.000387933M T T) (* -1 (/ (pow T 3) 38710000M)))))
+    (mod (+ 100.46061837M
+           (* 36000.770053608M T)
+           (* 0.000387933M T T)
+           (* -1 (/ (pow T 3) 38710000M)))
+         360)))
 
 (defn mean-siderial-time-greenwich
   "Calculates the mean sidereal time in degrees at greenwich for the given instant in UT."
   [jd]
   (let [T (julian-centuries jd)]
-    (+ 280.46061837M (* 360.98564736629M (- jd 2451545.0M)) (* 0.000387933M T T) (* -1 (/ (pow T 3) 38710000M)))))
+    (mod (+ 280.46061837M
+           (* 360.98564736629M (- jd 2451545.0M))
+           (* 0.000387933M T T)
+           (* -1 (/ (pow T 3) 38710000M)))
+         360)))

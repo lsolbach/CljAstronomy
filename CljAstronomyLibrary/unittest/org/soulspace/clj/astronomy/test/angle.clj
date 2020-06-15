@@ -10,42 +10,47 @@
 (ns org.soulspace.clj.astronomy.test.angle
   (:use
     [clojure.test]
+    [org.soulspace.clj.astronomy.test]
     [org.soulspace.clj.astronomy angle]
     [org.soulspace.clj.math java-math]))
 
-(def error 0.0001)
+(deftest dms-to-deg-test
+  (is (= (dms-to-deg "+180°") 180.0))
+  (is (= (dms-to-deg "1°") 1.0))
+  (is (= (dms-to-deg "0° 30'") 0.5))
+  (is (= (dms-to-deg "0° 0' 45\"") 0.0125))
+  (is (= (dms-to-deg "-0° 0' 45.0\"") -0.0125))
+  (is (about-equal (dms-to-deg "19° 10' 57\"") 19.1825))
+  (is (about-equal (dms-to-deg "-11° 09' 41\"") -11.1614)))
 
-(deftest dms-angle-to-angle-test
-  (is (= (dms-angle-to-angle "+180°") 180.0))
-  (is (= (dms-angle-to-angle "1°") 1.0))
-  (is (= (dms-angle-to-angle "0° 30'") 0.5))
-  (is (= (dms-angle-to-angle "0° 0' 45\"") 0.0125))
-  (is (= (dms-angle-to-angle "-0° 0' 45.0\"") -0.0125))
-  (is (<= (abs (- (dms-angle-to-angle "19° 10' 57\"") 19.1825)) error))
-  (is (<= (abs (- (dms-angle-to-angle "-11° 09' 41\"") -11.1614)) error)))
-
-(deftest angle-to-dms-angle-test
-  (is (= (angle-to-dms-angle 0.0125) {:sign 1 :deg 0 :min 0 :sec 45.0}))
-  (is (= (angle-to-dms-angle 0.5) {:sign 1 :deg 0 :min 30 :sec 0.0}))
-  (is (= (angle-to-dms-angle 1.0) {:sign 1 :deg 1 :min 0 :sec 0.0}))
-  (is (= (angle-to-dms-angle 18.5) {:sign 1 :deg 18 :min 30 :sec 0.0})))
+(deftest deg-to-dms-test
+  (is (= (deg-to-dms 0.0125) {:sign 1 :deg 0 :min 0 :sec 45.0}))
+  (is (= (deg-to-dms 0.5) {:sign 1 :deg 0 :min 30 :sec 0.0}))
+  (is (= (deg-to-dms 1.0) {:sign 1 :deg 1 :min 0 :sec 0.0}))
+  (is (= (deg-to-dms 18.5) {:sign 1 :deg 18 :min 30 :sec 0.0})))
 
 (deftest hms-to-ha-test
   (is (== (hms-to-ha "1h 0m 0s") 1.0))
-  (is (== (hms-to-ha "2h 30m 0s") 2.5)))
+  (is (== (hms-to-ha "2h 30m 0.0s") 2.5))
+  (is (about-equal (ha-to-deg (hms-to-ha "14h15m39.7s")) 213.9154))
+  (is (about-equal (ha-to-deg (hms-to-ha "13h25m11.6s")) 201.2983)))
 
-(deftest hour-angle-to-angle-test
-  (is (= (hour-angle-to-angle 12.0) 180.0))
-  (is (= (hour-angle-to-angle -12.0) -180.0))
-  (is (= (hour-angle-to-angle 0.5) 7.5))
-  (is (= (hour-angle-to-angle -0.5) -7.5))
-  (is (= (hour-angle-to-angle 25.0) 375.0)))
+(deftest ha-to-hms-tests
+  (is (= (ha-to-hms 1.0) {:h 1 :min 0 :sec 0.0}))
+  (is (= (ha-to-hms 2.5) {:h 2 :min 30 :sec 0.0})))
 
-(deftest angle-to-hour-angle-test
-  (is (= (angle-to-hour-angle 180.0) 12.0))
-  (is (= (angle-to-hour-angle -180.0) -12.0))
-  (is (= (angle-to-hour-angle 7.5) 0.5))
-  (is (= (angle-to-hour-angle -7.5) -0.5))
-  (is (= (angle-to-hour-angle 375.0) 25.0)))
+(deftest ha-to-deg-test
+  (is (= (ha-to-deg 12.0) 180.0))
+  (is (= (ha-to-deg -12.0) -180.0))
+  (is (= (ha-to-deg 0.5) 7.5))
+  (is (= (ha-to-deg -0.5) -7.5))
+  (is (= (ha-to-deg 25.0) 375.0)))
+
+(deftest deg-to-ha-test
+  (is (= (deg-to-ha 180.0) 12.0))
+  (is (= (deg-to-ha -180.0) 12.0))
+  (is (= (deg-to-ha 7.5) 0.5))
+  (is (= (deg-to-ha -7.5) 23.5))
+  (is (= (deg-to-ha 375.0) 1.0)))
 
 ;(run-tests)
