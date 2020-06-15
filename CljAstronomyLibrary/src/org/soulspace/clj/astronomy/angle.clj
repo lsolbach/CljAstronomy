@@ -110,20 +110,50 @@
 
 (defprotocol Angle
   "Protocol for Angles."
-  (to-radians [angle] "Returns the angle as radian value.")
-  (to-degrees [angle] "Returns the angle as degree value.")
-  (to-hours [angle] "Returns the angle as hour value.")
-  (to-minutes [angle] "Returns the angle as arc minutes value.")
-  (to-seconds [angle] "Returns the angle as arc seconds value.")
-  (to-dms [angle] "Returns the angle as a map of sign, degrees, minutes and seconds."))
+  (to-rad [angle] "Returns the angle as radian value.")
+  (to-deg [angle] "Returns the angle as degree value.")
+  (to-ha [angle] "Returns the angle as hour value.")
+  (to-arcmin [angle] "Returns the angle as arc minutes value.")
+  (to-arcsec [angle] "Returns the angle as arc seconds value.")
+  (to-dms [angle] "Returns the angle as a map of sign, deg, min and sec.")
+  (to-hms [angle] "Returns the angle as hour angle, a map of h, min and sec.")
+  (to-string [angle] "Returns a matching human readable string representation of the angle."))
+
+; Implementation of the Angle protocol that stores the angle as a degree value.
+(defrecord DegreeAngleImpl
+  [degrees]
+  Angle
+  (to-rad [angle] (deg-to-rad (:degrees angle)))
+  (to-deg [angle] (:degrees angle))
+  (to-ha [angle] (/ (:degrees angle) 15))
+  (to-arcmin [angle] (* 60 (:degrees angle)))
+  (to-arcsec [angle] (* 3600 (:degrees angle)))
+  (to-dms [angle] (deg-to-dms (:degrees angle)))
+  (to-hms [angle] (ha-to-hms (deg-to-ha (:degrees angle))))
+  (to-string [angle] (dms-string (:degrees angle))))
+
+; Implementation of the Angle protocol that stores the angle as a degree value.
+(defrecord HourAngleImpl
+  [ha]
+  Angle
+  (to-rad [angle] (deg-to-rad (ha-to-deg (:ha angle))))
+  (to-deg [angle] (ha-to-deg (:ha angle)))
+  (to-ha [angle] (:ha angle))
+  (to-arcmin [angle] (* 60 (ha-to-deg (:ha angle))))
+  (to-arcsec [angle] (* 3600 (ha-to-deg (:ha angle))))
+  (to-dms [angle] (deg-to-dms (:ha angle)))
+  (to-hms [angle] (ha-to-hms (:ha angle)))
+  (to-string [angle] (hms-string (:ha angle))))
 
 ; Implementation of the Angle protocol that stores the angle as a radian value.
 (defrecord RadianAngleImpl
-  [radian]
+  [radians]
   Angle
-  (to-radians [angle] (:radian angle))
-  (to-degrees [angle] (rad-to-deg (:radian angle)))
-  (to-hours [angle] (/ (rad-to-deg (:radian angle)) 15))
-  (to-minutes [angle] (* 60 (rad-to-deg (:radian angle))))
-  (to-seconds [angle] (* 3600 (rad-to-deg (:radian angle))))
-  (to-dms [angle] (deg-to-dms (rad-to-deg (:radian angle)))))
+  (to-radians [angle] (:radians angle))
+  (to-degrees [angle] (rad-to-deg (:radians angle)))
+  (to-ha [angle] (/ (rad-to-deg (:radians angle)) 15))
+  (to-arcmin [angle] (* 60 (rad-to-deg (:radians angle))))
+  (to-arcsec [angle] (* 3600 (rad-to-deg (:radians angle))))
+  (to-dms [angle] (deg-to-dms (rad-to-deg (:radians angle))))
+  (to-hms [angle] (ha-to-hms (deg-to-ha (rad-to-deg (:radians angle)))))
+  (to-string [angle] (dms-string (rad-to-deg (:radians angle)))))
