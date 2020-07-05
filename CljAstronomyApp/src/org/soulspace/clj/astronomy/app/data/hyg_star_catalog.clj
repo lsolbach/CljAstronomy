@@ -1,8 +1,8 @@
 (ns org.soulspace.clj.astronomy.app.data.hyg-star-catalog
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io]
+            [clojure.data.csv :as csv])
   (:use [clojure.set :only [map-invert]]
-        [clojure.java.io]
-        [clojure.data.csv]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
 (def hyg-star-file (str data-dir "/catalogs/hygdata_v3.csv"))
@@ -32,11 +32,11 @@
      :flamsteed (if (seq flam) flam)
      :constellation (if (and (seq con) (= (count con) 3)) (keyword con))
      :common-name (str/trim proper-name)
-     :ra (java.lang.Double/valueOf ra)
-     :dec (java.lang.Double/valueOf dec)
+     :ra (Double/valueOf ra)
+     :dec (Double/valueOf dec)
      :distance distance
-     :mag (java.lang.Double/valueOf mag)
-     :mag-abs (java.lang.Double/valueOf abs-mag)
+     :mag (Double/valueOf mag)
+     :mag-abs (Double/valueOf abs-mag)
      :spectral-type spectral-type
      :color-index color-index
      :x x
@@ -45,18 +45,17 @@
      :v-x v-x
      :v-y v-y
      :v-z v-z
-     :ra-rad (java.lang.Double/valueOf ra-rad) ; (if (seq ra-rad) (java.lang.Double/valueOf ra-rad))
-     :dec-rad (java.lang.Double/valueOf dec-rad) ; (if (seq dec-rad) (java.lang.Double/valueOf dec-rad))
-     :pm-ra-rad (if (seq pm-ra-rad) (java.lang.Double/valueOf pm-ra-rad))
-     :pm-dec-rad (if (seq pm-dec-rad) (java.lang.Double/valueOf pm-dec-rad))
-     :lum (if (seq lum) (java.lang.Double/valueOf lum))
+     :ra-rad (Double/valueOf ra-rad) ; (if (seq ra-rad) (java.lang.Double/valueOf ra-rad))
+     :dec-rad (Double/valueOf dec-rad) ; (if (seq dec-rad) (java.lang.Double/valueOf dec-rad))
+     :pm-ra-rad (if (seq pm-ra-rad) (Double/valueOf pm-ra-rad))
+     :pm-dec-rad (if (seq pm-dec-rad) (Double/valueOf pm-dec-rad))
+     :lum (if (seq lum) (Double/valueOf lum))
      :var (if (seq var) var)
-     :mag-var-min (if (seq var-min) (java.lang.Double/valueOf var-min))
-     :mag-var-max (if (seq var-max) (java.lang.Double/valueOf var-max))
+     :mag-var-min (if (seq var-min) (Double/valueOf var-min))
+     :mag-var-max (if (seq var-max) (Double/valueOf var-max))
      :comp (if (seq comp) comp)
      :comp-primary (if (seq comp-primary) comp-primary)
      :base (if (seq base) base)}))
-
 
 (defn parse-hyg-star-mapping-transformer
   "Creates a mapping transformation from csv vector to hyg catalog star."
@@ -66,12 +65,12 @@
 (defn read-hyg-star
   "Read and parse the HYG star data."
   []
-  (with-open [in-file (reader hyg-star-file)]
+  (with-open [in-file (io/reader hyg-star-file)]
     (into []
       (comp
         (drop 2) ; line 0 are the headers, line 1 is sol, our own star
         (map parse-hyg-star))
-      (read-csv in-file :separator \,))))
+      (csv/read-csv in-file :separator \,))))
 
 (defn write-star-catalog
   "Writes the stars to a file."
