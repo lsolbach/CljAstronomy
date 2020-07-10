@@ -7,6 +7,14 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 ;
+
+;;
+;; Functions for calculations regarding astronomical magnitudes
+;;
+;; References:
+;; Jean Meeus; Astronomical Algorithms, 2. Ed.; Willmann-Bell
+;;
+
 (ns org.soulspace.clj.astronomy.magnitude
   (:use [org.soulspace.clj.math math java-math]))
 

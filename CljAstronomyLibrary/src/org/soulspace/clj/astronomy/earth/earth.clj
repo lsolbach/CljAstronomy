@@ -113,46 +113,5 @@
         s (* D (+ 1 (* flattening H1 (sqr (sin F)) (sqr (cos G))) (* -1 flattening H2 (sqr (cos F)) (sqr (sin G)))))]
     s))
 
-;
-; Precession
-;
 
 
-
-;
-; Nutation
-;
-(defn mean-longitude-sun
-  "Calculates the mean longitude of the sun."
-  [t]
-  (+ 280.4665M (* 36000.7698M t)))
-
-(defn mean-longitude-moon
-  "Calculates the mean longitude of the moon."
-  [t]
-  (+ 218.3165 (* 481267.8813 t)))
-
-(defn longitude-ascending-node-moon
-  "Calculates the longitude of ascending node of the moons mean orbit on the ecliptic, measured from the mean equinox of the date."
-  [t]
-  (+ 125.04452M (* -1934.136261M t) (* 0.0020708M t) (/ (* t t t) 450000M)))
-
-(defn nutation-in-longitude
-  "Calculates the nutation in longitude (delta psi) in arc seconds  with an accuracy of 0.5 arc seconds."
-  [jde]
-  (let [t (julian-centuries jde)
-        omega (longitude-ascending-node-moon t)
-        l-sun (mean-longitude-sun t)
-        l-moon (mean-longitude-moon t)]
-    ; TODO test
-    (+ (* -17.20 (sin omega)) (* -1.32 (sin (* 2 l-sun))) (* -0.23 (sin (* 2 l-moon))) (0.21 (sin (* 2 omega))))))
-
-(defn nutation-in-obliquity
-  "Calculates the nutation in obliquity (delta epsilon) in arc seconds with an accuracy of 0.1 arc seconds."
-  [jde]
-  (let [t (julian-centuries jde)
-        omega (longitude-ascending-node-moon t)
-        l-sun (mean-longitude-sun t)
-        l-moon (mean-longitude-moon t)]
-    ; TODO test
-    (+ (* 9.20 (cos omega)) (* 0.57 (cos (* 2 l-sun))) (* 0.10 (cos (* 2 l-moon))) (* 0.09 (cos (* 2 omega))))))
