@@ -15,6 +15,5 @@
 
 (def au "Astronomical Unit (m)" 149597870e3)
 (def c "Light speed (m/s)" 299792458)
-(def ly "Light year" 1) ; TODO
-(def pc "Parallax second" 1) ; TODO
-
+(def ly "Light year" 9460730472580800) ; m/yr
+(def pc "Parallax second" 1) ; 3,085.677.581 × 10^16 m

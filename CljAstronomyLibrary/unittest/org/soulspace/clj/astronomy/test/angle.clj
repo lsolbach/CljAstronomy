@@ -53,4 +53,15 @@
   (is (= (deg-to-ha -7.5) 23.5))
   (is (= (deg-to-ha 375.0) 1.0)))
 
+(def deg-180 (->DegreeAngle 180.0))
+(def deg-540 (->DegreeAngle 540.0))
+
+(deftest degree-angle-tests
+  (is (= (to-rad deg-180) pi))
+  (is (= (to-deg deg-180) 180.0))
+  (is (= (to-ha deg-180) 12.0))
+  (is (= (to-rad deg-540) pi))
+  (is (= (to-deg deg-540) 180.0))
+  (is (= (to-ha deg-540) 12.0)))
+
 ;(run-tests)

@@ -8,10 +8,8 @@
 ;   You must not remove this notice, or any other, from this software.
 ;
 (ns org.soulspace.clj.astronomy.angle
+  (:require [clojure.spec.alpha :as s])
   (:use [org.soulspace.clj.math math java-math]))
-
-; TODO define an angle protocol?
-; TODO angle operations: +, - (*, /)?
 
 ; pattern for parsing an angle string given in signed degrees, minutes and seconds, e.g. -80° 7' 30\"
 (def dms-pattern #"(\+|-)?(\d+)°\s*(?:(\d+)'\s*(?:(\d+(?:\.\d+)?)\")?)?")
@@ -119,8 +117,10 @@
   (to-hms [angle] "Returns the angle as hour angle, a map of h, min and sec.")
   (to-string [angle] "Returns a matching human readable string representation of the angle."))
 
+; TODO add specs, add modulo 360, 2*pi, 24 on respective constructors
+
 ; Implementation of the Angle protocol that stores the angle as a degree value.
-(defrecord DegreeAngleImpl
+(defrecord DegreeAngle
   [degrees]
   Angle
   (to-rad [angle] (deg-to-rad (:degrees angle)))
@@ -133,7 +133,7 @@
   (to-string [angle] (dms-string (:degrees angle))))
 
 ; Implementation of the Angle protocol that stores the angle as a degree value.
-(defrecord HourAngleImpl
+(defrecord HourAngle
   [ha]
   Angle
   (to-rad [angle] (deg-to-rad (ha-to-deg (:ha angle))))
@@ -146,11 +146,11 @@
   (to-string [angle] (hms-string (:ha angle))))
 
 ; Implementation of the Angle protocol that stores the angle as a radian value.
-(defrecord RadianAngleImpl
+(defrecord RadianAngle
   [radians]
   Angle
-  (to-radians [angle] (:radians angle))
-  (to-degrees [angle] (rad-to-deg (:radians angle)))
+  (to-rad [angle] (:radians angle))
+  (to-deg [angle] (rad-to-deg (:radians angle)))
   (to-ha [angle] (/ (rad-to-deg (:radians angle)) 15))
   (to-arcmin [angle] (* 60 (rad-to-deg (:radians angle))))
   (to-arcsec [angle] (* 3600 (rad-to-deg (:radians angle))))

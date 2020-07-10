@@ -37,7 +37,7 @@
   [[long lat]]
   ;(stereographic-user-coordinates (stereographic-relative-coordinates (north-pole-stereographic-projector [long lat])))
   (-> [long lat]
-    north-pole-stereographic-projector
+    home-stereographic-projector
     stereographic-relative-coordinates
     stereographic-user-coordinates))
 
@@ -48,7 +48,7 @@
   (-> [x y]
     reverse-stereographic-user-coordinates
     reverse-stereographic-relative-coordinates
-    north-pole-reverse-stereographic-projector))
+    home-reverse-stereographic-projector))
 
 
 (defn draw-stereographic-chart-background
@@ -62,19 +62,20 @@
   (set-rendering-hint gfx (rendering-hint-keys :antialialising) (antialias-hints :on))
   (draw-stereographic-chart-background gfx)
   ;(draw-chart-grid gfx)
+  ;TODO use transducers
   (draw-dso-labels gfx stereographic-scale
                    (filter common-name?
-                           (filter (rad-ra-dec-filter [0.0 0.0] [(* 2 pi) (/ pi 2)])
+                           (filter (angular-distance-filter (/ pi 2) home)
                                    (filter (mag-filter 6) (get-deep-sky-objects)))))
   (draw-dso-labels gfx stereographic-scale
                    (filter common-name?
-                           (filter (ra-dec-filter [0.0 0.0] [360.0 90.0])
-                                   (filter (mag-filter 2) (get-stars)))))
+                     (filter (angular-distance-filter (/ pi 2) home)
+                       (filter (mag-filter 2) (get-stars)))))
   (draw-dsos gfx stereographic-scale
-             (filter (ra-dec-filter [0.0 0.0] [360.0 90.0])
+             (filter (angular-distance-filter (/ pi 2) home)
                      (filter (mag-filter 10) (get-deep-sky-objects))))
   (draw-dsos gfx stereographic-scale
-             (filter (ra-dec-filter [0.0 0.0] [360.0 90.0])
+             (filter (angular-distance-filter (/ pi 2) home)
                      (filter (mag-filter 7) (get-stars)))))
 
 (defn stereographic-star-chart-panel

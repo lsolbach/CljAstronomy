@@ -10,22 +10,22 @@
 (def north-pole-stereographic-projector (stereographic-projector 1 1 north-pole))
 (def south-pole-stereographic-projector (stereographic-projector 1 1 south-pole))
 (def equatorial-stereographic-projector (stereographic-projector 1 1 equator))
-(def ostfildern-stereographic-projector (stereographic-projector 1 1 home))
+(def home-stereographic-projector (stereographic-projector 1 1 home))
 
 (def north-pole-reverse-stereographic-projector (reverse-stereographic-projector 1 1 north-pole))
 (def south-pole-reverse-stereographic-projector (reverse-stereographic-projector 1 1 south-pole))
 (def equatorial-reverse-stereographic-projector (reverse-stereographic-projector 1 1 equator))
-(def ostfildern-reverse-stereographic-projector (reverse-stereographic-projector 1 1 home))
+(def home-reverse-stereographic-projector (reverse-stereographic-projector 1 1 home))
 
 (def north-pole-orthographic-projector (orthographic-projector 1 north-pole))
 (def south-pole-orthographic-projector (orthographic-projector 1 south-pole))
 (def equatorial-orthographic-projector (orthographic-projector 1 equator))
-(def ostfildern-orthographic-projector (orthographic-projector 1 home))
+(def home-orthographic-projector (orthographic-projector 1 home))
 
 (def north-pole-reverse-orthographic-projector (reverse-orthographic-projector 1 north-pole))
 (def south-pole-reverse-orthographic-projector (reverse-orthographic-projector 1 south-pole))
 (def equatorial-reverse-orthographic-projector (reverse-orthographic-projector 1 equator))
-(def ostfildern-reverse-orthographic-projector (reverse-orthographic-projector 1 home))
+(def home-reverse-orthographic-projector (reverse-orthographic-projector 1 home))
 
 (defn user-coordinate-transformer
   "Returns a scaling transformer function which scales the coordinates in the intervall [0,1] to java user

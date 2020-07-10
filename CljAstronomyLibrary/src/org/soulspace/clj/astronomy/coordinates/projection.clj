@@ -15,7 +15,6 @@
 ; TODO move to a separate module
 ; TODO maybe add simplifications for long-0 or lat-0 = 0 or 90 degrees
 
-
 (defn stereographic-projection
   "Calculates the stereographic projection of the coordinates of long and lat for a map centered on the coordinates long-0 and lat-0."
     ([R k-0 [long-0 lat-1] [long lat]]

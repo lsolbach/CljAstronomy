@@ -40,6 +40,10 @@
   ([instant ra]
    (- (mean-siderial-time-greenwich instant) ra)))
 
+(defprotocol Coordinate
+  "Protocol for coordinates.")
+
+
 (defprotocol Horizontal
   "Protocol for horizontal coordinate system (Alt/Az).")
 

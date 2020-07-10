@@ -1,4 +1,4 @@
-(defproject org.soulspace.clj/CljAstronomyLibrary "0.2.0"
+(defproject org.soulspace.clj/CljAstronomyLibrary "0.3.0-SNAPSHOT "
   :description "A library of astronomical algorithms in clojure"
   :url "https://github.com/lsolbach/CljAstronomy"
   :license {:name "Eclipse Public License"
