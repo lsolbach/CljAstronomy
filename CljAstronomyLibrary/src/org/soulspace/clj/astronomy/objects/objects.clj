@@ -9,6 +9,7 @@
 ;
 (ns org.soulspace.clj.astronomy.objects.objects)
 
+; TODO move protocol and records to a domain layer
 ; basic protocol for all astronomical objects (e.g. stars, galaxies, clusters)
 (defprotocol AstronomicalObject
   "Base protocol for all astronomical objects (e.g. stars, galaxies, clusters).")

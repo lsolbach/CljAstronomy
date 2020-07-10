@@ -100,6 +100,11 @@
      :min (long (floor (* af 60)))
      :sec (* mf 60.0)}))
 
+(defn dms-to-rad
+  "Converts an angle given in degrees, minutes and seconds into an angle given in radians."
+  [dms]
+  (deg-to-rad (dms-to-deg dms)))
+
 (defn dms-string
   "Returns the string representation of the hour angle."
   [a]

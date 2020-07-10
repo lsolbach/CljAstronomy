@@ -11,18 +11,17 @@
   (:use [org.soulspace.clj.math math java-math]
         [org.soulspace.clj.astronomy.time time instant]))
 
-; References:
-; Jean Meeus; Astronomical Algorithms, 2. Ed.; Willmann-Bell
+;; References:
+;; Jean Meeus; Astronomical Algorithms, 2. Ed.; Willmann-Bell
 
-; TODO abstract into the planet protocol? the methods should work with other constants for other planets too
+;; TODO rename methods to topo* instead of geo* to generalize them to other celestial bodies
+;; TODO abstract into the planet protocol? Move protocols and records to a domain layer 
 
 (def equatorial-radius 6378140) ; equatorial radius in meters
 (def flattening (/ 1 298.257)) ; flattening
 (def polar-radius (* equatorial-radius (- 1 flattening))) ; polar radius in meters
 (def eccentricity (sqrt (- (* 2 flattening) (sqr flattening)))) ; eccentricity of the meridian
 (def omega 7.292114992e-5) ; rotational angular velocity with respect to the stars at epoch 1996.5 (but earth is slowing down)
-
-(def position-types #{:geographic :geocentric})
 
 (defprotocol Position
   (longitude [position] "Returns the longitude of this position.")
@@ -32,7 +31,6 @@
 
 (defprotocol GeographicPosition
   (geocentric-position [position] "Returns the geocentric position of this geographic position."))
-
 
 (defrecord GeographicPositionImpl
   [longitude latitude height]

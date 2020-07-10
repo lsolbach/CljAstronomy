@@ -31,12 +31,22 @@
 
 (defn combined-magnitude
   "Calculates the combined magnitude of the given magnitudes."
-  ([coll]
-   (* -2.5 (log10 (apply + (map #(pow 10 (* -0.4 %)) coll)))))
+  ([mag1]
+    mag1)
   ([mag1 mag2]
    (let [x (* 0.4 (- mag2 mag1))]
-     (println x)
-     (- mag2 (* 2.5 (log10 (+ (pow 10 x) 1)))))))
+     (- mag2 (* 2.5 (log10 (+ (pow 10 x) 1))))))
+  ([mag1 mag2 & mags]
+    (->> (cons mag1 (cons mag2 mags))
+      (map #(pow 10 (* -0.4 %)))
+      (reduce +)
+      (log10)
+      (* -2.5))))
+
+(defn absolute-magnitude
+  "Calculates the absolute magnitude from the given relative magnitude and distance in parsec."
+  [dist mag]
+  (+ mag 5 (* -5 (log10 dist))))
 
 (defn mag-per-''²-to-mag-per-'²
   "Calculates the magnitudes per square arc minute from the magnitudes per square arc second."
