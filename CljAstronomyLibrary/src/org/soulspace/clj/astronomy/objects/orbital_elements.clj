@@ -9,4 +9,5 @@
 ;
 (ns org.soulspace.clj.astronomy.objects.orbital-elements)
 
+; TODO move protocol and records to a domain layer
 (defprotocol OrbitalElements)

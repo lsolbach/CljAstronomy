@@ -5,3 +5,5 @@
 target
 pom.xml
 .lein-failures
+/.classpath
+/.project

@@ -1,8 +1,8 @@
 (ns org.soulspace.clj.astronomy.app.data.hyg-dso-catalog
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io]
+            [clojure.data.csv :as csv])
   (:use [clojure.set :only [map-invert]]
-        [clojure.java.io]
-        [clojure.data.csv]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
 (def hyg-dso-file (str data-dir "/catalogs/dso.csv"))
@@ -14,7 +14,6 @@
                          "4" "Collinder open cluster catalog, items not already in Messier,Caldwell,NGC,IC and with defined size and magnitude (http://www.cloudynights.com/item.php?item_id=2544)."
                          "5" "Perek-Kohoutek catalog IDs, from original (Perek + Kouhoutek, 1967) and update (Perek + Kohoutek, 2001)."
                          "6" "Faint globulars (Palomar + Terzian) from http://www.astronomy-mall.com/Adventures.In.Deep.Space/obscure.htm and http://www.astronomy-mall.com/Adventures.In.Deep.Space/palglob.htm."})
-
 
 (def hyg-dso-type-map {"*" "Single Star"
                        "**" "Double Star"
@@ -34,7 +33,6 @@
                        "Neb?" "Nebula?"
                        "?" "Unknown"
                        "" "Unknown"})
-
 
 (defn hyg-dso-type
   "Returns the type of the dso object."
@@ -62,7 +60,6 @@
     (= type "") :unknown
     :default (do (println "Unknown type in HYG DSO catalog:" type) :unknown)))
 
-
 (defn catalog-id
   "Extracts the catalog id of the object."
   [catalog id1 cat1 id2 cat2]
@@ -73,18 +70,18 @@
 (defn parse-hyg-dso
   "Parse a line of hyg dso catalog data."
   [[ra dec type const mag common-name ra-rad dec-rad id r1 r2 angle dso-source id1 cat1 id2 cat2 dupid dupcat display-mag]]
-  {:ra (java.lang.Double/valueOf ra)  ; TODO store rad angle
-   :dec (java.lang.Double/valueOf dec)  ; TODO store rad angle
+  {:ra (Double/valueOf ra)
+   :dec (Double/valueOf dec)
    :type (hyg-dso-type type)
    :constellation (keyword const)
-   :mag (if (seq mag) (java.lang.Double/valueOf mag) 100.0)
+   :mag (if (seq mag) (Double/valueOf mag) 100.0)
    :common-name (if (seq common-name) common-name)
-   :ra-rad (java.lang.Double/valueOf ra-rad)
-   :dec-rad (java.lang.Double/valueOf dec-rad)
+   :ra-rad (Double/valueOf ra-rad)
+   :dec-rad (Double/valueOf dec-rad)
    :id id
-   :r1 (if (seq r1) (java.lang.Double/valueOf r1))
-   :r2 (if (seq r2) (java.lang.Double/valueOf r2))
-   :pos-angle (if (seq angle) (java.lang.Double/valueOf angle))
+   :r1 (if (seq r1) (Double/valueOf r1))
+   :r2 (if (seq r2) (Double/valueOf r2))
+   :pos-angle (if (seq angle) (Double/valueOf angle))
    :source dso-source
    :id1 id1
    :cat1 cat1
@@ -92,7 +89,7 @@
    :cat2 cat2
    :dupid dupid
    :dupcat dupcat
-   :display-mag (if (seq display-mag) (java.lang.Double/valueOf display-mag))
+   :display-mag (if (seq display-mag) (Double/valueOf display-mag))
    :messier (catalog-id "M" id1 cat1 id2 cat2)
    :ngc (catalog-id "NGC" id1 cat1 id2 cat2)
    :ic (catalog-id "IC" id1 cat1 id2 cat2)
@@ -106,7 +103,7 @@
 (defn read-hyg-dso
   "Read the messier catalog."
   []
-  (with-open [in-file (reader hyg-dso-file)]
+  (with-open [in-file (io/reader hyg-dso-file)]
     (into []
           (comp
             (drop 1)
@@ -116,5 +113,4 @@
             ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
             ; filter messier 40 double star
             (filter #(not= (:messier %) "40")))
-
-          (read-csv in-file))))
+          (csv/read-csv in-file))))

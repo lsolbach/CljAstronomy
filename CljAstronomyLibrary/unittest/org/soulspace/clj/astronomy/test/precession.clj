@@ -7,16 +7,11 @@
 ;;   the terms of this license.
 ;;   You must not remove this notice, or any other, from this software.
 ;;
-(ns org.soulspace.clj.astronomy.test.magnitude
-  (:use [clojure.test]
-        [org.soulspace.clj.astronomy.test]
-        [org.soulspace.clj.astronomy magnitude]))
+(ns org.soulspace.clj.astronomy.test.precession
+  (:use
+    [clojure.test]
+    [org.soulspace.clj.astronomy.test]
+    [org.soulspace.clj.astronomy precession]
+    [org.soulspace.clj.math java-math]))
 
-(deftest combined-magnitude-test
-  (is (about-equal (combined-magnitude 1.96) 1.96))
-  (is (about-equal (combined-magnitude 1.96 2.89) 1.58))
-  (is (about-equal (combined-magnitude 4.73 5.22 5.60) 3.93)))
-
-(deftest brightness-ratio-test
-  (is (about-equal (brightness-ratio 0.14 2.12) 6.19)))
 

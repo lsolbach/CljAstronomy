@@ -14,6 +14,7 @@
     [org.soulspace.clj.astronomy angle]))
 
 ; TODO the protocol is about topological/topographical calculations not only relevant for planets, rename to topology!?
+; TODO move protocol and record to domain layer, use functions from topology namespace
 (defprotocol Planet
   "Protocol for planets."
   (planetocentric-latitude

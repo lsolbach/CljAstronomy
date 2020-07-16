@@ -1,9 +1,18 @@
 (ns org.soulspace.clj.astronomy.instruments.photographic
   (:use [org.soulspace.clj.math math java-math]))
-;
-; photographic
-;
+
+;;
+;; photographic functions
+;;
+; TODO move to a new photography project
 (def pixel-size-eos600d (/ 0.0222 5184))
+
+(defn diagonal
+  "Calculates the diagonal of a rectangle."
+  ([a]
+   (sqrt (* 2 a a)))
+  ([a b]
+   (sqrt (+ (* a a) (* b b)))))
 
 (defn exposure-value
  "Calculates the exposure value for the given f-stop and shutter speed."
@@ -49,13 +58,6 @@
   "Calculates the angle of view of an image for the given focal length and sensor size."
   [focal-length size]
   (* 2 (atan (/ size (* 2 focal-length)))))
-
-(defn diagonal
-  "Calculates the diagonal of a rectangle."
-  ([a]
-   (sqrt (* 2 a a)))
-  ([a b]
-   (sqrt (+ (* a a) (* b b)))))
 
 (defn panoramic-image-count
   "Calculates the number of images needed for a panorama given the focal length, sensor size, panorama arc and overlap."
