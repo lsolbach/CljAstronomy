@@ -14,4 +14,12 @@
     [org.soulspace.clj.astronomy precession]
     [org.soulspace.clj.math java-math]))
 
+(deftest calc-m-test
+  (is (= (calc-m 0) 3.075)))
 
+(deftest calc-n-test
+  (is (= (calc-n 0) 1.336)))
+
+(deftest annual-precession-low-accuracy-test
+  (is (= (annual-precession-low-accuracy 0 [(hms-to-rad "10h08m22.3s") (dms-to-rad "11°58'02\"")])
+         {:delta-ra 3.208 :delta-dec -17.71})))
