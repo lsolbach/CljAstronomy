@@ -25,7 +25,7 @@
   "Calculates the mean anomaly of the sun at the given instant
   in julian centuries."
   [t]
-  (+ 357.52772M (* 35999.050340M t) (* -1 0.0001603M t t) (/ (* -1 t t t) 300000.0M )))
+  (+ 357.52772M (* 35999.050340M t) (* -1 0.0001603M t t) (/ (* -1 t t t) 300000.0M)))
 
 (defn mean-anomaly-moon
   "Calculates the mean anomaly of the moon at the given instant
@@ -78,9 +78,7 @@
   [jde]
   (let [t (julian-centuries jde)]
         ; TODO convert to deg and use the deg values here
-        (+ (dms-to-deg "23°26'21.448\"") (* -1 (dms-to-deg "0°0'46.8150\"") t)
-           (* -1 (dms-to-deg "0°0'0.00059\"") t t) (* (dms-to-deg "0°0'0.001813\"") t t t))))
+       (+ (dms-to-deg "23°26'21.448\"") (* -1 (dms-to-deg "0°0'46.8150\"") t)
+          (* -1 (dms-to-deg "0°0'0.00059\"") t t) (* (dms-to-deg "0°0'0.001813\"") t t t))))
 
 ; TODO high accuracy variant
-
-
