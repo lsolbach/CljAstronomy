@@ -77,6 +77,10 @@
   [a]
   (/ (mod a 360) 15))
 
+(defn hms-to-rad
+  "Converts an hour angle given in hours minutes and seconds into an angle given in radians."
+  [hms]
+  (deg-to-rad (ha-to-deg (hms-to-ha hms))))
 
 (defn dms-to-deg
   "Converts an angle given in degrees, minutes and seconds into an angle given in decimal degrees."

@@ -8,15 +8,15 @@
 ;   You must not remove this notice, or any other, from this software.
 ;
 
-;;
-;; Functions for calculations regarding astronomical magnitudes
-;;
-;; References:
-;; Jean Meeus; Astronomical Algorithms, 2. Ed.; Willmann-Bell
-;;
-
 (ns org.soulspace.clj.astronomy.magnitude
   (:use [org.soulspace.clj.math math java-math]))
+
+  ;;
+  ;; Functions for calculations regarding astronomical magnitudes
+  ;;
+  ;; References:
+  ;; Jean Meeus; Astronomical Algorithms, 2. Ed.; Willmann-Bell
+  ;;
 
 (defn magnitude-difference
   "Calculates the magnitude difference from the brightness ratio."
@@ -40,16 +40,16 @@
 (defn combined-magnitude
   "Calculates the combined magnitude of the given magnitudes."
   ([mag1]
-    mag1)
+   mag1)
   ([mag1 mag2]
    (let [x (* 0.4 (- mag2 mag1))]
      (- mag2 (* 2.5 (log10 (+ (pow 10 x) 1))))))
   ([mag1 mag2 & mags]
-    (->> (cons mag1 (cons mag2 mags))
-      (map #(pow 10 (* -0.4 %)))
-      (reduce +)
-      (log10)
-      (* -2.5))))
+   (->> (cons mag1 (cons mag2 mags))
+     (map #(pow 10 (* -0.4 %)))
+     (reduce +)
+     (log10)
+     (* -2.5))))
 
 (defn absolute-magnitude
   "Calculates the absolute magnitude from the given relative magnitude and distance in parsec."
