@@ -7,9 +7,20 @@
         [org.soulspace.clj.astronomy.app.instruments equipment]
         [org.soulspace.clj.astronomy.app.ui.swing common]))
 
+(comment
+  (def ui-elements {:f-name (text-field {:columns 30})
+                    :f-type (text-field {:columns 30})
+                    :f-aperture (number-field {:columns 30})
+                    :f-focal-length (number-field {:columns 30})
+                    :f-effectiveness (number-field {:columns 30})
+                    :f-fixed-magnification (check-box {}) ; TODO Radio buttons
+                    :f-magnification (number-field {:columns 30})
+                    :f-field-of-view (number-field {:columns 30})
+                    :f-available (check-box {})
+                    :b-add (button {:text (i18n "button.add")})})) 
+
 (defn optics-table-model
   [coll])
-
 
 (defn optic-panel
   "Creates the optic panel."
