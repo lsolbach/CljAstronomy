@@ -3,8 +3,7 @@
   :url "https://github.com/lsolbach/CljAstronomy"
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.10.0"]
-                 [org.soulspace.clj/CljLibrary "0.7.0"]
-                 [org.soulspace.clj/CljMathLibrary "0.5.1"]
-                 [proto-repl "0.3.1"]]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [org.soulspace.clj/clj.base "0.8.1"]
+                 [org.soulspace.clj/math.base "0.6.0"]]
   :test-paths ["unittest"])
