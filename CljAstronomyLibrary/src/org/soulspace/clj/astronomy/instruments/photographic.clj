@@ -41,14 +41,14 @@
   (/ (* 100 f-stop f-stop) (* (pow 2 exposure-value) shutter-speed)))
 
 (defn hyperfocal-distance
-  "Calculates the hyperfocal distance."
+  "Calculates the hyperfocal distance for the given focal length, f-stop and optionally the circle of confusion."
   ([focal-length f-stop]
    (hyperfocal-distance focal-length f-stop 1/1500))
   ([focal-length f-stop circle-of-confusion]
    (+ (/ (* focal-length focal-length) (* f-stop circle-of-confusion)) focal-length)))
 
 (defn hyperfocal-distance-approximation
-  "Calculates the hyperfocal distance."
+  "Calculates an approximation of the hyperfocal distance for the given focal length, f-stop and optionally the circle of confusion."
   ([focal-length f-stop]
    (hyperfocal-distance-approximation focal-length f-stop 1/1500))
   ([focal-length f-stop circle-of-confusion]

@@ -8,7 +8,7 @@ Ludger Solbach
 
 Copyright
 ---------
-© 2011-2016 Ludger Solbach
+(c) 2011-2020 Ludger Solbach
 
 License
 -------
@@ -16,7 +16,7 @@ License
 
 Code Repository
 ---------------
-[https://github.com/lsolbach/CljjAstronomyLibrary] (https://github.com/lsolbach/CljjAstronomyLibrary)
+[https://github.com/lsolbach/CljAstronomy] (https://github.com/lsolbach/CljAstronomy)
 
 History
 -------

@@ -14,7 +14,7 @@
 ;; Functions for calculations regarding the athmospere of the earth.
 ;;
 ;; References:
-;; Erik Wischnewski; Astronomie in Theorie und Praxis; 6. Aufl.; Erik Wischnewski; Kapitel 2: Athmosphäre der Erde
+;; Erik Wischnewski; Astronomie in Theorie und Praxis; 6. Aufl.; Erik Wischnewski; Kapitel 2: Atmosphäre der Erde
 ;; Wikipedia.de; Rayleigh-Streuung
 ;; Wikipedia.de; Mie-Streuung
 ;;

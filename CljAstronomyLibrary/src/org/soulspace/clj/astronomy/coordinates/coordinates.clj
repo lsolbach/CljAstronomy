@@ -44,9 +44,9 @@
 ; TODO move protocol and records to a domain layer
 (defprotocol CelestialObject
   "Protocol for celestial coordinates.")
-  (horizontal-coordinates [obj time location])
-  (equatorial-coordinates [obj time location])
-  (magnitude [obj time location])
+(horizontal-coordinates [obj time location])
+(equatorial-coordinates [obj time location])
+(magnitude [obj time location])
 
 ;; TODO convert to records
 (defprotocol HorizontalCoordinates
