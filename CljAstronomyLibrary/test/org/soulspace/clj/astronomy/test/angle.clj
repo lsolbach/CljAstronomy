@@ -1,18 +1,20 @@
-;;
-;;   Copyright (c) Ludger Solbach. All rights reserved.
-;;   The use and distribution terms for this software are covered by the
-;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
-;;   which can be found in the file license.txt at the root of this distribution.
-;;   By using this software in any fashion, you are agreeing to be bound by
-;;   the terms of this license.
-;;   You must not remove this notice, or any other, from this software.
-;;
+;;;;
+;;;;   Copyright (c) Ludger Solbach. All rights reserved.
+;;;;
+;;;;   The use and distribution terms for this software are covered by the
+;;;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;;;;   which can be found in the file license.txt at the root of this distribution.
+;;;;   By using this software in any fashion, you are agreeing to be bound by
+;;;;   the terms of this license.
+;;;;
+;;;;   You must not remove this notice, or any other, from this software.
+;;;;
 (ns org.soulspace.clj.astronomy.test.angle
+  (:require [clojure.test :refer :all]
+            [org.soulspace.math.core :as m])
   (:use
-    [clojure.test]
-    [org.soulspace.clj.astronomy.test]
-    [org.soulspace.clj.astronomy angle]
-    [org.soulspace.clj.math java-math]))
+   [org.soulspace.clj.astronomy.test]
+   [org.soulspace.clj.astronomy angle]))
 
 (deftest dms-to-deg-test
   (is (= (dms-to-deg "+180°") 180.0))
@@ -57,10 +59,10 @@
 (def deg-540 (->DegreeAngle 540.0))
 
 (deftest degree-angle-tests
-  (is (= (to-rad deg-180) pi))
+  (is (= (to-rad deg-180) m/PI))
   (is (= (to-deg deg-180) 180.0))
   (is (= (to-ha deg-180) 12.0))
-  (is (= (to-rad deg-540) pi))
+  (is (= (to-rad deg-540) m/PI))
   (is (= (to-deg deg-540) 180.0))
   (is (= (to-ha deg-540) 12.0)))
 

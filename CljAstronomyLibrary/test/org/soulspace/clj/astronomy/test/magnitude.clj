@@ -9,11 +9,16 @@
 ;;;;
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
-(ns org.soulspace.clj.astronomy.test)
+(ns org.soulspace.clj.astronomy.test.magnitude
+  (:use [clojure.test]
+        [org.soulspace.clj.astronomy.test]
+        [org.soulspace.clj.astronomy magnitude]))
 
-(defn about-equal
-  "Tests if the actual and expected values are equal in the given error margin."
-  ([actual expected]
-   (about-equal actual expected 0.0001))
-  ([actual expected error-margin]
-   (<= (abs (- actual expected)) error-margin)))
+(deftest combined-magnitude-test
+  (is (about-equal (combined-magnitude 1.96) 1.96))
+  (is (about-equal (combined-magnitude 1.96 2.89) 1.58))
+  (is (about-equal (combined-magnitude 4.73 5.22 5.60) 3.93)))
+
+(deftest brightness-ratio-test
+  (is (about-equal (brightness-ratio 0.14 2.12) 6.19)))
+

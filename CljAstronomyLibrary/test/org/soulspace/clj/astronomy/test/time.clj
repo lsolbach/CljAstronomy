@@ -1,18 +1,19 @@
-;
-;   Copyright (c) Ludger Solbach. All rights reserved.
-;   The use and distribution terms for this software are covered by the
-;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
-;   which can be found in the file license.txt at the root of this distribution.
-;   By using this software in any fashion, you are agreeing to be bound by
-;   the terms of this license.
-;   You must not remove this notice, or any other, from this software.
-;
+;;;;
+;;;;   Copyright (c) Ludger Solbach. All rights reserved.
+;;;;
+;;;;   The use and distribution terms for this software are covered by the
+;;;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;;;;   which can be found in the file license.txt at the root of this distribution.
+;;;;   By using this software in any fashion, you are agreeing to be bound by
+;;;;   the terms of this license.
+;;;;
+;;;;   You must not remove this notice, or any other, from this software.
+;;;;
 (ns org.soulspace.clj.astronomy.test.time
-  (:use
-    [clojure.test]
-    [org.soulspace.clj.astronomy.test]
-    [org.soulspace.clj.astronomy.time.time]
-    [org.soulspace.clj.astronomy.angle]))
+  (:require [clojure.test :refer :all]
+            [org.soulspace.clj.astronomy.test :as atest]
+            [org.soulspace.clj.astronomy.angle :refer [deg-to-ha]]
+            [org.soulspace.clj.astronomy.time.time :refer :all]))
 
 (deftest julian-day-test
   (is (= (date-to-julian-day 2000 1 1.5) 2451545.0))
@@ -76,9 +77,9 @@
   (is (== (day-of-year 1582 10 15) 288)))
 
 (deftest mean-siderial-time-greenwich-0ut-test
-  (is (about-equal (deg-to-ha (mean-siderial-time-greenwich-0ut 2446895.5)) 13.1795)))
+  (is (atest/about-equal (deg-to-ha (mean-siderial-time-greenwich-0ut 2446895.5)) 13.1795)))
 
 (deftest mean-siderial-time-greenwich-test
-  (is (about-equal (deg-to-ha (mean-siderial-time-greenwich 2446895.5)) 13.1795)))
+  (is (atest/about-equal (deg-to-ha (mean-siderial-time-greenwich 2446895.5)) 13.1795)))
 
 ;(run-tests)

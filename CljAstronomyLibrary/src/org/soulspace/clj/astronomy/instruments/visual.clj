@@ -1,14 +1,16 @@
-;
-;   Copyright (c) Ludger Solbach. All rights reserved.
-;   The use and distribution terms for this software are covered by the
-;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
-;   which can be found in the file license.txt at the root of this distribution.
-;   By using this software in any fashion, you are agreeing to be bound by
-;   the terms of this license.
-;   You must not remove this notice, or any other, from this software.
-;
+;;;;
+;;;;   Copyright (c) Ludger Solbach. All rights reserved.
+;;;;
+;;;;   The use and distribution terms for this software are covered by the
+;;;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;;;;   which can be found in the file license.txt at the root of this distribution.
+;;;;   By using this software in any fashion, you are agreeing to be bound by
+;;;;   the terms of this license.
+;;;;
+;;;;   You must not remove this notice, or any other, from this software.
+;;;;
 (ns org.soulspace.clj.astronomy.instruments.visual
-  (:use [org.soulspace.clj.math math java-math]))
+  (:reuire [org.soulspace.math.core :as m]))
 
 ;
 ; optics
@@ -21,12 +23,13 @@
 (defn objective-area
   "Calculates the effective area of the objective by taking into account the area of the obstruction."
   [aperture obstruction]
-  (- (* pi (/ aperture 2)) (* pi (/ obstruction 2))))
+  (- (* m/PI (/ aperture 2)) (* m/PI (/ obstruction 2))))
 
 (defn aperture-ratio
   "Calculates the aperture ratio of a given telescope."
   [aperture focal-length]
-  (/ focal-length aperture))
+  (/ focal-length
+     aperture))
 
 (defn f-factor
   "Calculates the aperture ratio as a factor of the focal lenght of a given telescope."
@@ -41,7 +44,8 @@
 (defn geometric-luminous-intensity
   "Estimates the geometric luminous intensity of a spacial object."
   [optic-focal-length aperture obstruction ocular-focal-length]
-  (sqr (/ (objective-area aperture obstruction) (magnification optic-focal-length ocular-focal-length))))
+  (m/sqr (/ (objective-area aperture obstruction)
+            (magnification optic-focal-length ocular-focal-length))))
 
 (defn contrast
   "Calculates the contrast of between a (spacial) object and the background."
@@ -51,12 +55,12 @@
 (defn twilight-number
   "Calculates the subjective contrast (Daemmerungszahl)."
   [aperture obstruction optic-focal-length ocular-focal-length]
-  (sqrt (* (objective-area aperture obstruction) (magnification optic-focal-length ocular-focal-length))))
+  (m/sqrt (* (objective-area aperture obstruction) (magnification optic-focal-length ocular-focal-length))))
 
 (defn twilight-number-by-magnification
   "Calculates the subjective contrast (Daemmerungszahl) by the given magnification."
   [aperture obstruction magnification]
-  (sqrt (* (objective-area aperture obstruction) magnification)))
+  (m/sqrt (* (objective-area aperture obstruction) magnification)))
 
 (defn magnification-by-aperture
   "Calculates the magnification by the aperture of the objective and the exit pupil."

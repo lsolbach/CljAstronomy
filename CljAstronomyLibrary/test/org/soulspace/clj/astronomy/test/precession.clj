@@ -9,11 +9,18 @@
 ;;;;
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
-(ns org.soulspace.clj.astronomy.test)
+(ns org.soulspace.clj.astronomy.test.precession
+  (:use
+    [clojure.test]
+    [org.soulspace.clj.astronomy.test]
+    [org.soulspace.clj.astronomy angle precession]))
 
-(defn about-equal
-  "Tests if the actual and expected values are equal in the given error margin."
-  ([actual expected]
-   (about-equal actual expected 0.0001))
-  ([actual expected error-margin]
-   (<= (abs (- actual expected)) error-margin)))
+(deftest calc-m-test
+  (is (= (calc-m 0) 3.075)))
+
+(deftest calc-n-test
+  (is (= (calc-n 0) 1.336)))
+
+(deftest annual-precession-low-accuracy-test
+  (is (= (annual-precession-low-accuracy 0 [(hms-to-rad "10h08m22.3s") (dms-to-rad "11°58'02\"")])
+         {:delta-ra 3.208 :delta-dec -17.71})))

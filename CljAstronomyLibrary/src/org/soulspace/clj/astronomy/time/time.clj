@@ -1,15 +1,19 @@
-;
-;   Copyright (c) Ludger Solbach. All rights reserved.
-;   The use and distribution terms for this software are covered by the
-;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
-;   which can be found in the file license.txt at the root of this distribution.
-;   By using this software in any fashion, you are agreeing to be bound by
-;   the terms of this license.
-;   You must not remove this notice, or any other, from this software.
-;
+;;;;
+;;;;   Copyright (c) Ludger Solbach. All rights reserved.
+;;;;
+;;;;   The use and distribution terms for this software are covered by the
+;;;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;;;;   which can be found in the file license.txt at the root of this distribution.
+;;;;   By using this software in any fashion, you are agreeing to be bound by
+;;;;   the terms of this license.
+;;;;
+;;;;   You must not remove this notice, or any other, from this software.
+;;;;
 (ns org.soulspace.clj.astronomy.time.time
-  (:use [org.soulspace.clj.math math java-math])
+  (:require [org.soulspace.math.core :as m])
   (:import [java.util Date GregorianCalendar SimpleTimeZone TimeZone]))
+
+; TODO Clojurescript compatibility
 
 ; References:
 ; Meeus, Jean; Astronomical Algorithms, 2nd Ed.; Willmann Bell
@@ -30,7 +34,7 @@
 (defn julian-day
   "Calculates the julian day from a calender date."
   [y m d b]
-  (+ (floor (* 365.25M (+ y 4716))) (floor (* 30.6001M (+ m 1))) d b -1524.5M))
+  (+ (m/floor (* 365.25M (+ y 4716))) (m/floor (* 30.6001M (+ m 1))) d b -1524.5M))
 
 (defn modified-julian-day
   "Calculates the modified julian day from the julian day"
@@ -39,28 +43,28 @@
 
 (defn- gregorian-b
   [y]
-  (let [a (floor (/ y 100))]
-    (+ 2 (- a) (floor (/ a 4)))))
+  (let [a (m/floor (/ y 100))]
+    (+ 2 (- a) (m/floor (/ a 4)))))
 
 (defn- jd-a
   [z]
   (if (< z 2299161)
     z
-    (let [a (floor (/ (- z 1876216.25M) 36524.25M))]
-      (+ z 1 a (- (floor (/ a 4)))))))
+    (let [a (m/floor (/ (- z 1876216.25M) 36524.25M))]
+      (+ z 1 a (- (m/floor (/ a 4)))))))
 
 (defn julian-day-to-date
   "Calculates the calender date of the julian day instant."
   [jd]
   (let [x (+ jd 0.5M)
-        z (floor x)
+        z (m/floor x)
         f (- x z)
         a (jd-a z)
         b (+ a 1524)
-        c (floor (/ (- b 122.1M) 365.25M))
-        d (floor (* 365.25M c))
-        e (floor (/ (- b d) 30.6001M))
-        day (+ (- b d (floor (* 30.6001M e))) f)
+        c (m/floor (/ (- b 122.1M) 365.25M))
+        d (m/floor (* 365.25M c))
+        e (m/floor (/ (- b d) 30.6001M))
+        day (+ (- b d (m/floor (* 30.6001M e))) f)
         month (if (< e 14) (- e 1) (- e 13))
         year (if (> month 2) (- c 4716) (- c 4715))]
     {:year year :month month :day day}))
@@ -111,7 +115,7 @@
         h (rem (* df 24) 24)
         m (rem (* (rem h 1) 60) 60)
         s (rem (* (rem m 1) 60) 60)]
-    {:hour (floor h) :min (floor m) :sec (floor s)}))
+    {:hour (m/floor h) :min (m/floor m) :sec (m/floor s)}))
 
 (defn julian-leap-year?
   "Returns true if the given year is a leap year in the julian calender."
@@ -147,7 +151,7 @@
 (defn day-of-week
   "Calculates the index of the day in the week for the given julian day instant."
   [jd]
-  (nth days (floor (rem (+ jd 1.5) 7))))
+  (nth days (m/floor (rem (+ jd 1.5) 7))))
 
 (defn day-of-year
   "Calculates the index of the day in the year for the given julian day instant."
@@ -156,13 +160,13 @@
      (day-of-year year month day)))
   ([year month day]
    (let [k (if (leap-year? year) 1 2)]
-     (+ (floor (/ (* 275 month) 9)) (* (- k) (floor (/ (+ month 9) 12))) day -30))))
+     (+ (m/floor (/ (* 275 month) 9)) (* (- k) (m/floor (/ (+ month 9) 12))) day -30))))
 
 (defn time-by-julian-day
   "Calculates the time for the given julian day instant."
   [jd]
   (let [x (+ jd 0.5)
-        f (- x (floor x))]
+        f (- x (m/floor x))]
     (time-of-day f)))
 
 ;
@@ -226,7 +230,7 @@
       (< year 1601) (+ 102 (* 102 t) (* 25.3 t t))
       (< year 2000) (+ 102 (* 102 t) (* 25.3 t t)) ; FIXME use (delta-t-table year)
       (< year 2101) (+ 102 (* 102 t) (* 25.3 t t) (* 0.37 (- year 2100)))
-      :default (+ 102 (* 102 t) (* 25.3 t t)))))
+      :else (+ 102 (* 102 t) (* 25.3 t t)))))
 
 ; http://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html
 (defn delta-t-nasa
@@ -252,7 +256,7 @@
       (< year 1861) (let [t (- y 1800M)]
                       (+ 13.72M (* -0.332447M t) (* 0.0068612M t t) (* 0.0041116M t t t)
                          (* -0.00037436M t t t t) (* 0.0000121272M t t t t t)
-                         (* -0.0000001699M t t t t t t) (* 0.000000000875M * t t t t t t t)))
+                         (* -0.0000001699M t t t t t t) (* 0.000000000875M t t t t t t t)))
       (< year 1901) (let [t (- y 1860M)]
                       (+ 7.62M (* 0.5737M t) (* -0.251754M t t) (* 0.01680668M t t t)
                          (* -0.0004473624M t t t t) (/ (* t t t t t) 233174M)))
@@ -272,7 +276,7 @@
                       (+ 62.92M (* 0.32217M t) (* 0.005589M t t)))
       (< year 2151) (let [u (/ (- y 1820M) 100M)]
                       (+ -20M (* 32M u u) (* -0.5628M (- 2150 y))))
-      :default (let [u (/ (- y 1820M) 100M)]
+      :else (let [u (/ (- y 1820M) 100M)]
                     (+ -20M (* 32M u u))))))
 
 (def delta-t delta-t-nasa)
@@ -322,7 +326,7 @@
     (mod (+ 100.46061837M
            (* 36000.770053608M T)
            (* 0.000387933M T T)
-           (* -1 (/ (pow T 3) 38710000M)))
+           (* -1 (/ (m/pow T 3) 38710000M)))
          360)))
 
 (defn mean-siderial-time-greenwich
@@ -332,5 +336,5 @@
     (mod (+ 280.46061837M
            (* 360.98564736629M (- jd 2451545.0M))
            (* 0.000387933M T T)
-           (* -1 (/ (pow T 3) 38710000M)))
+           (* -1 (/ (m/pow T 3) 38710000M)))
          360)))

@@ -1,13 +1,25 @@
+;;;;
+;;;;   Copyright (c) Ludger Solbach. All rights reserved.
+;;;;
+;;;;   The use and distribution terms for this software are covered by the
+;;;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;;;;   which can be found in the file license.txt at the root of this distribution.
+;;;;   By using this software in any fashion, you are agreeing to be bound by
+;;;;   the terms of this license.
+;;;;
+;;;;   You must not remove this notice, or any other, from this software.
+;;;;
 (ns org.soulspace.clj.astronomy.nutation
-  (:use [org.soulspace.clj.math math java-math]
-        [org.soulspace.clj.astronomy.time time instant]))
+  (:require [org.soulspace.math.core :as m])
+  (:use [org.soulspace.clj.astronomy.time time instant]
+        [org.soulspace.clj.astronomy.angle]))
 
-;;
-;; Functions for the calculation nutation and the obliquity of the ecliptic.
-;;
-;; References:
-;; Jean Meeus; Astronomical Algorithms, 2. Ed.; Willmann-Bell
-;;
+;;;
+;;; Functions for the calculation nutation and the obliquity of the ecliptic.
+;;;
+;;; References:
+;;; Jean Meeus; Astronomical Algorithms, 2. Ed.; Willmann-Bell
+;;;
 
 (defn mean-longitude-sun
   "Calculates the mean longitude of the sun at the given instant
@@ -55,8 +67,8 @@
         l-sun (mean-longitude-sun t)
         l-moon (mean-longitude-moon t)]
     ; TODO test
-    (+ (* -17.20 (sin omega)) (* -1.32 (sin (* 2 l-sun)))
-       (* -0.23 (sin (* 2 l-moon))) (0.21 (sin (* 2 omega))))))
+    (+ (* -17.20 (m/sin omega)) (* -1.32 (m/sin (* 2 l-sun)))
+       (* -0.23 (m/sin (* 2 l-moon))) (* 0.21 (m/sin (* 2 omega))))))
 
 (defn nutation-in-obliquity
   "Calculates the nutation in obliquity (delta epsilon) in arc seconds for the
@@ -67,8 +79,8 @@
         l-sun (mean-longitude-sun t)
         l-moon (mean-longitude-moon t)]
     ; TODO test
-    (+ (* 9.20 (cos omega)) (* 0.57 (cos (* 2 l-sun)))
-       (* 0.10 (cos (* 2 l-moon))) (* 0.09 (cos (* 2 omega))))))
+    (+ (* 9.20 (m/cos omega)) (* 0.57 (m/cos (* 2 l-sun)))
+       (* 0.10 (m/cos (* 2 l-moon))) (* 0.09 (m/cos (* 2 omega))))))
 
 (defn mean-obliquity-low-accuracy
   "Calculates the mean obliquity of the ecliptic (the inclination of the

@@ -17,3 +17,9 @@ target/
 .settings/
 bin/
 hs_err_pid*.log
+
+# VS Code Calva
+.calva
+.clj-kondo
+.cpcache
+.lsp

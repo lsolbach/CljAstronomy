@@ -1,5 +1,16 @@
+;;;;
+;;;;   Copyright (c) Ludger Solbach. All rights reserved.
+;;;;
+;;;;   The use and distribution terms for this software are covered by the
+;;;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;;;;   which can be found in the file license.txt at the root of this distribution.
+;;;;   By using this software in any fashion, you are agreeing to be bound by
+;;;;   the terms of this license.
+;;;;
+;;;;   You must not remove this notice, or any other, from this software.
+;;;;
 (ns org.soulspace.clj.astronomy.coordinates.projection
-  (:use [org.soulspace.clj.math math java-math]))
+  (:require [org.soulspace.math.core :as m]))
 
 ; References:
 ; Snyder, John P.; Map Projections - A Working Manual; USGS Professional Paper 1395
@@ -22,11 +33,11 @@
     ([R k-0 long-0 lat-1 long lat]
      (let [k (/ (* 2 k-0)
                 (+ 1
-                   (* (sin lat-1) (sin lat))
-                   (* (cos lat-1) (cos lat) (cos (- long long-0)))))
-           x (* R k (cos lat) (sin (- long long-0)))
-           y (* R k (- (* (cos lat-1) (sin lat))
-                       (* (sin lat-1) (cos lat) (cos (- long long-0)))))]
+                   (* (m/sin lat-1) (m/sin lat))
+                   (* (m/cos lat-1) (m/cos lat) (m/cos (- long long-0)))))
+           x (* R k (m/cos lat) (m/sin (- long long-0)))
+           y (* R k (- (* (m/cos lat-1) (m/sin lat))
+                       (* (m/sin lat-1) (m/cos lat) (m/cos (- long long-0)))))]
            ;h-stroke (+ (* (sin lat-1) (sin lat)) (* (cos lat-1) (cos lat) (cos (- long long-0)))) ; scale
            ;k-stroke 1.0 ; scale
        ;[x y h-stroke k-stroke]
@@ -37,21 +48,21 @@
   ([R k-0 [long-0 lat-1] [x y]]
    (reverse-stereographic-projection R k-0 long-0 lat-1 x y))
   ([R k-0 long-0 lat-1 x y]
-   (let [rho (sqrt (+ (* x x) (* y y)))
-         c (* 2 (atan2 rho (* 2 R k-0)))
+   (let [rho (m/sqrt (+ (* x x) (* y y)))
+         c (* 2 (m/atan2 rho (* 2 R k-0)))
          ; c (* 2 (atan (/ rho (* 2 R k-0))))
          lat (if (= rho 0.0)
                 lat-1
-                (asin (+ (* (cos c) (sin lat-1))
-                         (/ (* y (sin c) (cos lat-1))
+                (m/asin (+ (* (m/cos c) (m/sin lat-1))
+                         (/ (* y (m/sin c) (m/cos lat-1))
                             rho))))
          long (cond
                 (= rho 0.0) long-0
-                (= lat-1 (/ pi 2)) (+ long-0 (atan2 x (* -1 y)))
-                (= lat-1 (/ pi -2)) (+ long-0 (atan2 x y))
-                :default (+ long-0 (atan (* x (sin (/ c
-                                                      (- (* rho (cos lat-1) (cos c))
-                                                         (* y (sin lat-1) (sin c)))))))))]
+                (= lat-1 (/ m/PI 2)) (+ long-0 (m/atan2 x (* -1 y)))
+                (= lat-1 (/ m/PI -2)) (+ long-0 (m/atan2 x y))
+                :default (+ long-0 (m/atan (* x (m/sin (/ c
+                                                      (- (* rho (m/cos lat-1) (m/cos c))
+                                                         (* y (m/sin lat-1) (m/sin c)))))))))]
      [long lat])))
 
 (defn stereographic-projector
@@ -81,9 +92,9 @@
   ([R [long-0 lat-1] [long lat]]
    (orthographic-projection R long-0 lat-1 long lat))
   ([R long-0 lat-1 long lat]
-   (let [x (* R (cos lat) (sin (- long long-0)))
-         y (* R (- (* (cos lat-1) (sin lat))
-                   (* (sin lat-1) (cos lat) (cos (- long long-0)))))]
+   (let [x (* R (m/cos lat) (m/sin (- long long-0)))
+         y (* R (- (* (m/cos lat-1) (m/sin lat))
+                   (* (m/sin lat-1) (m/cos lat) (m/cos (- long long-0)))))]
          ;h-stroke (+ (* (sin lat-1) (sin lat)) (* (cos lat-1) (cos lat) (cos (- long long-0))))
          ;k-stroke 1.0
 
@@ -95,20 +106,20 @@
   ([R [long-0 lat-1] [x y]]
    (reverse-orthographic-projection R long-0 lat-1 x y))
   ([R long-0 lat-1 x y]
-   (let [rho (sqrt (+ (* x x) (* y y)))
-         c (asin (/ rho R))
+   (let [rho (m/sqrt (+ (* x x) (* y y)))
+         c (m/asin (/ rho R))
          lat (if (= rho 0.0)
                 lat-1
-                (asin (+ (* (cos c) (sin lat-1))
-                         (/ (* y (sin c) (cos lat-1))
+                (m/asin (+ (* (m/cos c) (m/sin lat-1))
+                         (/ (* y (m/sin c) (m/cos lat-1))
                             rho))))
          long (cond
                 (= rho 0.0) long-0
-                (= lat-1 (/ pi 2)) (+ long-0 (atan2 x (* -1 y)))
-                (= lat-1 (/ pi -2)) (+ long-0 (atan2 x y))
-                :default (+ long-0 (atan (* x (sin (/ c
-                                                      (- (* rho (cos lat-1) (cos c))
-                                                         (* y (sin lat-1) (sin c)))))))))]
+                (= lat-1 (/ m/PI 2)) (+ long-0 (m/atan2 x (* -1 y)))
+                (= lat-1 (/ m/PI -2)) (+ long-0 (m/atan2 x y))
+                :default (+ long-0 (m/atan (* x (m/sin (/ c
+                                                      (- (* rho (m/cos lat-1) (m/cos c))
+                                                         (* y (m/sin lat-1) (m/sin c)))))))))]
      [long lat])))
 
 (defn orthographic-projector

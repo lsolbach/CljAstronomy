@@ -9,11 +9,4 @@
 ;;;;
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
-(ns org.soulspace.clj.astronomy.test)
-
-(defn about-equal
-  "Tests if the actual and expected values are equal in the given error margin."
-  ([actual expected]
-   (about-equal actual expected 0.0001))
-  ([actual expected error-margin]
-   (<= (abs (- actual expected)) error-margin)))
+(ns org.soulspace.clj.astronomy.types.solarsystem.earth)
