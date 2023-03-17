@@ -10,8 +10,7 @@
 (ns org.soulspace.clj.astronomy.app.ui.swing.main-frame
   (:require [reagi.core :as r]
             [clojure.java.io :as io])
-  (:use 
-        [clojure.tools.swing-utils :only [do-swing-and-wait]]
+  (:use [clojure.tools.swing-utils :only [do-swing-and-wait]]
         [org.soulspace.clj.java awt]
         [org.soulspace.clj.java.awt event]
         [org.soulspace.clj.java.swing constants swinglib]
