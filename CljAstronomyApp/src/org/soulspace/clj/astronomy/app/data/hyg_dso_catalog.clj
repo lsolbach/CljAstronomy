@@ -5,7 +5,7 @@
   (:use [clojure.set :only [map-invert]]
         [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
-(def hyg-dso-file (str data-dir "/catalogs/dso.csv"))
+(def hyg-dso-file "data/catalogs/dso.csv")
 
 (def hyg-dso-source-map {"0" "miscellaneous, limited detail (e.g. Wikipedia)."
                          "1" "NGC 2000 (Sinott, 1988)."

@@ -1,11 +1,11 @@
 (ns org.soulspace.clj.astronomy.app.data.messier-catalog
-  (:use [clojure.set :only [map-invert]]
-        [clojure.java.io]
-        [clojure.data.csv]
-        [org.soulspace.clj.math java-math]
-        [org.soulspace.clj.astronomy.app.data common constellations greek]))
+  (:require [clojure.set :refer [map-invert]]
+            [clojure.java.io :as io]
+            [clojure.data.csv :as csv]
+            [org.soulspace.math.core :as m])
+  (:use [org.soulspace.clj.astronomy.app.data common constellations greek]))
 
-(def messier-file (str data-dir "/catalogs/messier.csv"))
+(def messier-file "data/catalogs/messier.csv")
 
 (defn messier-type
   "Determines the type of the messier object."
@@ -40,8 +40,8 @@
    :type (messier-type type detailed-type)
    :ra (java.lang.Double/valueOf ra)
    :dec (java.lang.Double/valueOf dec)
-   :ra-rad (deg-to-rad (* 15 (java.lang.Double/valueOf ra)))
-   :dec-rad (deg-to-rad (java.lang.Double/valueOf dec))
+   :ra-rad (m/deg-to-rad (* 15 (java.lang.Double/valueOf ra)))
+   :dec-rad (m/deg-to-rad (java.lang.Double/valueOf dec))
    :mag (java.lang.Double/valueOf mag)
    :size size
    :ngc (parse-ngc-id ngc)
@@ -56,9 +56,9 @@
 (defn read-messier
   "Read the messier catalog."
   []
-  (with-open [in-file (reader messier-file)]
+  (with-open [in-file (io/reader messier-file)]
     (into []
           (comp
             (drop 1)
             (map parse-messier))
-          (read-csv in-file))))
+          (csv/read-csv in-file))))

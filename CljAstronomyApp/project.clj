@@ -10,5 +10,5 @@
                  [org.soulspace.clj/CljAstronomyLibrary "0.3.0-SNAPSHOT"]
                  [org.soulspace.clj/CljSwingLibrary "0.5.1"]
                  [org.soulspace.clj/CljApplicationLibrary "0.6.0"]]
-  :test-paths ["unittest"]
+  :test-paths ["test"]
   :main org.soulspace.clj.astronomy.app.ui.swing.application)

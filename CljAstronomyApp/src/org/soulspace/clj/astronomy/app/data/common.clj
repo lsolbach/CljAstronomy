@@ -1,9 +1,197 @@
 (ns org.soulspace.clj.astronomy.app.data.common
-  (:use [clojure.set :only [map-invert]]
-        [org.soulspace.clj.astronomy.coordinates.coordinates :only [angular-distance]]
-        [org.soulspace.clj.astronomy.app.data constellations greek]))
+  (:require [clojure.set :refer [map-invert]]
+            [org.soulspace.clj.astronomy.coordinates.coordinates :refer [angular-distance]]))
 
-(def data-dir "data")
+;;;
+;;; Greek letters
+;;;
+
+(def greek-keys [:alpha :beta :gamma :delta :epsilon :zeta :eta :theta :iota :kappa :lambda
+                 :my :ny :xi :omikron :pi :rho :sigma :tau :ypsilon :phi :chi :psi :omega])
+
+(def greek-letter-names {:alpha "Alpha"
+                         :beta "Beta"
+                         :gamma "Gamma"
+                         :delta "Delta"
+                         :epsilon "Epsilon"
+                         :zeta "Zeta"
+                         :eta "Eta"
+                         :theta "Theta"
+                         :iota "Iota"
+                         :kappa "Kappa"
+                         :lambda "Lambda"
+                         :my "My"
+                         :ny "Ny"
+                         :xi "Xi"
+                         :omikron "Omikron"
+                         :pi "Pi"
+                         :rho "Rho"
+                         :sigma "Sigma"
+                         :tau "Tau"
+                         :ypsilon "Ypsilon"
+                         :phi "Phi"
+                         :chi "Chi"
+                         :psi "Psi"
+                         :omega "Omega"})
+
+(def greek-letters {:alpha "α"
+                    :beta "β"
+                    :gamma "γ"
+                    :delta "δ"
+                    :epsilon "ε"
+                    :zeta "ζ"
+                    :eta "η"
+                    :theta "θ"
+                    :iota "ι"
+                    :kappa "κ"
+                    :lambda "λ"
+                    :my "μ"
+                    :ny "ν"
+                    :xi "ξ"
+                    :omikron "ο"
+                    :pi "π"
+                    :rho "ρ"
+                    :sigma "σ"
+                    :tau "τ"
+                    :ypsilon "υ"
+                    :phi "φ"
+                    :chi "χ"
+                    :psi "ψ"
+                    :omega "ω"})
+
+(def greek-abbrevs {:alpha "Alp"
+                    :beta "Bet"
+                    :gamma "Gam"
+                    :delta "Del"
+                    :epsilon "Eps"
+                    :zeta "Zet"
+                    :eta "Eta"
+                    :theta "The"
+                    :iota "Iot"
+                    :kappa "Kap"
+                    :lambda "Lam"
+                    :my "My"
+                    :ny "Ny"
+                    :xi "Xi"
+                    :omikron "Omi"
+                    :pi "Pi"
+                    :rho "Rho"
+                    :sigma "Sig"
+                    :tau "Tau"
+                    :ypsilon "Yps"
+                    :phi "Phi"
+                    :chi "Chi"
+                    :psi "Psi"
+                    :omega "Ome"})
+
+(def greek-letter-name-keys (map-invert greek-letter-names))
+(def greek-letter-keys (map-invert greek-letters))
+(def greek-abbrev-keys (map-invert greek-abbrevs))
+
+
+;;;
+;;; Constellations
+;;;
+
+(def constellation-data
+  [[:And "And" "Andromeda" "Andromedae"]
+   [:Ant "Ant" "Antlia" "Antliae"]
+   [:Aps "Aps" "Apus" "Apodis"]
+   [:Aql "Aql" "Aquila" "Aquila"]
+   [:Aqr "Aqr" "Aquarius" "Aquarii"]
+   [:Ara "Ara" "Ara" "Arae"]
+   [:Ari "Ari" "Aries" "Arietis"]
+   [:Aur "Aur" "Auriga" "Aurigae"]
+   [:Boo "Boo" "Bootes" "Bootis"]
+   [:CMa "CMa" "Canis Major" "Canis Majoris"]
+   [:CMi "CMi" "Canis Minor" "Canis Minoris"]
+   [:CVn "CVn" "Canes Venatici" "Canum Venaticorum"]
+   [:Cae "Cae" "Caelum" "Caeli"]
+   [:Cam "Cam" "Camelopadis" "Camelopardalis"]
+   [:Cap "Cap" "Capricornus" "Capricorni"]
+   [:Car "Car" "Carina" "Carinae"]
+   [:Cas "Cas" "Cassiopeia" "Cassiopeiae"]
+   [:Cen "Cen" "Centarus" "Centauri"]
+   [:Cep "Cep" "Cepheus" "Cephi"]
+   [:Cet "Cet" "Cetus" "Ceti"]
+   [:Cha "Cha" "Chamelaeon" "Chamaeleontis"]
+   [:Cir "Cir" "Circinus" "Circini "]
+   [:Cnc "Cnc" "Cancer" "Cancri"]
+   [:Col "Col" "Columba" "Columbae"]
+   [:Com "Com" "Coma Berenices" "Comae Berenices"]
+   [:CrA "CrA" "Corona Australis" "Coronae Australis"]
+   [:CrB "CrB" "Corona Borealis" "Coronae Borealis"]
+   [:Crt "Crt" "Crater" "Crateris"]
+   [:Cru "Cru" "Crux" "Cruxis"]
+   [:Crv "Crv" "Corvus" "Corvii"]
+   [:Cyg "Cyg" "Cygnus" "Cygni"]
+   [:Del "Del" "Delphinus" "Delphini"]
+   [:Dor "Dor" "Dorado" "Doradus"]
+   [:Dra "Dra" "Draco" "Draconis"]
+   [:Equ "Equ" "Equuleus" "Equulei"]
+   [:Eri "Eri" "Eridianus" "Eridiani"]
+   [:For "For" "Fornax" "Fornacis"]
+   [:Gem "Gem" "Gemini" "Geminorum"]
+   [:Gru "Gru" "Grus" "Gruis"]
+   [:Her "Her" "Hercules" "Herculi"]
+   [:Hor "Hor" "Horologium" "Horologii"]
+   [:Hya "Hya" "Hydra" "Hydrae"]
+   [:Hyi "Hyi" "Hydrus" "Hydri"]
+   [:Ind "Ind" "Indus" "Indi"]
+   [:LMi "LMi" "Leo Minor" "Leonis Minoris"]
+   [:Lac "Lac" "Lacerta" "Lacertae"]
+   [:Leo "Leo" "Leo" "Leonis"]
+   [:Lep "Lep" "Lepus" "Leporis"]
+   [:Lib "Lib" "Libra" "Librae"]
+   [:Lup "Lup" "Lupus" "Lupi"]
+   [:Lyn "Lyn" "Lynx" "Lyncis"]
+   [:Lyr "Lyr" "Lyra" "Lyrae"]
+   [:Men "Men" "Mensa" "Mensae"]
+   [:Mic "Mic" "Microscopium" "Microscopii"]
+   [:Mon "Mon" "Monoceros" "Monocerotis"]
+   [:Mus "Mus" "Musca" "Muscae"]
+   [:Nor "Nor" "Norma" "Normae"]
+   [:Oct "Oct" "Octans" "Octantis"]
+   [:Oph "Oph" "Ophiuchus" "Ophiuchi"]
+   [:Ori "Ori" "Orion" "Orionis"]
+   [:Pav "Pav" "Pavo" "Pavonis"]
+   [:Peg "Peg" "Pegasus" "Pegasi"]
+   [:Per "Per" "Perseus" "Persei"]
+   [:Phe "Phe" "Phoenix" "Phoenicis"]
+   [:Pic "Pic" "Pictor" "Pictoris"]
+   [:PsA "PsA" "Piscis Austrinus" "Piscis Austrini"]
+   [:Psc "Psc" "Pisces" "Piscium"]
+   [:Pup "Pup" "Puppis" "Puppis"]
+   [:Pyx "Pyx" "Pyxis" "Pyxidis"]
+   [:Ret "Ret" "Reticulum" "Reticuli"]
+   [:Scl "Scl" "Sculptor" "Sculptoris"]
+   [:Sco "Sco" "Scorpius" "Scorpii"]
+   [:Sct "Sct" "Scutum" "Scuti"]
+   [:Ser "Ser" "Serpens" "Serpentis"]
+   [:Sex "Sex" "Sextans" "Sextantis"]
+   [:Sge "Sge" "Sagitta" "Sagittae"]
+   [:Sgr "Sgr" "Sagittarius" "Sagittarii"]
+   [:Tau "Tau" "Taurus" "Tauri"]
+   [:Tel "Tel" "Telescopium" "Telescopii"]
+   [:TrA "TrA" "Triangulum Australis" "Trianguli Australis"]
+   [:Tri "Tri" "Triangulum" "Trianguli"]
+   [:Tuc "Tuc" "Tucan" "Tucanis"]
+   [:UMa "UMa" "Ursa Major" "Ursa Majoris"]
+   [:UMi "UMi" "Ursa Minor" "Ursa Minoris"]
+   [:Vel "Vel" "Vela" "Velorum"]
+   [:Vir "Vir" "Virgo" "Virgonis"]
+   [:Vol "Vol" "Volans" "Volantis"]
+   [:Vul "Vul" "Vulpecula" "Vulpecularis"]])
+
+(def constellation-keys (map first constellation-data))
+(def constellation-name-map (zipmap constellation-keys (map #(nth % 2) constellation-data)))
+(def constellation-genitivum-map (zipmap constellation-keys (map #(nth % 3) constellation-data)))
+(def constellation-by-name-map (map-invert constellation-name-map))
+
+
+;;;
+;;; Catalogs
+;;;
 
 (def catalog-name {:hip "Hipparchos Catalog"
                    :hd "Henry Draper Catalog"
@@ -59,7 +247,7 @@
 (def object-type-keys (keys object-type-name))
 (def object-type-key (map-invert object-type-name))
 
-(def object-hierarchy ""
+(def object-hierarchy "Celestial object hierarchy"
   (->
     (make-hierarchy)
     (derive :double-star :star)
@@ -85,9 +273,196 @@
     (derive :irregular-galaxy :galaxy)))
 
 
-;
-; angular distance
-;
+;;;
+;;; Predicates
+;;;
+
+(defn common-name?
+  "Returns true if the object has a common name."
+  [o]
+  (not (empty? (:common-name o))))
+
+(defn bayer-letter?
+  "Returns true if the object has a bayer letter."
+  [o]
+  (not (nil? (:bayer o))))
+
+(defn flamsteed-object?
+  "Returns true if the object has a flamsteed."
+  [o]
+  (not (empty? (:flamsteed o))))
+
+(defn hd-object?
+  "Returns true if the object has a hd number."
+  [o]
+  (not (empty? (:hd o))))
+
+(defn hr-object?
+  "Returns true if the object has a hr number."
+  [o]
+  (not (empty? (:hr o))))
+
+(defn gliese-object?
+  "Returns true if the object has a gliese number."
+  [o]
+  (not (empty? (:gliese o))))
+
+(defn hip-object?
+  "Returns true if the object has a hip number."
+  [o]
+  (not (empty? (:hip o))))
+
+(defn messier-object?
+  "Returns true if the object is a messier object."
+  [o]
+  (not (empty? (:messier o))))
+
+(defn ngc-object?
+  "Returns true if the object is listed in the New General Catalog."
+  [o]
+  (not (empty? (:ngc o))))
+
+(defn ic-object?
+  "Returns true if the object is listed in the Index Catalog."
+  [o]
+  (not (empty? (:ic o))))
+
+(defn ngc-ic-object
+  "Returns true if the object is listed in the New General Catalog or Index Catalog."
+  [o]
+  (or (ngc-object? o) (ic-object? o)))
+
+(defn pk-object?
+  "Returns true if the object is listed in the Perek and Kohoutek Catalog."
+  [o]
+  (not (empty? (:pk o))))
+
+(defn c-object?
+  "Returns true if the object is listed in the Cadwell Catalog."
+  [o]
+  (not (empty? (:c o))))
+
+(defn col-object?
+  "Returns true if the object is listed in the Collinder Catalog."
+  [o]
+  (not (empty? (:col o))))
+
+(defn mel-object?
+  "Returns true if the object is listed in the Melotte Catalog."
+  [o]
+  (not (empty? (:mel o))))
+
+(defn pgc-object?
+  "Returns true if the object is listed in the PGC Catalog."
+  [o]
+  (not (empty? (:pgc o))))
+
+(defn open-cluster?
+  "Returns true if the object is an open cluster."
+  [o]
+  (= (:type o) :open-cluster))
+
+(defn globular-cluster?
+  "Returns true if the object is a globular cluster."
+  [o]
+  (= (:type o) :globular-cluster))
+
+(defn galaxy?
+  "Returns true if the object is a galaxy."
+  [o]
+  (or (= (:type o) :galaxy)
+      (= (:type o) :spiral-galaxy)
+      (= (:type o) :elliptical-galaxy)
+      (= (:type o) :lenticular-galaxy)
+      (= (:type o) :irregular-galaxy)))
+
+(defn emission-nebula?
+  "Returns true if the object is an emmission nebula."
+  [o]
+  (= (:type o) :emission-nebula))
+
+(defn reflection-nebula?
+  "Returns true if the object is a reflection nebula."
+  [o]
+  (= (:type o) :reflection-nebula))
+
+(defn planetary-nebula?
+  "Returns true if the object is a planetary nebula."
+  [o]
+  (= (:type o) :planetary-nebula))
+
+(defn dark-nebula?
+  "Returns true if the object is a dark nebula."
+  [o]
+  (= (:type o) :dark-nebula))
+
+;;;
+;;; Celestial object labels
+;;;
+
+(defmulti object-label :type  :hierarchy #'object-hierarchy)
+
+; "Returns the label for the star."
+(defmethod object-label :star
+  [star]
+  (cond
+    (common-name? star) (:common-name star)
+    (bayer-letter? star) (greek-letters (:bayer star))
+    (flamsteed-object? star) (:flamsteed star)
+    (hd-object? star) (str "HD" (:hd star))
+    (hr-object? star) (str "HR" (:hr star))
+    (gliese-object? star) (str "Gliese" (:gliese star))
+    (hip-object? star) (str "Hip" (:hip star))
+    :default ""))
+
+; "Returns the label for the deep sky object."
+(defmethod object-label :dso
+  [dso]
+  (cond
+    (common-name? dso) (:common-name dso)
+    (messier-object? dso) (str "M " (:messier dso))
+    (ngc-object? dso) (str "NGC " (:ngc dso))
+    (ic-object? dso) (str "IC " (:ic dso))
+    (pk-object? dso) (str "PK " (:pk dso))
+    (c-object? dso) (str "C " (:c dso))
+    (col-object? dso) (str "Col " (:col dso))
+    (mel-object? dso) (str "Mel " (:mel dso))
+    (pgc-object? dso) (str "PGC " (:pgc dso))
+    :default ""))
+
+(defmethod object-label nil
+  [obj]
+  (println (:id obj) (:type obj))
+  "")
+
+(defn ra-label
+  "Returns the right ascension as string."
+  [ra]
+  (str ra))
+
+(defn dec-label
+  "Returns the declination as string."
+  [dec]
+  (str dec))
+
+(defn constellation-label
+  "Returns the constellation as string."
+  [constellation]
+  (if constellation
+    (constellation-name-map constellation)
+    ""))
+
+(defn type-label
+  "Returns the type as string."
+  [type]
+  (if type
+    (object-type-name type)
+    ""))
+
+;;;
+;;; angular distance
+;;;
+
 (defn angular-distance-of-object-and-coords
   "Calculates the angular distance of the coordinates and the object."
   [[ra dec] o]
@@ -98,3 +473,49 @@
   [[ra dec] coll]
   (if (seq coll)
     (apply min-key (partial angular-distance-of-object-and-coords [ra dec]) coll)))
+
+;;;
+;;; Filters
+;;;
+
+(defn mag-filter
+  "Returns a filter for magnification of objects. Faintest and optionally brightest can be given."
+  ([faintest]
+   (mag-filter faintest -30))
+  ([faintest brightest]
+   (fn [obj] (and (<= (:mag obj) faintest) (>= (:mag obj) brightest)))))
+
+(defn ra-dec-filter
+  "Returns a filter for the RA and Dec coordinates of an object."
+  ([[ra-min dec-min] [ra-max dec-max]]
+   (ra-dec-filter ra-min dec-min ra-max dec-max))
+  ([ra-min dec-min ra-max dec-max]
+   (fn [obj] (and (>= (:ra obj) ra-min) (>= (:dec obj) dec-min) (<= (:ra obj) ra-max) (<= (:dec obj) dec-max)))))
+
+(defn rad-ra-dec-filter
+  "Returns a filter for the RA and Dec coordinates of an object."
+  ([[ra-min dec-min] [ra-max dec-max]]
+   (rad-ra-dec-filter ra-min dec-min ra-max dec-max))
+  ([ra-min dec-min ra-max dec-max]
+   (fn [obj] (and (>= (:ra-rad obj) ra-min) (>= (:dec-rad obj) dec-min) (<= (:ra-rad obj) ra-max) (<= (:dec-rad obj) dec-max)))))
+
+(defn angular-distance-filter
+  "Returns a filter for the angular distance of an object"
+  ([dist [ra dec]]
+   (angular-distance-filter dist ra dec))
+  ([dist ra dec]
+   (fn [obj] (<= (angular-distance [(:ra-rad obj) (:dec-rad obj)] [ra dec]) dist))))
+
+(defn common-name-filter
+  "Returns a filter for objects with a common name."
+  ([]
+   (fn [obj] (seq (:common-name obj))))
+  ([common-name]
+   (fn [obj] (re-matches (re-pattern common-name) (:common-name obj)))))
+
+(defn type-filter
+  "Returns a filter for typed objects."
+  ([]
+   #(and (:type %) (not= (:type %) :unknown)))
+  ([type]
+   #(and (:type %) (not= (:type %) (keyword type)))))
