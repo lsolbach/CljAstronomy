@@ -1,14 +1,10 @@
 CljAstronomyLibrary
 ===================
-The CljAstronomyLibrary is a library for astronomical calculations.
-
-Author/Project Lead
--------------------
-Ludger Solbach
+The CljAstronomyLibrary is a Clojure/ClojureScript library for astronomical calculations.
 
 Copyright
 ---------
-(c) 2011-2020 Ludger Solbach
+(c) 2011-2023 Ludger Solbach
 
 License
 -------
@@ -21,6 +17,13 @@ Code Repository
 History
 -------
 
-Version 0.1.0 (--.--.201-)
---------------------------
+Version 0.4.0
+-------------
+* added Clojurescript support
+* refactored namespaces
+* docmentation and test enhancements
+* bug fixes
+
+Version 0.1.0
+-------------
 * Initial import

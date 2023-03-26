@@ -1,11 +1,23 @@
-(ns org.soulspace.clj.astronomy.app.data.messier-catalog
-  (:use [clojure.set :only [map-invert]]
-        [clojure.java.io]
-        [clojure.data.csv]
-        [org.soulspace.clj.math java-math]
-        [org.soulspace.clj.astronomy.app.data common constellations greek]))
+;;;;
+;;;;   Copyright (c) Ludger Solbach. All rights reserved.
+;;;;
+;;;;   The use and distribution terms for this software are covered by the
+;;;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;;;;   which can be found in the file license.txt at the root of this distribution.
+;;;;   By using this software in any fashion, you are agreeing to be bound by
+;;;;   the terms of this license.
+;;;;
+;;;;   You must not remove this notice, or any other, from this software.
+;;;;
 
-(def messier-file (str data-dir "/catalogs/messier.csv"))
+(ns org.soulspace.clj.astronomy.app.data.messier-catalog
+  (:require [clojure.set :refer [map-invert]]
+            [clojure.java.io :as io]
+            [clojure.data.csv :as csv]
+            [org.soulspace.clj.math.core :as m]
+            [org.soulspace.clj.astronomy.app.data.common :as adc]))
+
+(def messier-file (str adc/data-dir "/catalogs/messier.csv"))
 
 (defn messier-type
   "Determines the type of the messier object."
@@ -40,12 +52,12 @@
    :type (messier-type type detailed-type)
    :ra (java.lang.Double/valueOf ra)
    :dec (java.lang.Double/valueOf dec)
-   :ra-rad (deg-to-rad (* 15 (java.lang.Double/valueOf ra)))
-   :dec-rad (deg-to-rad (java.lang.Double/valueOf dec))
+   :ra-rad (m/deg-to-rad (* 15 (java.lang.Double/valueOf ra)))
+   :dec-rad (m/deg-to-rad (java.lang.Double/valueOf dec))
    :mag (java.lang.Double/valueOf mag)
    :size size
    :ngc (parse-ngc-id ngc)
-   :constellation (constellation-by-name-map constellation)
+   :constellation (adc/constellation-by-name-map constellation)
    :common-name common-name})
 
 (defn parse-messier-mapping-transformer
@@ -56,7 +68,7 @@
 (defn read-messier
   "Read the messier catalog."
   []
-  (with-open [in-file (reader messier-file)]
+  (with-open [in-file (io/reader messier-file)]
     (into []
           (comp
             (drop 1)

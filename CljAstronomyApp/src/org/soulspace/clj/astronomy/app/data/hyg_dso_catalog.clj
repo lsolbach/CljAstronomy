@@ -1,13 +1,25 @@
+;;;;
+;;;;   Copyright (c) Ludger Solbach. All rights reserved.
+;;;;
+;;;;   The use and distribution terms for this software are covered by the
+;;;;   Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+;;;;   which can be found in the file license.txt at the root of this distribution.
+;;;;   By using this software in any fashion, you are agreeing to be bound by
+;;;;   the terms of this license.
+;;;;
+;;;;   You must not remove this notice, or any other, from this software.
+;;;;
+
 (ns org.soulspace.clj.astronomy.app.data.hyg-dso-catalog
   (:require [clojure.string :as str]
+            [clojure.set :refer [map-invert]]
             [clojure.java.io :as io]
-            [clojure.data.csv :as csv])
-  (:use [clojure.set :only [map-invert]]
-        [org.soulspace.clj.astronomy.app.data common constellations greek]))
+            [clojure.data.csv :as csv]
+            [org.soulspace.clj.astronomy.app.data.common :as adc]))
 
-(def hyg-dso-file (str data-dir "/catalogs/dso.csv"))
+(def hyg-dso-file (str adc/data-dir "/catalogs/dso.csv"))
 
-(def hyg-dso-source-map {"0" "miscellaneous, limited detail (e.g. Wikipedia)."
+(def hyg-dso-sources {"0" "miscellaneous, limited detail (e.g. Wikipedia)."
                          "1" "NGC 2000 (Sinott, 1988)."
                          "2" "Historically Corrected New General Catalogue from the NGC/IC project (http://www.ngcic.org)."
                          "3" "PGC galaxy catalog (http://leda.univ-lyon1.fr/)."
@@ -15,24 +27,24 @@
                          "5" "Perek-Kohoutek catalog IDs, from original (Perek + Kouhoutek, 1967) and update (Perek + Kohoutek, 2001)."
                          "6" "Faint globulars (Palomar + Terzian) from http://www.astronomy-mall.com/Adventures.In.Deep.Space/obscure.htm and http://www.astronomy-mall.com/Adventures.In.Deep.Space/palglob.htm."})
 
-(def hyg-dso-type-map {"*" "Single Star"
-                       "**" "Double Star"
-                       "***" "Triple Star"
-                       "Ast" "Asterism"
-                       "Gxy" "Galaxy"
-                       "GxyCld" "Bright cloud/knot in a galaxy"
-                       "GC" "Globular Cluster"
-                       "HIIRgn" "HII Region"
-                       "Neb" "Nebula (emission or reflection)"
-                       "NF" "Not Found"
-                       "OC" "Open Cluster"
-                       "PN" "Planetary Nebula"
-                       "DN" "Dark Nebula"
-                       "SNR" "Supernova Remnant"
-                       "MWSC" "Milky Way Star Cloud"
-                       "Neb?" "Nebula?"
-                       "?" "Unknown"
-                       "" "Unknown"})
+(def hyg-dso-types {"*" "Single Star"
+                    "**" "Double Star"
+                    "***" "Triple Star"
+                    "Ast" "Asterism"
+                    "Gxy" "Galaxy"
+                    "GxyCld" "Bright cloud/knot in a galaxy"
+                    "GC" "Globular Cluster"
+                    "HIIRgn" "HII Region"
+                    "Neb" "Nebula (emission or reflection)"
+                    "NF" "Not Found"
+                    "OC" "Open Cluster"
+                    "PN" "Planetary Nebula"
+                    "DN" "Dark Nebula"
+                    "SNR" "Supernova Remnant"
+                    "MWSC" "Milky Way Star Cloud"
+                    "Neb?" "Nebula?"
+                    "?" "Unknown"
+                    "" "Unknown"})
 
 (defn hyg-dso-type
   "Returns the type of the dso object."
@@ -68,7 +80,7 @@
     (= cat2 catalog) id2))
 
 (defn parse-hyg-dso
-  "Parse a line of hyg dso catalog data."
+  "Parse a line of HYG DSO catalog data."
   [[ra dec type const mag common-name ra-rad dec-rad id r1 r2 angle dso-source id1 cat1 id2 cat2 dupid dupcat display-mag]]
   {:ra (Double/valueOf ra)
    :dec (Double/valueOf dec)
@@ -99,9 +111,8 @@
    :pk (catalog-id "PK" id1 cat1 id2 cat2)
    :pgc (catalog-id "PGC" id1 cat1 id2 cat2)})
 
-
 (defn read-hyg-dso
-  "Read the messier catalog."
+  "Read the HYG DSO catalog."
   []
   (with-open [in-file (io/reader hyg-dso-file)]
     (into []
