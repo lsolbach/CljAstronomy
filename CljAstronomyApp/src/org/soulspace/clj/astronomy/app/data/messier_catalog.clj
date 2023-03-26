@@ -73,4 +73,4 @@
           (comp
             (drop 1)
             (map parse-messier))
-          (read-csv in-file))))
+          (csv/read-csv in-file))))

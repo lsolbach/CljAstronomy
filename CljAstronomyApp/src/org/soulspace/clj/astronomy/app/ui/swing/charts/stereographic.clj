@@ -11,8 +11,8 @@
 ;;;;
 
 (ns org.soulspace.clj.astronomy.app.ui.swing.charts.stereographic
-  (:use [org.soulspace.clj.math math java-math]
-        [org.soulspace.clj.java awt]
+  (:require [org.soulspace.math.core :as m])
+  (:use [org.soulspace.clj.java awt]
         [org.soulspace.clj.java.awt event graphics]
         [org.soulspace.clj.java.swing constants event swinglib]
         [org.soulspace.clj.astronomy.coordinates projection]

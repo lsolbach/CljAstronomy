@@ -9,5 +9,5 @@
                  ;[reagi/reagi "0.10.1" :exclusions [org.clojure/clojure]]
                  [org.soulspace.clj/astronomy.core "0.4.0"]
                  [org.soulspace.clj/clj.swing "0.8.0"]]
-  :test-paths ["unittest"]
+  :test-paths ["test"]
   :main org.soulspace.clj.astronomy.app.ui.swing.application)

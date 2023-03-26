@@ -1,7 +1,7 @@
 (ns org.soulspace.clj.astronomy.app.chart.drawing
   (:import [java.awt Graphics2D Color])
+  (:require [org.soulspace.math.core :as m])
   (:use [org.soulspace.clj string]
-        [org.soulspace.clj.math math java-math]
         [org.soulspace.clj.java.awt graphics]
         [org.soulspace.clj.astronomy.coordinates coordinates]
         [org.soulspace.clj.astronomy.app.data common labels constellations greek]
@@ -121,17 +121,17 @@
   "Draws the chart grid."
   [^java.awt.Graphics2D gfx scale]
   (let [col (chart-colors :grid)
-        rad-0 (deg-to-rad 0)
-        rad-45 (deg-to-rad 45)
-        rad--45 (deg-to-rad -45)
-        rad-90 (deg-to-rad 90)
-        rad--90 (deg-to-rad -90)
-        rad-135 (deg-to-rad 135)
-        rad-180 (deg-to-rad 180)
-        rad-225 (deg-to-rad 225)
-        rad-270 (deg-to-rad 270)
-        rad-315 (deg-to-rad 315)
-        rad-360 (deg-to-rad 360)]
+        rad-0 (m/deg-to-rad 0)
+        rad-45 (m/deg-to-rad 45)
+        rad--45 (m/deg-to-rad -45)
+        rad-90 (m/deg-to-rad 90)
+        rad--90 (m/deg-to-rad -90)
+        rad-135 (m/deg-to-rad 135)
+        rad-180 (m/deg-to-rad 180)
+        rad-225 (m/deg-to-rad 225)
+        rad-270 (m/deg-to-rad 270)
+        rad-315 (m/deg-to-rad 315)
+        rad-360 (m/deg-to-rad 360)]
     ;
     (draw-line gfx (scale [rad-0 rad--45]) (scale [rad-360 rad--45]) col)
     (draw-line gfx (scale [rad-0 rad-0]) (scale [rad-360 rad-0]) col)

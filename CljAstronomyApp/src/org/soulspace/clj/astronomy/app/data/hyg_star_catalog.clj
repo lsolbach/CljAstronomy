@@ -14,9 +14,8 @@
   (:require [clojure.string :as str]
             [clojure.set :refer [map-invert]]
             [clojure.java.io :as io]
-            [clojure.data.csv :as csv])
-  (:use 
-        [org.soulspace.clj.astronomy.app.data.common :as adc]))
+            [clojure.data.csv :as csv]
+            [org.soulspace.clj.astronomy.app.data.common :as adc]))
 
 (def hyg-star-file (str adc/data-dir "/catalogs/hygdata_v3.csv"))
 
@@ -40,7 +39,7 @@
      :hr (if (seq hr) hr)
      :hip (if (seq hip) hip)
      :gliese (if (seq gliese) gliese)
-     :bayer (if (seq bayer) (greek-abbrev-keys bayer))
+     :bayer (if (seq bayer) (adc/greek-abbrev-keys bayer))
      :bayer-superscript (if (not (= superscript " ")) superscript)
      :flamsteed (if (seq flam) flam)
      :constellation (if (and (seq con) (= (count con) 3)) (keyword con))
