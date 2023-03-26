@@ -11,7 +11,6 @@
 ;;;;
 
 (ns org.soulspace.clj.astronomy.app.ui.swing.common
-  (:use [org.soulspace.clj.java awt]
-        [org.soulspace.clj.java.swing constants swinglib]))
+  (:require [org.soulspace.clj.java.awt.core :as awt]))
 
-(def heading-font (font (font-names :dialog) [(font-styles :bold)] 14))
+(def heading-font (awt/font (awt/font-names :dialog) [(awt/font-styles :bold)] 14))

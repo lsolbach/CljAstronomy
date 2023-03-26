@@ -15,10 +15,10 @@
             [org.soulspace.clj.astronomy.coordinates.coordinates :refer [angular-distance]]))
 
 ;;;
-;;; Catalogs
+;;; Catalog data
 ;;;
 
-(def catalog-names {:hip "Hipparchos Catalog"
+(def catalog-name {:hip "Hipparchos Catalog"
                     :hd "Henry Draper Catalog"
                     :hr "Harvard Revised/Yale Bright Star Catalog"
                     :gliese "Gliese Catalog"
@@ -37,12 +37,12 @@
                     :pk "Perek and Kohoutek Catalog"
                     :harvard "Harvard Catalog"})
 
-(def catalog-keys (keys catalog-names))
-(def catalog-key (map-invert catalog-names))
+(def catalog-keys (keys catalog-name))
+(def catalog-key (map-invert catalog-name))
 
 
 ;;;
-;;; Constellations
+;;; Constellation data
 ;;;
 
 (def constellation-data
@@ -142,7 +142,7 @@
 (def constellation-by-name-map (map-invert constellation-name-map))
 
 ;;;
-;;; Greek alphabet
+;;; Greek alphabet data
 ;;;
 
 (def greek-data [[:alpha "Alpha" "α" "Alp"]
@@ -180,7 +180,7 @@
 
 
 ;;;
-;;; object predicates
+;;; Object predicates
 ;;;
 
 (defn common-name?
@@ -303,38 +303,37 @@
   (= (:type o) :dark-nebula))
 
 
-; TODO rename to object type
-(def object-type-name {:satellite "Satellite"
-                       :moon "Moon"
-                       :planet "Planet"
-                       :minor-planet "Minor Planet"
-                       :comet "Comet"
-                       :star "Star"
-                       :variable-star "Variable Star"
-                       :double-star "Double Star"
-                       :triple-star "Triple Star"
-                       :neutron-star "Neutron Star"
-                       :stellar-black-hole "Stellar Black Hole"
-                       :asterism "Asterism"
-                       :open-cluster "Open Cluster"
-                       :globular-cluster "Globular Cluster"
-                       :planetary-nebula "Planetary Nebula"
-                       :emission-nebula "Emission Nebula"
-                       :reflection-nebula "Reflection Nebula"
-                       :dark-nebula "Dark Nebula"
-                       :supernova-remnant "Supernova Remnant"
-                       :star-cloud "Star Cloud"
-                       :galaxy-cloud "Galaxy Cloud"
-                       :galaxy "Galaxy"
-                       :spiral-galaxy "Spiral Galaxy"
-                       :elliptical-galaxy "Elliptical Galaxy"
-                       :lenticular-galaxy "Lenticular Galaxy"
-                       :irregular-galaxy "Irregular Galaxy"
-                       :quasar "Quasar"
-                       :galaxy-cluster "Galaxy Cluster"})
+(def object-type {:satellite "Satellite"
+                   :moon "Moon"
+                   :planet "Planet"
+                   :minor-planet "Minor Planet"
+                   :comet "Comet"
+                   :star "Star"
+                   :variable-star "Variable Star"
+                   :double-star "Double Star"
+                   :triple-star "Triple Star"
+                   :neutron-star "Neutron Star"
+                   :stellar-black-hole "Stellar Black Hole"
+                   :asterism "Asterism"
+                   :open-cluster "Open Cluster"
+                   :globular-cluster "Globular Cluster"
+                   :planetary-nebula "Planetary Nebula"
+                   :emission-nebula "Emission Nebula"
+                   :reflection-nebula "Reflection Nebula"
+                   :dark-nebula "Dark Nebula"
+                   :supernova-remnant "Supernova Remnant"
+                   :star-cloud "Star Cloud"
+                   :galaxy-cloud "Galaxy Cloud"
+                   :galaxy "Galaxy"
+                   :spiral-galaxy "Spiral Galaxy"
+                   :elliptical-galaxy "Elliptical Galaxy"
+                   :lenticular-galaxy "Lenticular Galaxy"
+                   :irregular-galaxy "Irregular Galaxy"
+                   :quasar "Quasar"
+                   :galaxy-cluster "Galaxy Cluster"})
 
-(def object-type-keys (keys object-type-name))
-(def object-type-key (map-invert object-type-name))
+(def object-type-keys (keys object-type))
+(def object-type-key (map-invert object-type))
 
 (def object-hierarchy "Celestial object hierarchy"
   (->
@@ -421,7 +420,7 @@
   "Returns the type as string."
   [type]
   (if type
-    (object-type-name type)
+    (object-type type)
     ""))
 
 ;;;
@@ -532,7 +531,7 @@
   "Returns the type as string."
   [type]
   (if type
-    (object-type-name type)
+    (object-type type)
     ""))
 
 ;;;

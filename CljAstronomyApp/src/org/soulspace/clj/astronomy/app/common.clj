@@ -11,9 +11,11 @@
 ;;;;
 
 (ns org.soulspace.clj.astronomy.app.common
-  (:import [java.util Date])
-  (:require [org.soulspace.clj.astronomy.time :as time]))
+  (:require [org.soulspace.clj.java.i18n :i18n]
+            [org.soulspace.clj.astronomy.time :as time])
+  (:import [java.util Date]))
 
+(def i18n (partial i18n/bundle-lookup (i18n/bundle "resources")))
 
 (def current-time (ref (time/new-julian-day)))
 

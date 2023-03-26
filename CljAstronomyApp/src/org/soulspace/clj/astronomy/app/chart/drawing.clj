@@ -1,18 +1,21 @@
 (ns org.soulspace.clj.astronomy.app.chart.drawing
-  (:import [java.awt Graphics2D Color])
-  (:require [org.soulspace.math.core :as m])
-  (:use [org.soulspace.clj string]
-        [org.soulspace.clj.java.awt graphics]
-        [org.soulspace.clj.astronomy.coordinates coordinates]
+  (:require [org.soulspace.math.core :as m]
+            [clojure.string :as str]
+            [org.soulspace.clj.string :as sstr]
+            [org.soulspace.clj.java.awt.graphics :as agfx]
+            )
+  (:use [org.soulspace.clj.astronomy.coordinates coordinates]
         [org.soulspace.clj.astronomy.app.data common labels constellations greek]
-        [org.soulspace.clj.astronomy.app.chart common]))
+        [org.soulspace.clj.astronomy.app.chart common])
+  (:import [java.awt Graphics2D Color])
+  )
 
 (defn color-by-spectral-type
   "Calculates the color in the chart based on the spectral type of the star."
   [spectral-type]
   (if (empty? spectral-type)
     (chart-colors :white)
-    (get simple-star-color-map (substring  0 1 (first-upper-case spectral-type)) (chart-colors :white))))
+    (get simple-star-color-map (sstr/substring  0 1 (sstr/first-upper-case spectral-type)) (chart-colors :white))))
 
 (defn diameter-by-mag
   "Calculates the diameter in the chart based on the magnitude of the star."
@@ -20,6 +23,11 @@
    (diameter-by-mag mag 6.0))
   ([mag min-mag]
    (+ 1 (* -1.5 (- mag min-mag)))))
+
+(defn draw-chart-background
+  "Draws the chart background."
+  [^java.awt.Graphics2D gfx [[x-max y-max] panel-dimension]]
+  (agfx/fill-colored-rect gfx 0 0 x-max y-max (cco/chart-colors :black)))
 
 ;"Draws a deep sky object."
 (defmulti draw-dso (fn [gfx scale dso] (:type dso)) :hierarchy #'object-hierarchy)
@@ -29,67 +37,67 @@
         dia (diameter-by-mag (:mag dso))
         col (color-by-spectral-type (:spectral-type dso))
         radius (/ dia 2)]
-    (fill-circle gfx (- x radius) (- y radius) (+ dia 1) (chart-colors :black)) ; draw an outer black filled circle
-    (fill-circle gfx (- x radius) (- y radius) dia col))) ; draw an inner filled circle with a diameter based on mag and color
+    (agfx/fill-circle gfx (- x radius) (- y radius) (+ dia 1) (chart-colors :black)) ; draw an outer black filled circle
+    (agfx/fill-circle gfx (- x radius) (- y radius) dia col))) ; draw an inner filled circle with a diameter based on mag and color
 
 (defmethod draw-dso :galaxy [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :galaxy)]
-    (draw-ellipse gfx (- x 5) (- y 3) 10 6 col)))
+    (agfx/draw-ellipse gfx (- x 5) (- y 3) 10 6 col)))
 
 (defmethod draw-dso :open-cluster [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :open-cluster)]
     ;(println x y)
-    (draw-circle gfx (- x 5) (- y 5) 10 col)))
+    (agfx/draw-circle gfx (- x 5) (- y 5) 10 col)))
 
 (defmethod draw-dso :globular-cluster [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :open-cluster)]
     ;(println x y)
-    (draw-circle gfx (- x 6) (- y 6) 12 col)
-    (draw-line gfx (- x 6) y (+ x 6) y col)
-    (draw-line gfx x (- y 6) x (+ y 6) col)))
+    (agfx/draw-circle gfx (- x 6) (- y 6) 12 col)
+    (agfx/draw-line gfx (- x 6) y (+ x 6) y col)
+    (agfx/draw-line gfx x (- y 6) x (+ y 6) col)))
 
 (defmethod draw-dso :emission-nebula [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :emission-nebula)]
     ;(println x y)
-    (draw-line gfx (- x 6) y x (- y 6) col)
-    (draw-line gfx x (- y 6) (+ x 6) y col)
-    (draw-line gfx (+ x 6) y x (+ y 6) col)
-    (draw-line gfx x (+ y 6) (- x 6) y col)))
+    (agfx/draw-line gfx (- x 6) y x (- y 6) col)
+    (agfx/draw-line gfx x (- y 6) (+ x 6) y col)
+    (agfx/draw-line gfx (+ x 6) y x (+ y 6) col)
+    (agfx/draw-line gfx x (+ y 6) (- x 6) y col)))
 
 (defmethod draw-dso :planetary-nebula [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :planetary-nebula)]
-    (draw-circle gfx (- x 4) (- y 4) 8 col)
-    (draw-line gfx (- x 6) y (+ x 6) y col)
-    (draw-line gfx x (- y 6) x (+ y 6) col)))
+    (agfx/draw-circle gfx (- x 4) (- y 4) 8 col)
+    (agfx/draw-line gfx (- x 6) y (+ x 6) y col)
+    (agfx/draw-line gfx x (- y 6) x (+ y 6) col)))
 
 (defmethod draw-dso :supernova-remnant [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :supernova-remnant)]
-    (draw-line gfx (- x 6) y x (- y 6) col)
-    (draw-line gfx x (- y 6) (+ x 6) y col)
-    (draw-line gfx (+ x 6) y x (+ y 6) col)
-    (draw-line gfx x (+ y 6) (- x 6) y col)))
+    (agfx/draw-line gfx (- x 6) y x (- y 6) col)
+    (agfx/draw-line gfx x (- y 6) (+ x 6) y col)
+    (agfx/draw-line gfx (+ x 6) y x (+ y 6) col)
+    (agfx/draw-line gfx x (+ y 6) (- x 6) y col)))
 
 (defmethod draw-dso :nebula [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :nebula)]
-    (draw-line gfx (- x 6) y x (- y 6) col)
-    (draw-line gfx x (- y 6) (+ x 6) y col)
-    (draw-line gfx (+ x 6) y x (+ y 6) col)
-    (draw-line gfx x (+ y 6) (- x 6) y col)))
+    (agfx/draw-line gfx (- x 6) y x (- y 6) col)
+    (agfx/draw-line gfx x (- y 6) (+ x 6) y col)
+    (agfx/draw-line gfx (+ x 6) y x (+ y 6) col)
+    (agfx/draw-line gfx x (+ y 6) (- x 6) y col)))
 
 (defmethod draw-dso :default [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :nebula)]
-    (draw-line gfx (- x 6) y x (- y 6) col)
-    (draw-line gfx x (- y 6) (+ x 6) y col)
-    (draw-line gfx (+ x 6) y x (+ y 6) col)
-    (draw-line gfx x (+ y 6) (- x 6) y col)))
+    (agfx/draw-line gfx (- x 6) y x (- y 6) col)
+    (agfx/draw-line gfx x (- y 6) (+ x 6) y col)
+    (agfx/draw-line gfx (+ x 6) y x (+ y 6) col)
+    (agfx/draw-line gfx x (+ y 6) (- x 6) y col)))
 
 (defn draw-dsos
   "Draws the collection of deep sky objects."
@@ -103,13 +111,13 @@
   [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (color-by-spectral-type (:spectral-type dso))]
-    (draw-string gfx (object-label dso) (+ (int x) 10) (+ (int y) 10) col)))
+    (agfx/draw-string gfx (object-label dso) (+ (int x) 10) (+ (int y) 10) col)))
 
 (defmethod draw-dso-label :dso
   [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
         col (chart-colors :white)]
-    (draw-string gfx (object-label dso) (+ (int x) 10) (+ (int y) 10) col)))
+    (agfx/draw-string gfx (object-label dso) (+ (int x) 10) (+ (int y) 10) col)))
 
 (defn draw-dso-labels
   "Draws the labels for the collection of stars."
@@ -133,14 +141,14 @@
         rad-315 (m/deg-to-rad 315)
         rad-360 (m/deg-to-rad 360)]
     ;
-    (draw-line gfx (scale [rad-0 rad--45]) (scale [rad-360 rad--45]) col)
-    (draw-line gfx (scale [rad-0 rad-0]) (scale [rad-360 rad-0]) col)
-    (draw-line gfx (scale [rad-0 rad-45]) (scale [rad-360 rad-45]) col)
+    (agfx/draw-line gfx (scale [rad-0 rad--45]) (scale [rad-360 rad--45]) col)
+    (agfx/draw-line gfx (scale [rad-0 rad-0]) (scale [rad-360 rad-0]) col)
+    (agfx/draw-line gfx (scale [rad-0 rad-45]) (scale [rad-360 rad-45]) col)
     ;
-    (draw-line gfx (scale [rad-45 rad--90]) (scale [rad-45 rad-90]) col)
-    (draw-line gfx (scale [rad-90 rad--90]) (scale [rad-90 rad-90]) col)
-    (draw-line gfx (scale [rad-135 rad--90]) (scale [rad-135 rad-90]) col)
-    (draw-line gfx (scale [rad-180 rad--90]) (scale [rad-180 rad-90]) col)
-    (draw-line gfx (scale [rad-225 rad--90]) (scale [rad-225 rad-90]) col)
-    (draw-line gfx (scale [rad-270 rad--90]) (scale [rad-270 rad-90]) col)
-    (draw-line gfx (scale [rad-315 rad--90]) (scale [rad-315 rad-90]) col)))
+    (agfx/draw-line gfx (scale [rad-45 rad--90]) (scale [rad-45 rad-90]) col)
+    (agfx/draw-line gfx (scale [rad-90 rad--90]) (scale [rad-90 rad-90]) col)
+    (agfx/draw-line gfx (scale [rad-135 rad--90]) (scale [rad-135 rad-90]) col)
+    (agfx/draw-line gfx (scale [rad-180 rad--90]) (scale [rad-180 rad-90]) col)
+    (agfx/draw-line gfx (scale [rad-225 rad--90]) (scale [rad-225 rad-90]) col)
+    (agfx/draw-line gfx (scale [rad-270 rad--90]) (scale [rad-270 rad-90]) col)
+    (agfx/draw-line gfx (scale [rad-315 rad--90]) (scale [rad-315 rad-90]) col)))
