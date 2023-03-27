@@ -141,11 +141,11 @@
         rad-270 (m/deg-to-rad 270)
         rad-315 (m/deg-to-rad 315)
         rad-360 (m/deg-to-rad 360)]
-    ;
+    ; horizontal 
     (agfx/draw-line gfx (scale [rad-0 rad--45]) (scale [rad-360 rad--45]) col)
     (agfx/draw-line gfx (scale [rad-0 rad-0]) (scale [rad-360 rad-0]) col)
     (agfx/draw-line gfx (scale [rad-0 rad-45]) (scale [rad-360 rad-45]) col)
-    ;
+    ; vertical
     (agfx/draw-line gfx (scale [rad-45 rad--90]) (scale [rad-45 rad-90]) col)
     (agfx/draw-line gfx (scale [rad-90 rad--90]) (scale [rad-90 rad-90]) col)
     (agfx/draw-line gfx (scale [rad-135 rad--90]) (scale [rad-135 rad-90]) col)
