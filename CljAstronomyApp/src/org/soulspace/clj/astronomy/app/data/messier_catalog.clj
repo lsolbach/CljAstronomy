@@ -12,10 +12,16 @@
 
 (ns org.soulspace.clj.astronomy.app.data.messier-catalog
   (:require [clojure.set :refer [map-invert]]
+            [clojure.core.async
+             :as a
+             :refer [>! <! >!! <!! go chan buffer close! thread
+                     alts! alts!! timeout]]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
-            [org.soulspace.clj.math.core :as m]
+            [org.soulspace.math.core :as m]
             [org.soulspace.clj.astronomy.app.data.common :as adc]))
+
+(def objects (atom []))
 
 (def messier-file (str adc/data-dir "/catalogs/messier.csv"))
 
@@ -74,3 +80,13 @@
             (drop 1)
             (map parse-messier))
           (csv/read-csv in-file))))
+
+(defn load-messier-catalog
+  "Loads the Messier catalog."
+  []
+  ; load catalog asynchronously so the application start is not delayed by catalog loading
+  (let [t (thread (read-messier))]
+    (go (reset! objects (<! t)))))
+
+(defrecord MessierCatalog
+  [in out])

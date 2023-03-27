@@ -10,22 +10,22 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.ui.swing.charts.common
-  (:require  [org.soulspace.clj.java.awt.core :as awt]
-             [org.soulspace.clj.java.awt.event :as aevt]
-             [org.soulspace.clj.java.awt.graphics :as agfx]
-             [org.soulspace.clj.java.swing.core :as swing]
-             [org.soulspace.clj.java.swing.event :as sevt]
-             [org.soulspace.clj.astronomy.app.common :as app]
-             [org.soulspace.clj.astronomy.app.data.common :as adc]
-             [org.soulspace.clj.astronomy.app.data.catalogs :as cat]
-             [org.soulspace.clj.astronomy.app.chart.common :as cco]
-             [org.soulspace.clj.astronomy.app.chart.drawing :as cdr]
-             [org.soulspace.clj.astronomy.app.chart.scaling :as csc]
-             [org.soulspace.clj.astronomy.app.ui.swing.common :as swc]
-             [org.soulspace.clj.astronomy.app.ui.swing.objects.object-info :as oi])
+(ns org.soulspace.clj.astronomy.app.ui.swing.charts
+  (:require [org.soulspace.math.core :as m]
+            [org.soulspace.clj.java.awt.core :as awt]
+            [org.soulspace.clj.java.awt.events :as aevt]
+            [org.soulspace.clj.java.awt.graphics :as agfx]
+            [org.soulspace.clj.java.swing.core :as swing]
+            [org.soulspace.clj.java.swing.events :as sevt]
+            [org.soulspace.clj.astronomy.app.common :as app]
+            [org.soulspace.clj.astronomy.app.data.common :as adc]
+            [org.soulspace.clj.astronomy.app.data.catalogs :as cat]
+            [org.soulspace.clj.astronomy.app.chart.common :as cco]
+            [org.soulspace.clj.astronomy.app.chart.drawing :as cdr]
+            [org.soulspace.clj.astronomy.app.chart.scaling :as csc]
+            [org.soulspace.clj.astronomy.app.ui.swing.common :as swc]
+            [org.soulspace.clj.astronomy.app.ui.swing.objects :as oi])
   (:import [java.awt.event MouseAdapter]))
-
 
 
 ; TODO
@@ -88,6 +88,11 @@
        (.setVisible filter-dialog false))
      (.setVisible filter-dialog true)
      filter-dialog)))
+
+(defn- point-coordinates
+  ""
+  [point]
+  [(.getX point) (.getY point)])
 
 (defn chart-panel-mouse-clicked
   "Called when a mouse click happens in the chart panel."
@@ -187,10 +192,10 @@
 
 (defn equirectangular-star-chart-panel
   "Creates the star chart panel."
-  [f panel-spec]
+  [f [x-max y-max]]
   (let [panel (swing/canvas-panel f {:minimumSize (awt/dimension 360 180)
-                                     :maximumSize (awt/dimension (:x-max panel-spec) (:y-max panel-spec))
-                                     :preferredSize (awt/dimension (:x-max panel-spec) (:y-max panel-spec))}
+                                     :maximumSize (awt/dimension x-max y-max)
+                                     :preferredSize (awt/dimension x-max y-max)}
                             [])]
     (swing/add-key-binding panel "srcoll-up" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_UP 0) up-action)
     (swing/add-key-binding panel "srcoll-down" (javax.swing.KeyStroke/getKeyStroke java.awt.event.KeyEvent/VK_DOWN 0) down-action)
@@ -201,14 +206,17 @@
 (defn equirectangular-star-chart-dialog
   "Creates the star chart dialog."
   []
-  (let [panel (equirectangular-star-chart-panel draw-equirectangular-chart (equirectangular-panel-spec))
+  (let [panel (equirectangular-star-chart-panel draw-equirectangular-chart (equirectangular-panel-dimension))
         popup-menu (chart-popup-menu)
         d (swing/dialog {:title (app/i18n "label.chart.equirectangular.title")}
                         [(swing/scroll-pane panel)])]
-    (swing/add-mouse-listener panel
-                        (swing/mouse-clicked-listener chart-panel-mouse-clicked d reverse-equirectangular-scale (filter (adc/mag-filter 10.5) (cat/get-deep-sky-objects))))
+    (aevt/add-mouse-listener panel
+                        (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-equirectangular-scale
+                                                                                  ;; => Syntax error compiling at (src/org/soulspace/clj/astronomy/app/ui/swing/charts.clj:1:8045).
+                                                                                  ;;    Unable to resolve symbol: reverse-equirectangular-scale in this context
+ (filter (adc/mag-filter 10.5) (cat/get-deep-sky-objects))))
     (.setComponentPopupMenu panel popup-menu)
-    (swing/add-mouse-listener panel (popup-listener popup-menu))
+    (aevt/add-mouse-listener panel (popup-listener popup-menu))
     d))
 
 (def equirectangular-star-chart-action
@@ -228,8 +236,10 @@
 (def stereographic-chart-objects (ref []))
 
 ; accessors for the chart data
-(defn- stereographic-panel-dimension [] (let [{:keys [x-max y-max]} @stereographic-panel-spec]
-                            [x-max y-max]))
+(defn- stereographic-panel-dimension
+  []
+  (let [{:keys [x-max y-max]} @stereographic-panel-spec]
+    [x-max y-max]))
 
 (def stereographic-user-coordinates (csc/user-coordinate-transformer (stereographic-panel-dimension)))
 (def reverse-stereographic-user-coordinates (csc/reverse-user-coordinate-transformer (stereographic-panel-dimension)))
@@ -263,17 +273,17 @@
   (cdr/draw-dso-labels gfx stereographic-scale
                    (filter adc/common-name?
                            (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                                   (filter (adc/mag-filter 6) (adc/get-deep-sky-objects)))))
+                                   (filter (adc/mag-filter 6) (cat/get-deep-sky-objects)))))
   (cdr/draw-dso-labels gfx stereographic-scale
                    (filter adc/common-name?
                            (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                                   (filter (adc/mag-filter 2) (adc/get-stars)))))
+                                   (filter (adc/mag-filter 2) (cat/get-stars)))))
   (cdr/draw-dsos gfx stereographic-scale
              (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                     (filter (adc/mag-filter 10) (adc/get-deep-sky-objects))))
+                     (filter (adc/mag-filter 10) (cat/get-deep-sky-objects))))
   (cdr/draw-dsos gfx stereographic-scale
              (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                     (filter (adc/mag-filter 7) (adc/get-stars)))))
+                     (filter (adc/mag-filter 7) (cat/get-stars)))))
 
 (defn stereographic-star-chart-panel
   "Creates the star chart panel."
@@ -293,8 +303,8 @@
   []
   (let [panel (stereographic-star-chart-panel draw-stereographic-chart @stereographic-panel-spec)
         d (swing/dialog {:title (app/i18n "label.chart.stereographic.title")} [(swing/scroll-pane panel)])]
-    (swing/add-mouse-listener panel
-                        (swing/mouse-clicked-listener chart-panel-mouse-clicked d reverse-stereographic-scale
+    (aevt/add-mouse-listener panel
+                        (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-stereographic-scale
                                                       (filter (adc/mag-filter 10.5) (cat/get-deep-sky-objects))))
     d))
 
@@ -387,8 +397,8 @@
   []
   (let [panel (orthographic-star-chart-panel draw-orthographic-chart @orthographic-panel-spec)
         d (swing/dialog {:title (app/i18n "label.chart.orthographic.title")} [(swing/scroll-pane panel)])]
-    (swing/add-mouse-listener panel
-                        (swing/mouse-clicked-listener chart-panel-mouse-clicked d reverse-orthographic-scale
+    (aevt/add-mouse-listener panel
+                        (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-orthographic-scale
                                                       (filter (adc/mag-filter 10.5) (cat/get-deep-sky-objects))))
     d))
 

@@ -11,7 +11,7 @@
 ;;;;
 
 (ns org.soulspace.clj.astronomy.app.instruments.equipment
-  (:require [org.soulspace.clj.astronomy.instruments.instruments :as i]))
+  (:require [org.soulspace.clj.astronomy.instruments.visual :as i]))
 
 (def optic-types [:monocular :binocular :achromat :apochromat :newton :dobson :maksutov :sc :rc :schiefspiegler :other])
 (def barlow-reducer-types [:barlow :reducer :flattener :flattener-reducer])
@@ -143,7 +143,7 @@
 ;
 ; Construction
 ;
-
+(comment
 (defn create-optic
   "Constructor for optic instances."
   ([value-map]
@@ -158,3 +158,5 @@
                 (get value-map :focal-length 20) (get value-map :field-of-view 50)))
   ([name type focal-length field-of-view]
    (OcularImpl. name type focal-length field-of-view)))
+  
+  )

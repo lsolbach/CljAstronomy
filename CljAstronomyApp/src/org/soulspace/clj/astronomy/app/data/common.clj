@@ -14,6 +14,8 @@
   (:require [clojure.set :refer [map-invert]]
             [org.soulspace.clj.astronomy.coordinates.coordinates :refer [angular-distance]]))
 
+(def data-dir "data/")
+
 ;;;
 ;;; Catalog data
 ;;;

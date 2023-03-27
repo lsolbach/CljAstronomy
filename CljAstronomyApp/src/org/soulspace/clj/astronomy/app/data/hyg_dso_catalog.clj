@@ -13,9 +13,16 @@
 (ns org.soulspace.clj.astronomy.app.data.hyg-dso-catalog
   (:require [clojure.string :as str]
             [clojure.set :refer [map-invert]]
+            [clojure.core.async
+             :as a
+             :refer [>! <! >!! <!! go chan buffer close! thread
+                     alts! alts!! timeout]]
+
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.clj.astronomy.app.data.common :as adc]))
+
+(def objects (atom []))
 
 (def hyg-dso-file (str adc/data-dir "/catalogs/dso.csv"))
 
@@ -125,3 +132,18 @@
             ; filter messier 40 double star
             (filter #(not= (:messier %) "40")))
           (csv/read-csv in-file))))
+
+(defn load-hyg-dso-catalog
+  "Loads the HYG dso catalog."
+  []
+  ; load catalog asynchronously so the application start is not delayed by catalog loading
+  (let [t (thread (read-hyg-dso))]
+    (go (reset! objects (<! t)))))
+
+
+; defrecord or deftype?
+(defrecord HygDSOCatalog
+  [in out]
+
+  )
+

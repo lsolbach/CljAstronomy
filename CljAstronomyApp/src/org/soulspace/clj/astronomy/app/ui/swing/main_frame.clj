@@ -15,9 +15,8 @@
             [clojure.tools.swing-utils :refer [do-swing-and-wait]]
             [reagi.core :as r]
             [org.soulspace.clj.java.awt.core :as awt]
-            [org.soulspace.clj.java.awt.event :as aevt]
+            [org.soulspace.clj.java.awt.events :as aevt]
             [org.soulspace.clj.java.swing.core :as swing]
-            [org.soulspace.clj.application.classpath :as cp]
             [org.soulspace.clj.astronomy.time :as time]
             [org.soulspace.clj.astronomy.app.common :as app]
             [org.soulspace.clj.astronomy.app.data.catalogs :as cat]
@@ -25,15 +24,9 @@
             [org.soulspace.clj.astronomy.app.ui.swing.equipment :as sweq]
             [org.soulspace.clj.astronomy.app.ui.swing.observation :as swobs]
             [org.soulspace.clj.astronomy.app.ui.swing.objects :as swobj]
-            [org.soulspace.clj.astronomy.app.ui.swing.charts.equirectangular :as swce]
-            [org.soulspace.clj.astronomy.app.ui.swing.charts.stereographic :as swcs]
-            [org.soulspace.clj.astronomy.app.ui.swing.charts.orthographic :as swco]
-            )
-  (:use 
-        [org.soulspace.clj.astronomy.app.ui.swing.equipment barlow-reducer eyepieces filters optics]
-)
+            [org.soulspace.clj.astronomy.app.ui.swing.charts :as swch])
   (:import [javax.swing Action BorderFactory JFrame]
-           [org.soulspace.clj.astronomy.time.instant JulianDay]))
+           [org.soulspace.clj.astronomy.time JulianDay]))
 
 (declare ui-frame)
 (def chart-frame) ; TODO use atom or ref here
@@ -86,7 +79,7 @@
 
 (def planetarium-action
   (swing/action (fn [_]
-            (let [chart-dialog (swco/orthographic-star-chart-dialog)]
+            (let [chart-dialog (swch/orthographic-star-chart-dialog)]
               (.setVisible chart-dialog true)))
           {:name (app/i18n "action.view.planetarium")
            :accelerator (swing/key-stroke \p :ctrl)
@@ -94,7 +87,7 @@
 
 (def orrery-action
   (swing/action (fn [_]
-            (let [chart-dialog (swco/orthographic-star-chart-dialog)]
+            (let [chart-dialog (swch/orthographic-star-chart-dialog)]
               (.setVisible chart-dialog true)))
           {:name (app/i18n "action.view.orrery")
            :accelerator (swing/key-stroke \y :ctrl)
@@ -176,17 +169,17 @@
                     (swing/menu-item {:action quit-action})])
              (swing/menu {:text (app/i18n "menu.views")}
                    [(swing/menu {:text (app/i18n "menu.view.starchart")}
-                          [(swing/menu-item {:action swce/equirectangular-star-chart-action})
-                           (swing/menu-item {:action swcs/stereographic-star-chart-action})
-                           (swing/menu-item {:action swco/orthographic-star-chart-action})])
+                          [(swing/menu-item {:action swch/equirectangular-star-chart-action})
+                           (swing/menu-item {:action swch/stereographic-star-chart-action})
+                           (swing/menu-item {:action swch/orthographic-star-chart-action})])
                     (swing/menu-item {:action planetarium-action})
                     (swing/menu-item {:action orrery-action})
-                    (swing/menu-item {:action swol/object-list-action})])
+                    (swing/menu-item {:action swobj/object-list-action})])
              (swing/menu {:text (app/i18n "menu.equipment")}
-                   [(swing/menu-item {:action optics-action})
-                    (swing/menu-item {:action eyepieces-action})
-                    (swing/menu-item {:action barlows-reducers-action})
-                    (swing/menu-item {:action filters-action})])
+                   [(swing/menu-item {:action sweq/optics-action})
+                    (swing/menu-item {:action sweq/eyepieces-action})
+                    (swing/menu-item {:action sweq/barlows-reducers-action})
+                    (swing/menu-item {:action sweq/filters-action})])
              (swing/menu {:text (app/i18n "menu.observation")}
                    [(swing/menu-item {:action swobs/observations-action})])
              (swing/menu {:text (app/i18n "menu.settings")}
@@ -221,9 +214,9 @@
          [(swing/panel
             {:layout (swing/mig-layout {:layoutConstraints "wrap 1"})}
             [(swing/tool-bar {}
-                             [swce/equirectangular-star-chart-action
-                              swcs/stereographic-star-chart-action
-                              swco/orthographic-star-chart-action
+                             [swch/equirectangular-star-chart-action
+                              swch/stereographic-star-chart-action
+                              swch/orthographic-star-chart-action
                               quit-action])
              (swing/panel {:layout (swing/mig-layout {:layoutConstraints "wrap 1, insets 10, fill, top"})}
                     [(location-time-panel)])])]))

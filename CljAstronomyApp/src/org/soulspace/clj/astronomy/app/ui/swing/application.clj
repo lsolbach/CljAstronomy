@@ -11,14 +11,18 @@
 ;;;;
 
 (ns org.soulspace.clj.astronomy.app.ui.swing.application
-  (:use [org.soulspace.clj.astronomy.app.data catalogs] 
-        [org.soulspace.clj.astronomy.app.ui.swing main-frame])
+  (:require [org.soulspace.clj.astronomy.app.data.catalogs :as cat] 
+        [org.soulspace.clj.astronomy.app.ui.swing.main-frame :as ui])
   (:gen-class))
 
 (defn -main
   "Main function to start the application"
   [& args]
-  (load-hyg-star-catalog)
+  (cat/load-hyg-star-catalog)
   ;(load-messier-catalog)
-  (load-hyg-dso-catalog)
-  (start-ui))
+  (cat/load-hyg-dso-catalog)
+  (ui/start-ui))
+
+(comment
+  (-main)
+  )

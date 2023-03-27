@@ -34,7 +34,6 @@
   (let [t (thread (hsc/read-hyg-star))]
     (go (reset! star-catalog (<! t)))))
 
-
 (defn load-messier-catalog
   "Loads the Messier catalog."
   []
@@ -63,3 +62,9 @@
   "Returns the loaded objects."
   []
   (concat @star-catalog @dso-catalog))
+
+(defprotocol Catalog
+  "Protocol for catalogs."
+  (get-objects [catalog] [catalog criteria] "Returns objects from the catalog.")
+  (get-capabilities [catalog] "Returns the capabilities of the catalog."))
+

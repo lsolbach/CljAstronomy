@@ -6,8 +6,8 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/core.async "1.6.673"]
                  [org.clojure/data.csv "1.0.1"]
-                 ;[reagi/reagi "0.10.1" :exclusions [org.clojure/clojure]]
-                 [org.soulspace.clj/astronomy.core "0.4.0"]
+                 [reagi/reagi "0.10.1" :exclusions [org.clojure/clojure]]
+                 [org.soulspace.clj/astronomy.core "0.4.2"]
                  [org.soulspace.clj/clj.swing "0.8.0"]]
   :test-paths ["test"]
   :main org.soulspace.clj.astronomy.app.ui.swing.application)

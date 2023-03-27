@@ -19,7 +19,7 @@
   (:import [javax.swing Action BorderFactory]))
 
 (defn observations-table-model
-  ""
+  "Creates a table model for observations in coll."
   [coll]
   (swing/mapseq-table-model
     [{:label (app/i18n "label.observation.time.start")}

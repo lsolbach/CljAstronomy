@@ -12,9 +12,9 @@
 
 (ns org.soulspace.clj.astronomy.app.ui.swing.equipment
   (:require [org.soulspace.clj.java.awt.core :as awt]
-            [org.soulspace.clj.java.awt.event :as aevt]
+            [org.soulspace.clj.java.awt.events :as aevt]
             [org.soulspace.clj.java.swing.core :as swing]
-            [org.soulspace.clj.java.swing.event :as sevt]
+            [org.soulspace.clj.java.swing.events :as sevt]
             [org.soulspace.clj.astronomy.app.common :as app]
             [org.soulspace.clj.astronomy.app.instruments.equipment :as ieq]
             [org.soulspace.clj.astronomy.app.ui.swing.common :as swc]))
@@ -89,8 +89,8 @@
                                                   (barlow-reducer-panel)])
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
-     (swing/add-action-listener b-ok (swing/action-listener (fn [_] (.setVisible d false))))
-     (swing/add-action-listener b-cancel (swing/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent barlows-reducers]
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
@@ -134,7 +134,7 @@
       [])
     (swing/panel {:layout (swing/mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
                                  :columnConstraints "[left|grow]"})}
-           [[(swing/label {:text (app/i18n "label.equipment.eyepiece.title") :font sws/heading-font}) "left, wrap 10"]
+           [[(swing/label {:text (app/i18n "label.equipment.eyepiece.title") :font swc/heading-font}) "left, wrap 10"]
             (swing/label {:text (app/i18n "label.equipment.eyepiece.name")}) f-name
             (swing/label {:text (app/i18n "label.equipment.eyepiece.focal-length")}) f-focal-length
             (swing/label {:text (app/i18n "label.equipment.eyepiece.field-of-view")}) f-field-of-view
@@ -148,7 +148,7 @@
                              :selectionMode (swing/list-selection-keys :single)})]
     (swing/panel {:layout (swing/mig-layout {:layoutConstraints "insets 10, wrap 1, fill"
                                  :columnConstraints "[left|grow]"})}
-           [[(swing/label {:text (app/i18n "label.equipment.eyepieces.title") :font sws/heading-font}) "left, wrap 10"]
+           [[(swing/label {:text (app/i18n "label.equipment.eyepieces.title") :font swc/heading-font}) "left, wrap 10"]
             (swing/scroll-pane l-eyepieces)])))
 
 
@@ -167,8 +167,8 @@
                                                   (eyepiece-panel)])
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
-     (swing/add-action-listener b-ok (swing/action-listener (fn [_] (.setVisible d false))))
-     (swing/add-action-listener b-cancel (swing/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent eyepieces]
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
@@ -249,8 +249,8 @@
                                                   (filter-panel)])
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
-     (swing/add-action-listener b-ok (swing/action-listener (fn [_] (.setVisible d false))))
-     (swing/add-action-listener b-cancel (swing/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent filters]
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
@@ -360,8 +360,8 @@
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
      ; TODO add selection listener to update the optic panel on list selections
-     (swing/add-action-listener b-ok (swing/action-listener (fn [_] (.setVisible d false))))
-     (swing/add-action-listener b-cancel (swing/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent optics]
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
@@ -375,13 +375,13 @@
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
      ; TODO add selection listener to update the optic panel on list selections
-     (swing/add-action-listener b-ok (swing/action-listener (fn [_] (.setVisible d false))))
-     (swing/add-action-listener b-cancel (swing/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d)))
 
 (def optics-action
   (swing/action (fn [_]
-            (let [dialog-optics (optics-dialog @ieq/optics-list)]
-              (.setVisible dialog-optics true)))
-          {:name (app/i18n "action.equipment.optics")}))
+                  (let [dialog-optics (optics-dialog @ieq/optics-list)]
+                    (.setVisible dialog-optics true)))
+                {:name (app/i18n "action.equipment.optics")}))
 

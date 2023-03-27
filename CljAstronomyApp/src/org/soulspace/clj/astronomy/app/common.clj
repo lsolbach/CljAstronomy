@@ -11,9 +11,8 @@
 ;;;;
 
 (ns org.soulspace.clj.astronomy.app.common
-  (:require [org.soulspace.clj.java.i18n :i18n]
-            [org.soulspace.clj.astronomy.time :as time])
-  (:import [java.util Date]))
+  (:require [org.soulspace.clj.java.i18n :as i18n]
+            [org.soulspace.clj.astronomy.time :as time]))
 
 (def i18n (partial i18n/bundle-lookup (i18n/bundle "resources")))
 

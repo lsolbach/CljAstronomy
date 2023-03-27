@@ -12,9 +12,9 @@
 
 (ns org.soulspace.clj.astronomy.app.ui.swing.objects
   (:require [org.soulspace.clj.java.awt.core :as awt]
-            [org.soulspace.clj.java.awt.event :as aevt]
+            [org.soulspace.clj.java.awt.events :as aevt]
             [org.soulspace.clj.java.swing.core :as swing]
-            [org.soulspace.clj.java.swing.event :as sevt]
+            [org.soulspace.clj.java.swing.events :as sevt]
             [org.soulspace.clj.astronomy.app.common :as app]
             [org.soulspace.clj.astronomy.app.data.common :as adc]
             [org.soulspace.clj.astronomy.app.data.catalogs :as cat]
@@ -120,9 +120,8 @@
      (defn clear-object-list-panel
        [object-list])
 
-
      (swing/set-selection-mode t-selection-model (swing/list-selection-keys :single))
-     (swing/add-list-selection-listener t-selection-model (swing/list-selection-listener show-object))
+     (sevt/add-list-selection-listener t-selection-model (sevt/list-selection-listener show-object))
 
      p)))
 
@@ -142,7 +141,7 @@
                             [list-panel "span, grow"]
                             [b-ok "span, tag ok"]])])]
      (.setVisible d true)
-     (swing/add-action-listener b-ok (swing/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent coll]
    (set-object-list coll)
@@ -154,7 +153,7 @@
                            [p
                             [b-ok "span, tag ok"]])])]
      (.setVisible d true)
-     (swing/add-action-listener b-ok (swing/action-listener (fn [_] (.setVisible d false))))
+     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
      d)))
 
 (def object-list-action
@@ -175,7 +174,7 @@
   [o]
   (let [f-name (swing/text-field {:columns 20 :text (adc/object-label o) :editable false})
         f-constellation (swing/text-field {:columns 20 :text (adc/constellation-label (:constellation o)) :editable false})
-        f-type (swing/text-field {:columns 20 :text (adc/object-type-name (:type o)) :editable false})
+        f-type (swing/text-field {:columns 20 :text (adc/object-type (:type o)) :editable false})
         f-ra (swing/number-field {:columns 20 :text (str (:ra o)) :editable false})
         f-dec (swing/number-field {:columns 20 :text (str (:dec o)) :editable false})
         f-mag (swing/number-field {:columns 20 :text (str (:mag o)) :editable false})
@@ -206,5 +205,5 @@
                             [(object-panel o)
                              [b-ok "span, tag ok"]])])]
       (.setVisible d true)
-      (swing/add-action-listener b-ok (swing/action-listener (fn [_] (.setVisible d false))))
+      (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
       d)))

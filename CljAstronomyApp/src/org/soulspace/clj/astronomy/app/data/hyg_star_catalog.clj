@@ -13,9 +13,15 @@
 (ns org.soulspace.clj.astronomy.app.data.hyg-star-catalog
   (:require [clojure.string :as str]
             [clojure.set :refer [map-invert]]
+            [clojure.core.async
+             :as a
+             :refer [>! <! >!! <!! go chan buffer close! thread
+                     alts! alts!! timeout]]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.clj.astronomy.app.data.common :as adc]))
+
+(def objects (atom []))
 
 (def hyg-star-file (str adc/data-dir "/catalogs/hygdata_v3.csv"))
 
@@ -84,7 +90,18 @@
         (map parse-hyg-star))
       (csv/read-csv in-file :separator \,))))
 
+(defn load-hyg-star-catalog
+  "Loads the HYG star catalog."
+  []
+  ; load catalog asynchronously so the application start is not delayed by catalog loading
+  (let [t (thread (read-hyg-star))]
+    (go (reset! objects (<! t)))))
+
 (defn write-star-catalog
   "Writes the stars to a file."
   [filename stars]
   (spit filename stars))
+
+(defrecord HygStarCatalog
+  [in out]
+  )
