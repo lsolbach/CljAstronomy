@@ -19,7 +19,6 @@
             [org.soulspace.clj.java.swing.core :as swing]
             [org.soulspace.clj.astronomy.time :as time]
             [org.soulspace.clj.astronomy.app.common :as app]
-            [org.soulspace.clj.astronomy.app.data.catalogs :as cat]
             [org.soulspace.clj.astronomy.app.ui.swing.common :as swc]
             [org.soulspace.clj.astronomy.app.ui.swing.equipment :as sweq]
             [org.soulspace.clj.astronomy.app.ui.swing.observation :as swobs]

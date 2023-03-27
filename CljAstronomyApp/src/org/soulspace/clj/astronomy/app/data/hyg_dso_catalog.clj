@@ -20,7 +20,8 @@
 
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]))
+            [org.soulspace.clj.astronomy.app.data.common :as adc]
+            [org.soulspace.clj.astronomy.app.data.catalog :as cat]))
 
 (def objects (atom []))
 
@@ -118,6 +119,17 @@
    :pk (catalog-id "PK" id1 cat1 id2 cat2)
    :pgc (catalog-id "PGC" id1 cat1 id2 cat2)})
 
+(defn read-xf
+  "Returns a transducer to transform the HYG DSO data on read."
+  []
+  (comp
+   (drop 1)
+   (map parse-hyg-dso)
+   (filter #(< (:mag %) 16))
+   (filter #(not= (:type %) :unknown))
+   (filter #(not= (:messier %) "40"))))
+
+
 (defn read-hyg-dso
   "Read the HYG DSO catalog."
   []
@@ -138,12 +150,17 @@
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (thread (read-hyg-dso))]
-    (go (reset! objects (<! t)))))
+    (go (reset! objects (<!! t)))))
 
+(defn get-objects
+  "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
+  ([]
+   @objects)
+  ([criteria]
+   (into [] (filter (cat/filter-xf criteria)) @objects)))
 
 ; defrecord or deftype?
 (defrecord HygDSOCatalog
-  [in out]
-
+           [in out objects] 
   )
 

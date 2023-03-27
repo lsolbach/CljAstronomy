@@ -21,23 +21,23 @@
 ;;;
 
 (def catalog-name {:hip "Hipparchos Catalog"
-                    :hd "Henry Draper Catalog"
-                    :hr "Harvard Revised/Yale Bright Star Catalog"
-                    :gliese "Gliese Catalog"
-                    :messier "Messier Catalog"
-                    :ngc "New General Catalogue"
-                    :ic "Index Catalogue"
-                    :col "Collinder Catalog"
-                    :mel "Melotte Catalog"
-                    :tr "Trumpler Catalog"
-                    :ter "Terzan Catalog"
-                    :pgc "Principal Galaxies Catalog"
-                    :ugc "Uppsala General Catalog of Galaxies"
-                    :eso "European Southern Observatory"
-                    :c "Caldwell Catalog"
-                    :pal "Palomar Catalog"
-                    :pk "Perek and Kohoutek Catalog"
-                    :harvard "Harvard Catalog"})
+                   :hd "Henry Draper Catalog"
+                   :hr "Harvard Revised/Yale Bright Star Catalog"
+                   :gliese "Gliese Catalog"
+                   :messier "Messier Catalog"
+                   :ngc "New General Catalogue"
+                   :ic "Index Catalogue"
+                   :col "Collinder Catalog"
+                   :mel "Melotte Catalog"
+                   :tr "Trumpler Catalog"
+                   :ter "Terzan Catalog"
+                   :pgc "Principal Galaxies Catalog"
+                   :ugc "Uppsala General Catalog of Galaxies"
+                   :eso "European Southern Observatory"
+                   :c "Caldwell Catalog"
+                   :pal "Palomar Catalog"
+                   :pk "Perek and Kohoutek Catalog"
+                   :harvard "Harvard Catalog"})
 
 (def catalog-keys (keys catalog-name))
 (def catalog-key (map-invert catalog-name))
@@ -304,35 +304,38 @@
   [o]
   (= (:type o) :dark-nebula))
 
-
-(def object-type {:satellite "Satellite"
-                   :moon "Moon"
-                   :planet "Planet"
-                   :minor-planet "Minor Planet"
-                   :comet "Comet"
-                   :star "Star"
-                   :variable-star "Variable Star"
-                   :double-star "Double Star"
-                   :triple-star "Triple Star"
-                   :neutron-star "Neutron Star"
-                   :stellar-black-hole "Stellar Black Hole"
-                   :asterism "Asterism"
-                   :open-cluster "Open Cluster"
-                   :globular-cluster "Globular Cluster"
-                   :planetary-nebula "Planetary Nebula"
-                   :emission-nebula "Emission Nebula"
-                   :reflection-nebula "Reflection Nebula"
-                   :dark-nebula "Dark Nebula"
-                   :supernova-remnant "Supernova Remnant"
-                   :star-cloud "Star Cloud"
-                   :galaxy-cloud "Galaxy Cloud"
-                   :galaxy "Galaxy"
-                   :spiral-galaxy "Spiral Galaxy"
-                   :elliptical-galaxy "Elliptical Galaxy"
-                   :lenticular-galaxy "Lenticular Galaxy"
-                   :irregular-galaxy "Irregular Galaxy"
-                   :quasar "Quasar"
-                   :galaxy-cluster "Galaxy Cluster"})
+;;
+;; Object types
+;;
+(def object-type {:asteriod "Asteroid"
+                  :comet "Comet"
+                  :satellite "Satellite/Moon"
+                  :dwarf-planet "Dwarf Planet"
+                  :planet "Planet"
+                  :solar-system-object "Solar System Object"
+                  :star "Star"
+                  :variable-star "Variable Star"
+                  :double-star "Double Star"
+                  :triple-star "Triple Star"
+                  :neutron-star "Neutron Star"
+                  :stellar-black-hole "Stellar Black Hole"
+                  :asterism "Asterism"
+                  :open-cluster "Open Cluster"
+                  :globular-cluster "Globular Cluster"
+                  :planetary-nebula "Planetary Nebula"
+                  :emission-nebula "Emission Nebula"
+                  :reflection-nebula "Reflection Nebula"
+                  :dark-nebula "Dark Nebula"
+                  :supernova-remnant "Supernova Remnant"
+                  :star-cloud "Star Cloud"
+                  :galaxy-cloud "Galaxy Cloud"
+                  :galaxy "Galaxy"
+                  :spiral-galaxy "Spiral Galaxy"
+                  :elliptical-galaxy "Elliptical Galaxy"
+                  :lenticular-galaxy "Lenticular Galaxy"
+                  :irregular-galaxy "Irregular Galaxy"
+                  :quasar "Quasar"
+                  :galaxy-cluster "Galaxy Cluster"})
 
 (def object-type-keys (keys object-type))
 (def object-type-key (map-invert object-type))
@@ -340,6 +343,11 @@
 (def object-hierarchy "Celestial object hierarchy"
   (->
    (make-hierarchy)
+   (derive :comet :solar-system-object)
+   (derive :asteriod :solar-system-object)
+   (derive :satellite :solar-system-object)
+   (derive :dwarf-planet :solar-system-object)
+   (derive :planet :solar-system-object)
    (derive :double-star :star)
    (derive :triple-star :star)
    (derive :multiple-star :star)
@@ -429,13 +437,13 @@
 ;;; object filters
 ;;;
 
-
 (defn mag-filter
   "Returns a filter for magnification of objects. Faintest and optionally brightest can be given."
   ([faintest]
    (mag-filter faintest -30))
   ([faintest brightest]
-   (fn [obj] (and (<= (:mag obj) faintest) (>= (:mag obj) brightest)))))
+   (fn [obj] (and (<= (:mag obj) faintest)
+                  (>= (:mag obj) brightest)))))
 
 (defn ra-dec-filter
   "Returns a filter for the RA and Dec coordinates of an object."
@@ -550,3 +558,81 @@
   [[ra dec] coll]
   (if (seq coll)
     (apply min-key (partial angular-distance-of-object-and-coords [ra dec]) coll)))
+
+;;;
+;;; Protocols
+;;;
+
+(defprotocol Catalog
+  "Protocol for catalogs."
+  (get-objects [catalog] [catalog criteria] "Returns objects from the catalog.")
+  (get-capabilities [catalog] "Returns the capabilities of the catalog."))
+
+
+(defprotocol AstronomicalObject
+  "Protocol for astronomical objects."
+  (type [obj]                                    "Returns the type of the object.")
+  (designation [obj]                             "Returns the designation of the object.                      
+                                                  If the object has multiple designations,
+                                                  the most common designation will be returned")
+  (distance [obj] [obj time] [obj time location] "Returns the distance to the object"))
+
+(defprotocol Coordinates
+  "Protocol for coordinate systems."
+  (equatorial [obj] [obj time] [obj time location] "Returns the equtorial coordinates (RA/Dec).")
+  (horizontal [obj time location]                  "Returns the horizontal coordinates (Alt/Az).")
+  ; (ecliptical [obj] [obj time] [obj time location] "Returns the ecliptical coordinates (lat/long).")
+  ; (galactical [obj] [obj time] "Returns the galactical coordinates.")
+  )
+
+(defprotocol Magnitude
+  (magnitude [obj] [obj time] [obj time location] "Returns the magnitude."))
+
+(defprotocol Constellation
+  "Protocol for Constellations."
+  (const-name [constellation] "Returns the name of the constellation.")
+  (const-genitivum [constellation] "Returns the genitivum of the constellation.")
+  (const-abbrev [constellation] "Returns the abbreviation of the constellation."))
+
+(defprotocol CatalogObject
+  "Protocol for objects from a catalog."
+  (catalogs [obj] "Returns the known catalogs, in which the object is listed."))
+
+(defprotocol DeepSkyObject
+  "Protocol for deep sky objects."
+  (constellation [obj] [obj time] [obj time location]))
+
+(defprotocol Star
+  )
+
+(defprotocol SolarSystemObject
+  (bound-to [obj] "Returns the object, this object is bound to gravitationally.
+                   
+                   Examples:
+                   * The moon is gravitationally bound to the earth.
+                   * The earth is gravitationally bound to the sun."))
+
+(defprotocol Observer
+  "Protocol for an observer"
+  (location [obs] "Returns the location of the observer.")
+  (time [obs] "Returns the time of the observer."))
+
+(comment
+  ; location
+  {:lat 51.33
+   :long 9.0
+   :height 300})
+
+;; TODO convert to records
+(defprotocol HorizontalCoordinates
+  "Protocol for horizontal coordinate system (Alt/Az).")
+
+(defprotocol EquatorialCoordinates
+  "Protocol for equatorial coordinate system (RA/Dec).")
+
+(defprotocol EclipticalCoordinates
+  "Protocol for ecliptical coordinate system.")
+
+(defprotocol GalacticalCoordinates
+  "Protocol for galactical coordinate system.")
+

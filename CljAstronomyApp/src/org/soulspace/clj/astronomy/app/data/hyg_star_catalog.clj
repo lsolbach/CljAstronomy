@@ -19,7 +19,8 @@
                      alts! alts!! timeout]]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]))
+            [org.soulspace.clj.astronomy.app.data.common :as adc]
+            [org.soulspace.clj.astronomy.app.data.catalog :as cat]))
 
 (def objects (atom []))
 
@@ -95,12 +96,19 @@
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (thread (read-hyg-star))]
-    (go (reset! objects (<! t)))))
+    (go (reset! objects (<!! t)))))
 
-(defn write-star-catalog
-  "Writes the stars to a file."
-  [filename stars]
-  (spit filename stars))
+(defn filter-xf
+  ""
+  [criteria]
+  )
+
+(defn get-objects
+  "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
+  ([]
+   @objects)
+  ([criteria]
+   (into [] (filter (cat/filter-xf criteria)) @objects)))
 
 (defrecord HygStarCatalog
   [in out]

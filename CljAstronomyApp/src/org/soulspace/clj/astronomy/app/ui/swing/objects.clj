@@ -17,7 +17,6 @@
             [org.soulspace.clj.java.swing.events :as sevt]
             [org.soulspace.clj.astronomy.app.common :as app]
             [org.soulspace.clj.astronomy.app.data.common :as adc]
-            [org.soulspace.clj.astronomy.app.data.catalogs :as cat]
             [org.soulspace.clj.astronomy.app.ui.swing.common :as swc]))
 
 ;;;

@@ -19,7 +19,7 @@
             [org.soulspace.clj.java.swing.events :as sevt]
             [org.soulspace.clj.astronomy.app.common :as app]
             [org.soulspace.clj.astronomy.app.data.common :as adc]
-            [org.soulspace.clj.astronomy.app.data.catalogs :as cat]
+            [org.soulspace.clj.astronomy.app.data.catalog :as cat]
             [org.soulspace.clj.astronomy.app.chart.common :as cco]
             [org.soulspace.clj.astronomy.app.chart.drawing :as cdr]
             [org.soulspace.clj.astronomy.app.chart.scaling :as csc]

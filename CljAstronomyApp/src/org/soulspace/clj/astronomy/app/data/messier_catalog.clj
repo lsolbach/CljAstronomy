@@ -19,7 +19,8 @@
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.math.core :as m]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]))
+            [org.soulspace.clj.astronomy.app.data.common :as adc]
+            [org.soulspace.clj.astronomy.app.data.catalog :as cat]))
 
 (def objects (atom []))
 
@@ -86,7 +87,19 @@
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (thread (read-messier))]
-    (go (reset! objects (<! t)))))
+    (go (reset! objects (<!! t)))))
+
+(defn get-objects
+  "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
+  ([]
+   @objects)
+  ([criteria]
+   (into [] (filter (cat/filter-xf criteria)) @objects)))
+
+;;;
+;;; Massier catalog component
+;;;
 
 (defrecord MessierCatalog
-  [in out])
+  [in out]
+  )

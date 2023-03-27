@@ -14,7 +14,11 @@
 
 (defprotocol AstronomicalObject)
 
-(defprotocol Coordinates) ; positional object?
+ ; positional object?
+(defprotocol Coordinates
+  (to-ra-dec [obj] "Returns the right ascension and declination of the object.")
+  ()
+  )
 
 (defprotocol DeepSkyObject
   "Protocol for objects outside our solar system.")
