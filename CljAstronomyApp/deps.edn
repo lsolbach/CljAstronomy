@@ -1,0 +1,8 @@
+
+{:deps {org.clojure/clojure {:mvn/version "1.11.1"}}
+       {org.clojure/core.async {:mvn/version "1.6.673"}}
+       {org.clojure/data.csv {:mvn/version "1.0.1"}}
+       {integrant/integrant {:mvn/version "0.8.0"}}
+       {reagi/reagi {:mvn/version "0.10.1"}}
+       {org.soulspace.clj/astronomy.core {:mvn/version "0.4.2"}}
+       {org.soulspace.clj/clj.swing {:mvn/version "0.8.0"}}}
