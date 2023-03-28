@@ -20,8 +20,7 @@
 
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]
-            [org.soulspace.clj.astronomy.app.data.catalog :as cat]))
+            [org.soulspace.clj.astronomy.app.data.common :as adc]))
 
 (def objects (atom []))
 
@@ -157,7 +156,7 @@
   ([]
    @objects)
   ([criteria]
-   (into [] (filter (cat/filter-xf criteria)) @objects)))
+   (into [] (filter (adc/filter-xf criteria)) @objects)))
 
 ; defrecord or deftype?
 (defrecord HygDSOCatalog

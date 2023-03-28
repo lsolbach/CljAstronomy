@@ -192,7 +192,7 @@
     (cdr/draw-dso-labels gfx equirectangular-scale (filter (adc/mag-filter 3) stars))
     (cdr/draw-dso-labels gfx equirectangular-scale (filter adc/common-name? (filter (adc/mag-filter 6) dsos)))
     (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 8) dsos))
-    (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 6) dsos))))
+    (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 6) stars))))
 
 (defn equirectangular-star-chart-panel
   "Creates the star chart panel."
@@ -236,7 +236,7 @@
 ;;;
 
 ; references to the chart data
-(def stereographic-panel-spec (ref {:x-max 1440 :y-max 1440}))
+(def stereographic-panel-spec (ref {:x-max 1080 :y-max 1080}))
 (def stereographic-chart-objects (ref []))
 
 ; accessors for the chart data
@@ -328,7 +328,7 @@
 ;;;
 
 ; references to the chart data
-(def orthographic-panel-spec (ref {:x-max 1440 :y-max 1440}))
+(def orthographic-panel-spec (ref {:x-max 1080 :y-max 1080}))
 (def orthographic-chart-objects (ref []))
 
 ; accessors for the chart data

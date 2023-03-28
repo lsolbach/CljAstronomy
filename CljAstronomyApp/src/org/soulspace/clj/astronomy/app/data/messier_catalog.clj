@@ -19,8 +19,7 @@
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.math.core :as m]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]
-            [org.soulspace.clj.astronomy.app.data.catalog :as cat]))
+            [org.soulspace.clj.astronomy.app.data.common :as adc]))
 
 (def objects (atom []))
 
@@ -67,8 +66,8 @@
    :constellation (adc/constellation-by-name-map constellation)
    :common-name common-name})
 
-(defn parse-messier-mapping-transformer
-  "Creates a mapping transformation from csv vector to messier object."
+(defn parse-messier-xf
+  "Creates a mapping transducer from csv vector to messier object."
   []
   (map #(parse-messier %)))
 
@@ -94,7 +93,7 @@
   ([]
    @objects)
   ([criteria]
-   (into [] (filter (cat/filter-xf criteria)) @objects)))
+   (into [] (filter (adc/filter-xf criteria)) @objects)))
 
 ;;;
 ;;; Massier catalog component

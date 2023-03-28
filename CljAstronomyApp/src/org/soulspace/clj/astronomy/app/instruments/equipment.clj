@@ -30,7 +30,6 @@
                         {:name "Baader OIII 2\"" :available true}
                         {:name "Baader H-beta 2\"" :available true}]))
 
-
 (defprotocol Optic
   "Protocol for optics (e.g. telescopes, binoculars)."
   (objective-area [optic] "Calculates the effective area of the objective by taking into account the area of the obstruction.")
