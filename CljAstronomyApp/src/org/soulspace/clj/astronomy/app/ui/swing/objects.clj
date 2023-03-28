@@ -17,6 +17,9 @@
             [org.soulspace.clj.java.swing.events :as sevt]
             [org.soulspace.clj.astronomy.app.common :as app]
             [org.soulspace.clj.astronomy.app.data.common :as adc]
+            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chdc]
+            [org.soulspace.clj.astronomy.app.data.hyg-star-catalog :as chsc]
+            [org.soulspace.clj.astronomy.app.data.messier-catalog :as cmes]
             [org.soulspace.clj.astronomy.app.ui.swing.common :as swc]))
 
 ;;;
@@ -157,7 +160,7 @@
 
 (def object-list-action
   (swing/action (fn [_]
-            (let [object-list (cat/get-deep-sky-objects)
+            (let [object-list (chsc/get-objects) ; TODO replace with command on channel
                   dialog-object-list (object-list-dialog object-list)]
               (.setVisible dialog-object-list true)))
           {:name (app/i18n "action.view.object-list")

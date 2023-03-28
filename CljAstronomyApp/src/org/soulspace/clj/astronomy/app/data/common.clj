@@ -571,7 +571,7 @@
 
 (defprotocol AstronomicalObject
   "Protocol for astronomical objects."
-  (type [obj]                                    "Returns the type of the object.")
+  (obj-type [obj]                                "Returns the type of the object.")
   (designation [obj]                             "Returns the designation of the object.                      
                                                   If the object has multiple designations,
                                                   the most common designation will be returned")
@@ -615,7 +615,7 @@
 (defprotocol Observer
   "Protocol for an observer"
   (location [obs] "Returns the location of the observer.")
-  (time [obs] "Returns the time of the observer."))
+  (observer-time [obs] "Returns the time of the observer."))
 
 (comment
   ; location

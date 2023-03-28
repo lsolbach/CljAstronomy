@@ -19,7 +19,9 @@
             [org.soulspace.clj.java.swing.events :as sevt]
             [org.soulspace.clj.astronomy.app.common :as app]
             [org.soulspace.clj.astronomy.app.data.common :as adc]
-            [org.soulspace.clj.astronomy.app.data.catalog :as cat]
+            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chdc]
+            [org.soulspace.clj.astronomy.app.data.hyg-star-catalog :as chsc]
+            [org.soulspace.clj.astronomy.app.data.messier-catalog :as cmes]
             [org.soulspace.clj.astronomy.app.chart.common :as cco]
             [org.soulspace.clj.astronomy.app.chart.drawing :as cdr]
             [org.soulspace.clj.astronomy.app.chart.scaling :as csc]
@@ -182,13 +184,15 @@
 (defn draw-equirectangular-chart
   "Draw the rectangular star chart."
   [^java.awt.Graphics2D gfx]
-  (agfx/set-rendering-hint gfx (agfx/rendering-hint-keys :antialialising) (agfx/antialias-hints :on))
-  (cdr/draw-chart-background gfx (equirectangular-panel-dimension))
-  (cdr/draw-chart-grid gfx equirectangular-scale)
-  (cdr/draw-dso-labels gfx equirectangular-scale (filter (adc/mag-filter 3) (cat/get-stars)))
-  (cdr/draw-dso-labels gfx equirectangular-scale (filter adc/common-name? (filter (adc/mag-filter 6) (cat/get-deep-sky-objects))))
-  (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 8) (cat/get-deep-sky-objects)))
-  (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 6) (cat/get-stars))))
+  (let [stars (chsc/get-objects)
+        dsos  (cmes/get-objects)]
+    (agfx/set-rendering-hint gfx (agfx/rendering-hint-keys :antialialising) (agfx/antialias-hints :on))
+    (cdr/draw-chart-background gfx (equirectangular-panel-dimension))
+    (cdr/draw-chart-grid gfx equirectangular-scale)
+    (cdr/draw-dso-labels gfx equirectangular-scale (filter (adc/mag-filter 3) stars))
+    (cdr/draw-dso-labels gfx equirectangular-scale (filter adc/common-name? (filter (adc/mag-filter 6) dsos)))
+    (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 8) dsos))
+    (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 6) dsos))))
 
 (defn equirectangular-star-chart-panel
   "Creates the star chart panel."
@@ -209,12 +213,12 @@
   (let [panel (equirectangular-star-chart-panel draw-equirectangular-chart (equirectangular-panel-dimension))
         popup-menu (chart-popup-menu)
         d (swing/dialog {:title (app/i18n "label.chart.equirectangular.title")}
-                        [(swing/scroll-pane panel)])]
+                        [(swing/scroll-pane panel)]) ]
     (aevt/add-mouse-listener panel
                         (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-equirectangular-scale
                                                                                   ;; => Syntax error compiling at (src/org/soulspace/clj/astronomy/app/ui/swing/charts.clj:1:8045).
                                                                                   ;;    Unable to resolve symbol: reverse-equirectangular-scale in this context
- (filter (adc/mag-filter 10.5) (cat/get-deep-sky-objects))))
+ (filter (adc/mag-filter 10.5) (cmes/get-objects))))
     (.setComponentPopupMenu panel popup-menu)
     (aevt/add-mouse-listener panel (popup-listener popup-menu))
     d))
@@ -266,24 +270,26 @@
 (defn draw-stereographic-chart
   "Draw the stereographic star chart."
   [^java.awt.Graphics2D gfx]
-  (agfx/set-rendering-hint gfx (agfx/rendering-hint-keys :antialialising) (agfx/antialias-hints :on))
-  (cdr/draw-chart-background gfx (stereographic-panel-dimension))
+  (let [stars (chsc/get-objects)
+        dsos  (cmes/get-objects)]
+    (agfx/set-rendering-hint gfx (agfx/rendering-hint-keys :antialialising) (agfx/antialias-hints :on))
+    (cdr/draw-chart-background gfx (stereographic-panel-dimension))
   ;(draw-chart-grid gfx)
   ;TODO use transducers
-  (cdr/draw-dso-labels gfx stereographic-scale
-                   (filter adc/common-name?
-                           (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                                   (filter (adc/mag-filter 6) (cat/get-deep-sky-objects)))))
-  (cdr/draw-dso-labels gfx stereographic-scale
-                   (filter adc/common-name?
-                           (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                                   (filter (adc/mag-filter 2) (cat/get-stars)))))
-  (cdr/draw-dsos gfx stereographic-scale
-             (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                     (filter (adc/mag-filter 10) (cat/get-deep-sky-objects))))
-  (cdr/draw-dsos gfx stereographic-scale
-             (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                     (filter (adc/mag-filter 7) (cat/get-stars)))))
+    (cdr/draw-dso-labels gfx stereographic-scale
+                         (filter adc/common-name?
+                                 (filter (adc/angular-distance-filter m/HALF-PI csc/home)
+                                         (filter (adc/mag-filter 6) dsos))))
+    (cdr/draw-dso-labels gfx stereographic-scale
+                         (filter adc/common-name?
+                                 (filter (adc/angular-distance-filter m/HALF-PI csc/home)
+                                         (filter (adc/mag-filter 2) stars))))
+    (cdr/draw-dsos gfx stereographic-scale
+                   (filter (adc/angular-distance-filter m/HALF-PI csc/home)
+                           (filter (adc/mag-filter 10) dsos)))
+    (cdr/draw-dsos gfx stereographic-scale
+                   (filter (adc/angular-distance-filter m/HALF-PI csc/home)
+                           (filter (adc/mag-filter 7) stars)))))
 
 (defn stereographic-star-chart-panel
   "Creates the star chart panel."
@@ -305,7 +311,7 @@
         d (swing/dialog {:title (app/i18n "label.chart.stereographic.title")} [(swing/scroll-pane panel)])]
     (aevt/add-mouse-listener panel
                         (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-stereographic-scale
-                                                      (filter (adc/mag-filter 10.5) (cat/get-deep-sky-objects))))
+                                                      (filter (adc/mag-filter 10.5) (cmes/get-objects))))
     d))
 
 (def stereographic-star-chart-action
@@ -362,22 +368,24 @@
 (defn draw-orthographic-chart
   "Draw the orthographic star chart."
   [^java.awt.Graphics2D gfx]
+  (let [stars (chsc/get-objects)
+        dsos  (cmes/get-objects)]
   (agfx/set-rendering-hint gfx (agfx/rendering-hint-keys :antialialising) (agfx/antialias-hints :on))
   (cdr/draw-chart-background gfx (orthographic-panel-dimension))
   (cdr/draw-dso-labels gfx orthographic-scale
                    (filter adc/common-name?
                            (filter (adc/rad-ra-dec-filter [0.0 0.0] [m/DOUBLE-PI m/HALF-PI])
-                                   (filter (adc/mag-filter 2) (cat/get-stars)))))
+                                   (filter (adc/mag-filter 2) stars))))
   (cdr/draw-dso-labels gfx orthographic-scale
                    (filter adc/common-name?
                            (filter (adc/rad-ra-dec-filter [0.0 0.0] [m/DOUBLE-PI m/HALF-PI])
-                                   (filter (adc/mag-filter 6) (cat/get-deep-sky-objects)))))
+                                   (filter (adc/mag-filter 6) dsos))))
   (cdr/draw-dsos gfx orthographic-scale
              (filter (adc/rad-ra-dec-filter [0.0 0.0] [m/DOUBLE-PI m/HALF-PI])
-                     (filter (adc/mag-filter 10) (cat/get-deep-sky-objects))))
+                     (filter (adc/mag-filter 10) dsos)))
   (cdr/draw-dsos gfx orthographic-scale
              (filter (adc/rad-ra-dec-filter [0.0 0.0] [m/DOUBLE-PI m/HALF-PI])
-                     (filter (adc/mag-filter 7) (cat/get-stars)))))
+                     (filter (adc/mag-filter 7) stars)))))
 
 (defn orthographic-star-chart-panel
   "Creates the star chart panel."
@@ -399,7 +407,7 @@
         d (swing/dialog {:title (app/i18n "label.chart.orthographic.title")} [(swing/scroll-pane panel)])]
     (aevt/add-mouse-listener panel
                         (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-orthographic-scale
-                                                      (filter (adc/mag-filter 10.5) (cat/get-deep-sky-objects))))
+                                                      (filter (adc/mag-filter 10.5) (cmes/get-objects))))
     d))
 
 (def orthographic-star-chart-action
