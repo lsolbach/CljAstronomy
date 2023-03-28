@@ -13,11 +13,7 @@
 (ns org.soulspace.clj.astronomy.app.data.hyg-dso-catalog
   (:require [clojure.string :as str]
             [clojure.set :refer [map-invert]]
-            [clojure.core.async
-             :as a
-             :refer [>! <! >!! <!! go go-loop chan buffer close! thread
-                     alts! alts!! timeout]]
-
+            [clojure.core.async :as a]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.clj.astronomy.app.data.common :as adc]))
@@ -94,7 +90,7 @@
   [[ra dec type const mag common-name ra-rad dec-rad id r1 r2 angle dso-source id1 cat1 id2 cat2 dupid dupcat display-mag]]
   {:ra (Double/valueOf ra)
    :dec (Double/valueOf dec)
-   :type (hyg-dso-type type)
+   :object-type (hyg-dso-type type)
    :constellation (keyword const)
    :mag (if (seq mag) (Double/valueOf mag) 100.0)
    :common-name (if (seq common-name) common-name)
@@ -141,8 +137,8 @@
   "Loads the HYG dso catalog."
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
-  (let [t (thread (read-hyg-dso))]
-    (go (let [objs  (<! t)]
+  (let [t (a/thread (read-hyg-dso))]
+    (a/go (let [objs  (a/<! t)]
           (reset! catalog {:enabled? true
                            :objects objs
                            :catalog-designations #{}
@@ -157,12 +153,21 @@
 
 (defn handle-requests
   "Handles catalog requests."
-  [request-chan response-chan]
-  (when (:enabled? @catalog)
-    (println "Catalog enabled, handling requests.")
-    (go-loop [request (<! request-chan)]
-      (println request)
-      (>! response-chan (get-objects (:criteria request))))))
+  [in out]
+  (println "Catalog enabled, handling requests.")
+  (a/go
+    (while (:enabled? @catalog)
+      (println "Catalog enabled, handling requests.")
+      (loop []
+        (println "looping...")
+        ; (println "Request Channel" in)
+        ; (println "Response Channel" out)
+        (let [request (a/<! in)]
+          (adc/data-tapper "Request" request)
+          (let [objs (get-objects (:criteria request))]
+            (adc/data-tapper "Response" objs)
+            (a/>! out objs))
+        (recur)))))
 
 (defn init-catalog
   [request-chan response-chan]
@@ -170,15 +175,23 @@
   (handle-requests request-chan response-chan))
 
 (comment
+  (def in (a/chan 100))
+  (def out (a/chan 100))
   (load-hyg-dso-catalog)
-  @catalog
-  (let [in (chan 2)
-        out (chan 2)]
-    (handle-requests in out)
-    (go (>! in {:criteria {:object-types #{:planetary-nebula}}}))
-    (go (print (<! out)))
-  )
+  (:enabled? @catalog)
+  (count (get-objects (:criteria {:criteria {:magnitudes {:max -30 :min 8}
+                                             :object-types #{:emission-nebula}}})))
+  (handle-requests in out)
+  (ca/go (a/>! in (do (range 100))))
+  (ca/go (println (a/<! in)))
+  (ca/go (a/>! in {:criteria {:magnitudes {:max -30 :min 8}
+                                           :object-types #{:emission-nebula}}}))
+  (ca/go (println (a/<! out)))
 )
+
+(defn init
+  ""
+  [])
 
 ; defrecord or deftype?
 (defrecord HygDSOCatalog

@@ -601,9 +601,13 @@
     #(contains? (:catalog-designations %) v)
     (= :magnitudes k)
     #(let [max (get v :max -30)
-           min (get v :max 6)]
+           min (get v :min 10)]
+       ;(println "<" max (:mag %) min)
        (and (< max (:mag %) min)))))
     ; TODO add functions for other criteria
+
+(comment
+  (criterium-predicate {}))
 
 (defn filter-xf
   "Creates a filter transducer for the criteria."
@@ -612,7 +616,7 @@
     (if (seq remaining)
       (recur (rest remaining) (conj filter-predicates (criterium-predicate (first remaining))))
       ; compose the filtering functions and create a filter transducer
-      (filter (apply comp (remove nil? filter-predicates))))))
+      (filter (apply every-pred (remove nil? filter-predicates))))))
 
 (comment
   (first {:object-types #{:star :galaxy}})

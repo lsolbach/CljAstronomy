@@ -1,13 +1,13 @@
 (ns org.soulspace.clj.astronomy.app.system
   (:require [integrant.core :as ig]
-            [clojure.core.async :as async]
+            [clojure.core.async :as a]
             [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chdc]
             [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chsc]
             [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as cmes]))
 
 
-(def catalog-requests (async/chan))
-(def catalog-responses (async/chan))
+(def catalog-requests (a/chan 10))
+(def catalog-responses (a/chan 10))
 
 (def config
   {:catalog/hyg-dso {:data-dir "data"}

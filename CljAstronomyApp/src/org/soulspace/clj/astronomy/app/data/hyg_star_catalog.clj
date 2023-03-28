@@ -13,10 +13,7 @@
 (ns org.soulspace.clj.astronomy.app.data.hyg-star-catalog
   (:require [clojure.string :as str]
             [clojure.set :refer [map-invert]]
-            [clojure.core.async
-             :as a
-             :refer [>! <! >!! <!! go chan buffer close! thread
-                     alts! alts!! timeout]]
+            [clojure.core.async :as a]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.clj.astronomy.app.data.common :as adc]))
@@ -94,13 +91,8 @@
   "Loads the HYG star catalog."
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
-  (let [t (thread (read-hyg-star))]
-    (go (reset! objects (<!! t)))))
-
-(defn filter-xf
-  ""
-  [criteria]
-  )
+  (let [t (a/thread (read-hyg-star))]
+    (a/go (reset! objects (a/<!! t)))))
 
 (defn get-objects
   "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
@@ -108,6 +100,10 @@
    @objects)
   ([criteria]
    (into [] (filter (adc/filter-xf criteria)) @objects)))
+
+(defn init
+  ""
+  [])
 
 (defrecord HygStarCatalog
   [in out]
