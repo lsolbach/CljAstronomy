@@ -613,6 +613,7 @@
       (recur (rest remaining) (conj filter-predicates (criterium-predicate (first remaining))))
       ; compose the filtering functions and create a filter transducer
       (filter (apply comp (remove nil? filter-predicates))))))
+
 (comment
   (first {:object-types #{:star :galaxy}})
   (criterium-predicate (first {:object-types #{:star :galaxy}}))

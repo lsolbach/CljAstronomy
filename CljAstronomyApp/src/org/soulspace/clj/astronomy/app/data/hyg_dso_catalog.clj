@@ -15,24 +15,27 @@
             [clojure.set :refer [map-invert]]
             [clojure.core.async
              :as a
-             :refer [>! <! >!! <!! go chan buffer close! thread
+             :refer [>! <! >!! <!! go go-loop chan buffer close! thread
                      alts! alts!! timeout]]
 
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.clj.astronomy.app.data.common :as adc]))
 
-(def objects (atom []))
+(def catalog (atom {:enabled? false
+                    :objects []
+                    :object-types #{}
+                    :catalog-designations #{}}))
 
 (def hyg-dso-file (str adc/data-dir "/catalogs/dso.csv"))
 
 (def hyg-dso-sources {"0" "miscellaneous, limited detail (e.g. Wikipedia)."
-                         "1" "NGC 2000 (Sinott, 1988)."
-                         "2" "Historically Corrected New General Catalogue from the NGC/IC project (http://www.ngcic.org)."
-                         "3" "PGC galaxy catalog (http://leda.univ-lyon1.fr/)."
-                         "4" "Collinder open cluster catalog, items not already in Messier,Caldwell,NGC,IC and with defined size and magnitude (http://www.cloudynights.com/item.php?item_id=2544)."
-                         "5" "Perek-Kohoutek catalog IDs, from original (Perek + Kouhoutek, 1967) and update (Perek + Kohoutek, 2001)."
-                         "6" "Faint globulars (Palomar + Terzian) from http://www.astronomy-mall.com/Adventures.In.Deep.Space/obscure.htm and http://www.astronomy-mall.com/Adventures.In.Deep.Space/palglob.htm."})
+                      "1" "NGC 2000 (Sinott, 1988)."
+                      "2" "Historically Corrected New General Catalogue from the NGC/IC project (http://www.ngcic.org)."
+                      "3" "PGC galaxy catalog (http://leda.univ-lyon1.fr/)."
+                      "4" "Collinder open cluster catalog, items not already in Messier,Caldwell,NGC,IC and with defined size and magnitude (http://www.cloudynights.com/item.php?item_id=2544)."
+                      "5" "Perek-Kohoutek catalog IDs, from original (Perek + Kouhoutek, 1967) and update (Perek + Kohoutek, 2001)."
+                      "6" "Faint globulars (Palomar + Terzian) from http://www.astronomy-mall.com/Adventures.In.Deep.Space/obscure.htm and http://www.astronomy-mall.com/Adventures.In.Deep.Space/palglob.htm."})
 
 (def hyg-dso-types {"*" "Single Star"
                     "**" "Double Star"
@@ -128,38 +131,56 @@
    (filter #(not= (:type %) :unknown))
    (filter #(not= (:messier %) "40"))))
 
-
 (defn read-hyg-dso
   "Read the HYG DSO catalog."
   []
   (with-open [in-file (io/reader hyg-dso-file)]
-    (into []
-          (comp
-            (drop 1)
-            (map parse-hyg-dso)
-            (filter #(< (:mag %) 16))
-            (filter #(not= (:type %) :unknown))
-            ;(filter #(contains? #{"M" "NGC" "IC" "PK" "Col"} (:cat1 %)))
-            ; filter messier 40 double star
-            (filter #(not= (:messier %) "40")))
-          (csv/read-csv in-file))))
+    (into [] (read-xf) (csv/read-csv in-file))))
 
 (defn load-hyg-dso-catalog
   "Loads the HYG dso catalog."
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (thread (read-hyg-dso))]
-    (go (reset! objects (<!! t)))))
+    (go (let [objs  (<! t)]
+          (reset! catalog {:enabled? true
+                           :objects objs
+                           :catalog-designations #{}
+                           :object-types #{}})))))
 
 (defn get-objects
   "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
   ([]
-   @objects)
+   (:objects @catalog))
   ([criteria]
-   (into [] (filter (adc/filter-xf criteria)) @objects)))
+   (into [] (adc/filter-xf criteria) (:objects @catalog))))
+
+(defn handle-requests
+  "Handles catalog requests."
+  [request-chan response-chan]
+  (when (:enabled? @catalog)
+    (println "Catalog enabled, handling requests.")
+    (go-loop [request (<! request-chan)]
+      (println request)
+      (>! response-chan (get-objects (:criteria request))))))
+
+(defn init-catalog
+  [request-chan response-chan]
+  (load-hyg-dso-catalog)
+  (handle-requests request-chan response-chan))
+
+(comment
+  (load-hyg-dso-catalog)
+  @catalog
+  (let [in (chan 2)
+        out (chan 2)]
+    (handle-requests in out)
+    (go (>! in {:criteria {:object-types #{:planetary-nebula}}}))
+    (go (print (<! out)))
+  )
+)
 
 ; defrecord or deftype?
 (defrecord HygDSOCatalog
            [in out objects] 
   )
-

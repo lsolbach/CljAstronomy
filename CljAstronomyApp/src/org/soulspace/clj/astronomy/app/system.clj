@@ -1,15 +1,19 @@
 (ns org.soulspace.clj.astronomy.app.system
   (:require [integrant.core :as ig]
+            [clojure.core.async :as async]
             [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chdc]
             [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chsc]
-            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as cmes]
-            ))
+            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as cmes]))
 
+
+(def catalog-requests (async/chan))
+(def catalog-responses (async/chan))
 
 (def config
   {:catalog/hyg-dso {:data-dir "data"}
    :catalog/hyg-star {:data-dir "data"}
-   :catalog/messier {:data-dir "data"}})
+   :catalog/messier {:data-dir "data"}
+   :swing/ui {}})
 
 (defmethod ig/init-key :catalog/hyg-dso [_ {:keys [data-dir] :as opts}]
   (fn [_] (-> (chdc/map->HygDSOCatalog opts)
@@ -23,6 +27,8 @@
   (fn [_] (-> (cmes/map->HygDSOCatalog opts)
               (cmes/start))))
 
+(defmethod ig/init-key swing/ui [args]
+  (fn [_] nil)) ; TODO implement
 
 (defmethod ig/halt-key :catalog/hyg-dso  [_ catalog]
   (chdc/stop catalog))
@@ -32,4 +38,7 @@
 
 (defmethod ig/halt-key :catalog/messier  [_ catalog]
   (cmes/stop catalog))
+
+(defmethod ig/halt-key :swing/ui  [_ ui]
+  (ui/stop ui))
 

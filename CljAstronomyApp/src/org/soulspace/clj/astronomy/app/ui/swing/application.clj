@@ -11,8 +11,7 @@
 ;;;;
 
 (ns org.soulspace.clj.astronomy.app.ui.swing.application
-  (:require [org.soulspace.clj.astronomy.app.data.catalog :as cat]
-            [org.soulspace.clj.astronomy.app.ui.swing.main-frame :as ui]
+  (:require [org.soulspace.clj.astronomy.app.ui.swing.main-frame :as ui]
             [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chdc]
             [org.soulspace.clj.astronomy.app.data.hyg-star-catalog :as chsc]
             [org.soulspace.clj.astronomy.app.data.messier-catalog :as cmes])
@@ -29,7 +28,7 @@
   [& args]
   (chsc/load-hyg-star-catalog)
   (cmes/load-messier-catalog)
-  ;(chdc/load-hyg-dso-catalog)
+  (chdc/load-hyg-dso-catalog)
   (ui/start-ui))
 
 (comment
