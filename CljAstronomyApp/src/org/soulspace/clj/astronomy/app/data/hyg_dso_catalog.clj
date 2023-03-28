@@ -152,7 +152,7 @@
    (into [] (adc/filter-xf criteria) (:objects @catalog))))
 
 (defn handle-requests
-  "Handles catalog requests."
+  "Reads queries from the in channel and returns the results on the out channel."
   [in out]
   (println "Catalog enabled, handling requests.")
   (a/go
@@ -164,10 +164,13 @@
         ; (println "Response Channel" out)
         (let [request (a/<! in)]
           (adc/data-tapper "Request" request)
-          (let [objs (get-objects (:criteria request))]
+          (let [criteria (:criteria request)
+                ; TODO check criteria against the capabilities of the repository
+                ;      to skip real searches when not neccessary
+                objs (get-objects criteria)]
             (adc/data-tapper "Response" objs)
             (a/>! out objs))
-        (recur)))))
+          (recur))))))
 
 (defn init-catalog
   [request-chan response-chan]
