@@ -18,7 +18,7 @@
             [clojure.data.csv :as csv]
             [org.soulspace.clj.astronomy.app.data.common :as adc]))
 
-(def objects (atom []))
+(def catalog (atom []))
 
 (def hyg-star-file (str adc/data-dir "/catalogs/hygdata_v3.csv"))
 
@@ -87,24 +87,43 @@
         (map parse-hyg-star))
       (csv/read-csv in-file :separator \,))))
 
-(defn load-hyg-star-catalog
+(defn load-hyg-star-catalog!
   "Loads the HYG star catalog."
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (a/thread (read-hyg-star))]
-    (a/go (reset! objects (a/<!! t)))))
+    (a/go (reset! catalog (a/<!! t)))))
 
 (defn get-objects
   "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
   ([]
-   @objects)
+   @catalog)
   ([criteria]
-   (into [] (filter (adc/filter-xf criteria)) @objects)))
+   (into [] (filter (adc/filter-xf criteria)) @catalog)))
 
-(defn init
-  ""
-  [])
+(defn handle-requests
+  "Reads queries from the in channel and returns the results on the out channel."
+  [in out]
+  (a/go
+    (while (:enabled? @catalog)
+      (loop []
+        (println "looping...")
+        (let [request (a/<! in)]
+          (adc/data-tapper "Request" request) ; for debugging
+          (let [criteria (:criteria request)
+                ; TODO check criteria against the capabilities of the repository
+                ;      to skip real searches when not neccessary
+                objs (get-objects criteria)]
+            (adc/data-tapper "Response" objs) ; for debugging
+            (a/>! out objs))
+          (recur))))))
 
 (defrecord HygStarCatalog
+           [in out])
+
+(defn init-catalog
   [in out]
+  (let [cat (->HygStarCatalog in out)]
+    (load-hyg-star-catalog!)
+    (handle-requests in out))
   )

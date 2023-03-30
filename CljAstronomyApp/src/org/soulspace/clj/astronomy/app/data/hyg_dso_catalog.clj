@@ -133,7 +133,7 @@
   (with-open [in-file (io/reader hyg-dso-file)]
     (into [] (read-xf) (csv/read-csv in-file))))
 
-(defn load-hyg-dso-catalog
+(defn load-hyg-dso-catalog!
   "Loads the HYG dso catalog."
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
@@ -151,36 +151,33 @@
   ([criteria]
    (into [] (adc/filter-xf criteria) (:objects @catalog))))
 
+
 (defn handle-requests
   "Reads queries from the in channel and returns the results on the out channel."
   [in out]
-  (println "Catalog enabled, handling requests.")
   (a/go
     (while (:enabled? @catalog)
-      (println "Catalog enabled, handling requests.")
       (loop []
         (println "looping...")
-        ; (println "Request Channel" in)
-        ; (println "Response Channel" out)
         (let [request (a/<! in)]
-          (adc/data-tapper "Request" request)
+          (adc/data-tapper "Request" request) ; for debugging
           (let [criteria (:criteria request)
                 ; TODO check criteria against the capabilities of the repository
                 ;      to skip real searches when not neccessary
                 objs (get-objects criteria)]
-            (adc/data-tapper "Response" objs)
+            (adc/data-tapper "Response" objs) ; for debugging
             (a/>! out objs))
           (recur))))))
 
 (defn init-catalog
-  [request-chan response-chan]
-  (load-hyg-dso-catalog)
-  (handle-requests request-chan response-chan))
+  [in out]
+  (load-hyg-dso-catalog!)
+  (handle-requests in out))
 
 (comment
   (def in (a/chan 100))
   (def out (a/chan 100))
-  (load-hyg-dso-catalog)
+  (load-hyg-dso-catalog!)
   (:enabled? @catalog)
   (count (get-objects (:criteria {:criteria {:magnitudes {:max -30 :min 8}
                                              :object-types #{:emission-nebula}}})))

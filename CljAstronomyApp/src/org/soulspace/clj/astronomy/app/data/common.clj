@@ -380,115 +380,55 @@
    (derive :lenticular-galaxy :galaxy)
    (derive :irregular-galaxy :galaxy)))
 
-;
-; default labels
-;
-(defmulti object-label :type :hierarchy #'object-hierarchy)
-
-; "Returns the label for the star."
-(defmethod object-label :star
-  [star]
-  (cond
-    (common-name? star) (:common-name star)
-    (bayer-letter? star) (greek-letters (:bayer star))
-    (flamsteed-object? star) (:flamsteed star)
-    (hd-object? star) (str "HD" (:hd star))
-    (hr-object? star) (str "HR" (:hr star))
-    (gliese-object? star) (str "Gliese" (:gliese star))
-    (hip-object? star) (str "Hip" (:hip star))
-    :default ""))
-
-; "Returns the label for the deep sky object."
-(defmethod object-label :dso
-  [dso]
-  (cond
-    (common-name? dso) (:common-name dso)
-    (messier-object? dso) (str "M " (:messier dso))
-    (ngc-object? dso) (str "NGC " (:ngc dso))
-    (ic-object? dso) (str "IC " (:ic dso))
-    (pk-object? dso) (str "PK " (:pk dso))
-    (c-object? dso) (str "C " (:c dso))
-    (col-object? dso) (str "Col " (:col dso))
-    (mel-object? dso) (str "Mel " (:mel dso))
-    (pgc-object? dso) (str "PGC " (:pgc dso))
-    :default ""))
-
-(defmethod object-label nil
-  [obj]
-  (println (:id obj) (:type obj))
-  "")
-
-(defn ra-label
-  "Returns the right ascension as string."
-  [ra]
-  (str ra))
-
-(defn dec-label
-  "Returns the declination as string."
-  [dec]
-  (str dec))
-
-(defn constellation-label
-  "Returns the constellation as string."
-  [constellation]
-  (if constellation
-    (constellation-name-map constellation)
-    ""))
-
-(defn type-label
-  "Returns the type as string."
-  [type]
-  (if type
-    (object-type type)
-    ""))
-
 ;;;
 ;;; object filters
 ;;;
 
-(defn mag-filter
+(defn in-mag-range?
   "Returns a filter for magnification of objects. Faintest and optionally brightest can be given."
   ([faintest]
-   (mag-filter faintest -30))
+   (in-mag-range? faintest -30))
   ([faintest brightest]
    (fn [obj] (and (<= (:mag obj) faintest)
                   (>= (:mag obj) brightest)))))
 
-(defn ra-dec-filter
+(defn in-bounding-box?
   "Returns a filter for the RA and Dec coordinates of an object."
   ([[ra-min dec-min] [ra-max dec-max]]
-   (ra-dec-filter ra-min dec-min ra-max dec-max))
+   (in-bounding-box? ra-min dec-min ra-max dec-max))
   ([ra-min dec-min ra-max dec-max]
    (fn [obj] (and (>= (:ra obj) ra-min) (>= (:dec obj) dec-min) (<= (:ra obj) ra-max) (<= (:dec obj) dec-max)))))
 
-(defn rad-ra-dec-filter
+(comment
+ ; TODO handle angle format in Angle and Coordinate abstractions and use common code
+ (defn rad-ra-dec-filter
   "Returns a filter for the RA and Dec coordinates of an object."
   ([[ra-min dec-min] [ra-max dec-max]]
    (rad-ra-dec-filter ra-min dec-min ra-max dec-max))
   ([ra-min dec-min ra-max dec-max]
    (fn [obj] (and (>= (:ra-rad obj) ra-min) (>= (:dec-rad obj) dec-min) (<= (:ra-rad obj) ra-max) (<= (:dec-rad obj) dec-max)))))
+)
 
-(defn angular-distance-filter
-  "Returns a filter for the angular distance of an object"
+(defn angular-distance-below?
+  "Returns a filter for the angular distance of an object."
   ([dist [ra dec]]
-   (angular-distance-filter dist ra dec))
+   (angular-distance-below? dist ra dec))
   ([dist ra dec]
    (fn [obj] (<= (angular-distance [(:ra-rad obj) (:dec-rad obj)] [ra dec]) dist))))
 
-(defn common-name-filter
-  "Returns a filter for objects with a common name."
+(defn common-name?
+  "Returns a predicate for objects with a common name."
   ([]
    (fn [obj] (seq (:common-name obj))))
   ([common-name]
    (fn [obj] (re-matches (re-pattern common-name) (:common-name obj)))))
 
-(defn type-filter
+(defn object-type?
   "Returns a filter for typed objects."
   ([]
-   #(and (:type %) (not= (:type %) :unknown)))
+   #(and (:object-type %) (not= (:object-type %) :unknown)))
   ([type]
-   #(and (:type %) (not= (:type %) (keyword type)))))
-
+   #(and (:object-type %) (not= (:object-type %) (keyword type)))))
 
 ;;;
 ;;; Celestial object labels
@@ -573,8 +513,8 @@
 ;;;
 
 (comment
-  ; filter criteria example, use criteria to build a filter transducer
-  {:catalog-designations #{:hd :hip :ngc :ic}                            ; catalogs to include
+  ; example for the filter criteria, use criteria to build a filter transducer
+  {:catalog-designations #{:hd :hip :ngc :ic}                ; catalogs to include
    :object-types #{:star :galaxy}                            ; object types to include
    :magnitudes {:max -30 :min 6}                             ; magnitudes to include 
    :bounding-box {:coordinates-min {:ra-min 0 :deg-min -90}  ; bounding box on coordinates 
@@ -583,11 +523,12 @@
               :max-distance 10}
    :constellations #{}}
 
-  ; capabilities of the catalog
+  ; idea for the capabilities of a catalog
   {:catalog-designations #{:ngc :ic}
    :object-types #{:globular-cluster :galaxy :planetary-nebula
                    :emission-nebula :open-cluster :reflection-nebula}
-   :magnitudes {:max -30. :min 6.}})
+   :magnitudes {:max -30. :min 6.}}
+  )
 
 (defn criterium-predicate
   "Returns a filter predicate for the given criterium."
@@ -655,60 +596,63 @@
 
 (defprotocol Catalog
   "Protocol for catalogs."
-  (get-objects [catalog] [catalog criteria] "Returns objects from the catalog.")
-  (get-capabilities [catalog] "Returns the capabilities of the catalog."))
-
+  (initialize [this]                     "Initializes the catalog.")
+  (get-objects [this] [this criteria] "Returns objects from the catalog.")
+  (get-capabilities [this]               "Returns the capabilities of the catalog."))
 
 (defprotocol AstronomicalObject
   "Protocol for astronomical objects."
-  (obj-type [obj]                                "Returns the type of the object.")
-  (designation [obj]                             "Returns the designation of the object.                      
-                                                  If the object has multiple designations,
-                                                  the most common designation will be returned")
-  (distance [obj] [obj time] [obj time location] "Returns the distance to the object"))
+  (obj-type [this]                                  "Returns the type of the object.")
+  (designation [this]                               "Returns the designation of the object.                      
+                                                     If the object has multiple designations,
+                                                     the most common designation will be returned")
+  (distance [this] [this time] [this time location] "Returns the distance to the object"))
 
 (defprotocol Coordinates
   "Protocol for coordinate systems."
-  (equatorial [obj] [obj time] [obj time location] "Returns the equtorial coordinates (RA/Dec).")
-  (horizontal [obj time location]                  "Returns the horizontal coordinates (Alt/Az).")
+  (equatorial [this] [this time] [this time location] "Returns the equtorial coordinates (RA/Dec).")
+  (horizontal [this time location]                    "Returns the horizontal coordinates (Alt/Az).")
   ; (ecliptical [obj] [obj time] [obj time location] "Returns the ecliptical coordinates (lat/long).")
   ; (galactical [obj] [obj time] "Returns the galactical coordinates.")
   )
 
 (defprotocol Magnitude
-  (magnitude [obj] [obj time] [obj time location] "Returns the magnitude."))
+  (magnitude [this] [this time] [this time location] "Returns the magnitude."))
 
 (defprotocol Constellation
   "Protocol for Constellations."
-  (const-name [constellation] "Returns the name of the constellation.")
-  (const-genitivum [constellation] "Returns the genitivum of the constellation.")
-  (const-abbrev [constellation] "Returns the abbreviation of the constellation."))
+  (constellation-name [this]      "Returns the name of the constellation.")
+  (constellation-genitivum [this] "Returns the genitivum of the constellation.")
+  (constellation-abbrev [this]    "Returns the abbreviation of the constellation."))
 
 (defprotocol CatalogObject
   "Protocol for objects from a catalog."
-  (catalogs [obj] "Returns the known catalogs, in which the object is listed."))
+  (catalogs [this] "Returns the known catalogs, in which the object is listed."))
 
 (defprotocol DeepSkyObject
   "Protocol for deep sky objects."
-  (constellation [obj] [obj time] [obj time location]))
+  (constellation [this] [this time] [this time location]))
 
-(defprotocol Star)
+(defprotocol Star
+  "Protocol for stars."
+  (spectral-color [this]))
 
 (defprotocol SolarSystemObject
-  (bound-to [obj] "Returns the object, this object is bound to gravitationally.
+  (bound-to [this] "Returns the object, this object is bound to gravitationally.
                    
                    Examples:
                    * The moon is gravitationally bound to the earth.
                    * The earth is gravitationally bound to the sun."))
 
 (defprotocol Planet
-  "Protocol for planets.")
+  "Protocol for planets."
   ; TODO add fns
+  )
 
 (defprotocol Observer
   "Protocol for an observer"
-  (location [obs] "Returns the location of the observer.")
-  (observer-time [obs] "Returns the time of the observer."))
+  (observer-location [this] "Returns the location of the observer.")
+  (observer-time [this] "Returns the time of the observer."))
 
 (comment
   ; location
@@ -728,4 +672,3 @@
 
 (defprotocol GalacticalCoordinates
   "Protocol for galactical coordinate system.")
-
