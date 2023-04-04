@@ -1,11 +1,11 @@
-(ns org.soulspace.clj.astronomy.app.chart.drawing
+(ns org.soulspace.astronomy.app.chart.drawing
   (:require [org.soulspace.math.core :as m]
             [clojure.string :as str]
             [org.soulspace.clj.string :as sstr]
             [org.soulspace.clj.java.awt.graphics :as agfx]
-            [org.soulspace.clj.astronomy.coordinates.coordinates :as coord]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]
-            [org.soulspace.clj.astronomy.app.chart.common :as cco])
+            [org.soulspace.astronomy.coordinates :as coord]
+            [org.soulspace.astronomy.app.data.common :as adc]
+            [org.soulspace.astronomy.app.chart.common :as cco])
   (:import [java.awt Graphics2D Color])
   )
 

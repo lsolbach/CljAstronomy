@@ -10,11 +10,11 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.ui.swing.application
-  (:require [org.soulspace.clj.astronomy.app.ui.swing.main-frame :as ui]
-            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chdc]
-            [org.soulspace.clj.astronomy.app.data.hyg-star-catalog :as chsc]
-            [org.soulspace.clj.astronomy.app.data.messier-catalog :as cmes])
+(ns org.soulspace.astronomy.app.ui.swing.application
+  (:require [org.soulspace.astronomy.app.ui.swing.main-frame :as ui]
+            [org.soulspace.astronomy.app.data.hyg-dso-catalog :as chdc]
+            [org.soulspace.astronomy.app.data.hyg-star-catalog :as chsc]
+            [org.soulspace.astronomy.app.data.messier-catalog :as cmes])
   (:gen-class))
 
 

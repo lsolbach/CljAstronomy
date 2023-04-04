@@ -10,15 +10,20 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.data.messier-catalog
+(ns org.soulspace.astronomy.app.data.messier-catalog
   (:require [clojure.set :refer [map-invert]]
             [clojure.core.async :as a]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.math.core :as m]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]))
+            [org.soulspace.astronomy.app.data.common :as adc]))
 
-(def objects (atom []))
+(def catalog (atom {:initialized? false
+                    :enabled? false
+                    :source ""
+                    :objects []
+                    :object-types #{}
+                    :catalog-designations #{:messier}}))
 
 (def messier-file (str adc/data-dir "/catalogs/messier.csv"))
 
@@ -78,24 +83,47 @@
             (map parse-messier))
           (csv/read-csv in-file))))
 
-(defn load-messier-catalog
+(defn load-catalog!
   "Loads the Messier catalog."
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (a/thread (read-messier))]
-    (a/go (reset! objects (a/<!! t)))))
+    (a/go (let [objs  (a/<! t)]
+          (reset! catalog {:initialized? true
+                           :enabled? true
+                           :source ""
+                           :objects objs
+                           :catalog-designations #{}
+                           :object-types #{}})))))
 
 (defn get-objects
   "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
   ([]
-   @objects)
+   (:objects @catalog))
   ([criteria]
-   (into [] (filter (adc/filter-xf criteria)) @objects)))
+   (into [] (adc/filter-xf criteria) (:objects @catalog))))
 
-(defn init
-  ""
-  []
-  )
+(defn handle-requests
+  "Reads queries from the in channel and returns the results on the out channel."
+  [in out]
+  (a/go
+    (while (:enabled? @catalog)
+      (loop []
+        (println "looping...")
+        (let [request (a/<! in)]
+          (adc/data-tapper "Request" request) ; for debugging
+          (let [criteria (:criteria request)
+                ; TODO check criteria against the capabilities of the repository
+                ;      to skip real searches when not neccessary
+                objs (get-objects criteria)]
+            (adc/data-tapper "Response" objs) ; for debugging
+            (a/>! out objs))
+          (recur))))))
+
+(defn init-catalog
+  [in out]
+  (load-catalog!)
+  (handle-requests in out))
 
 
 ;;;
@@ -104,4 +132,18 @@
 
 (defrecord MessierCatalog
   [in out]
+  adc/Catalog
+  (initialize
+   [this]
+   (load-catalog!)
+   (handle-requests in out))
+  (get-objects
+   ([this]
+    (:objects @catalog))
+   ([this criteria]
+    (into [] (filter (adc/filter-xf criteria)) (:objects @catalog))))
+  (get-capabilities
+   [this]
+   
+   )
   )

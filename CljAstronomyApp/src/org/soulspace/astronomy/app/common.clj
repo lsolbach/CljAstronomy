@@ -10,9 +10,9 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.common
+(ns org.soulspace.astronomy.app.common
   (:require [org.soulspace.clj.java.i18n :as i18n]
-            [org.soulspace.clj.astronomy.time :as time]))
+            [org.soulspace.astronomy.time :as time]))
 
 (def i18n (partial i18n/bundle-lookup (i18n/bundle "resources")))
 

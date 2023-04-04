@@ -10,7 +10,7 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.ui.swing.common
+(ns org.soulspace.astronomy.app.ui.swing.common
   (:require [org.soulspace.clj.java.awt.core :as awt]))
 
 (def heading-font (awt/font (awt/font-names :dialog) [(awt/font-styles :bold)] 14))

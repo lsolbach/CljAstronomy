@@ -1,6 +1,6 @@
-(ns org.soulspace.clj.astronomy.app.chart.scaling
+(ns org.soulspace.astronomy.app.chart.scaling
   (:require [org.soulspace.math.core :as m]
-            [org.soulspace.clj.astronomy.coordinates.projection :as cp]))
+            [org.soulspace.astronomy.coordinates :as cp]))
 
 (def north-pole [(m/deg-to-rad 0.0) (m/deg-to-rad 90.0)])
 (def south-pole [(m/deg-to-rad 0.0) (m/deg-to-rad -90.0)])

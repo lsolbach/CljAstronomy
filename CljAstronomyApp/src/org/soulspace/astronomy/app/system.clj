@@ -1,9 +1,9 @@
-(ns org.soulspace.clj.astronomy.app.system
+(ns org.soulspace.astronomy.app.system
   (:require [integrant.core :as ig]
             [clojure.core.async :as a]
-            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chdc]
-            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chsc]
-            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as cmes]))
+            [org.soulspace.astronomy.app.data.hyg-dso-catalog :as chdc]
+            [org.soulspace.astronomy.app.data.hyg-dso-catalog :as chsc]
+            [org.soulspace.astronomy.app.data.hyg-dso-catalog :as cmes]))
 
 
 (def catalog-requests (a/chan 10))

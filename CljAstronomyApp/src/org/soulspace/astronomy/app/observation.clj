@@ -10,7 +10,23 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.location)
+(ns org.soulspace.astronomy.app.observation)
 
-; TODO add the location event stream here
+(defprotocol Observation
+  "")
 
+
+(defprotocol DeepSkyObservation
+  "")
+
+
+(defprotocol PlanetObservation
+  "")
+
+
+(defprotocol SunObservation
+  "")
+
+
+
+(def observations-list (ref []))

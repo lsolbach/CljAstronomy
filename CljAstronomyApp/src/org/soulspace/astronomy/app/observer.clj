@@ -10,7 +10,8 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.time
+(ns org.soulspace.astronomy.app.observer
   (:require [reagi.core :as r]))
 
-; TODO add the time signal/eventstream here
+; TODO add the time and location event streams here
+

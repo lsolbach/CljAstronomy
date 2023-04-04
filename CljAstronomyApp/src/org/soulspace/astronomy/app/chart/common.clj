@@ -1,4 +1,4 @@
-(ns org.soulspace.clj.astronomy.app.chart.common
+(ns org.soulspace.astronomy.app.chart.common
   (:require [org.soulspace.clj.java.awt.core :as awt]
             [org.soulspace.clj.java.awt.graphics :as gfx]))
 

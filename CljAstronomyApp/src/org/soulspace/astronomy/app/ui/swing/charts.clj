@@ -10,23 +10,23 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.ui.swing.charts
+(ns org.soulspace.astronomy.app.ui.swing.charts
   (:require [org.soulspace.math.core :as m]
             [org.soulspace.clj.java.awt.core :as awt]
             [org.soulspace.clj.java.awt.events :as aevt]
             [org.soulspace.clj.java.awt.graphics :as agfx]
             [org.soulspace.clj.java.swing.core :as swing]
             [org.soulspace.clj.java.swing.events :as sevt]
-            [org.soulspace.clj.astronomy.app.common :as app]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]
-            [org.soulspace.clj.astronomy.app.data.hyg-dso-catalog :as chdc]
-            [org.soulspace.clj.astronomy.app.data.hyg-star-catalog :as chsc]
-            [org.soulspace.clj.astronomy.app.data.messier-catalog :as cmes]
-            [org.soulspace.clj.astronomy.app.chart.common :as cco]
-            [org.soulspace.clj.astronomy.app.chart.drawing :as cdr]
-            [org.soulspace.clj.astronomy.app.chart.scaling :as csc]
-            [org.soulspace.clj.astronomy.app.ui.swing.common :as swc]
-            [org.soulspace.clj.astronomy.app.ui.swing.objects :as oi])
+            [org.soulspace.astronomy.app.common :as app]
+            [org.soulspace.astronomy.app.data.common :as adc]
+            [org.soulspace.astronomy.app.data.hyg-dso-catalog :as chdc]
+            [org.soulspace.astronomy.app.data.hyg-star-catalog :as chsc]
+            [org.soulspace.astronomy.app.data.messier-catalog :as cmes]
+            [org.soulspace.astronomy.app.chart.common :as cco]
+            [org.soulspace.astronomy.app.chart.drawing :as cdr]
+            [org.soulspace.astronomy.app.chart.scaling :as csc]
+            [org.soulspace.astronomy.app.ui.swing.common :as swc]
+            [org.soulspace.astronomy.app.ui.swing.objects :as oi])
   (:import [java.awt.event MouseAdapter]))
 
 

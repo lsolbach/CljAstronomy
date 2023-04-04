@@ -13,8 +13,8 @@
 (ns org.soulspace.clj.astronomy.app.ui.swing.observation
   (:require [org.soulspace.clj.java.awt.core :as awt]
         [org.soulspace.clj.java.swing.core :as swing]
-        [org.soulspace.clj.astronomy.app.common :as app]
-        [org.soulspace.clj.astronomy.app.observation :as obs]
+        [org.soulspace.astronomy.app.common :as app]
+        [org.soulspace.astronomy.app.observation :as obs]
         [org.soulspace.clj.astronomy.app.ui.swing.common :as swc])
   (:import [javax.swing Action BorderFactory]))
 

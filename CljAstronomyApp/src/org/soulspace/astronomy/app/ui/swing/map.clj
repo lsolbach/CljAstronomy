@@ -10,15 +10,15 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.ui.swing.map
+(ns org.soulspace.astronomy.app.ui.swing.map
   (:require [clojure.java.io :as io]
             [org.soulspace.clj.math.core :as m]
             [org.soulspace.clj.java.awt.core :as awt]
             [org.soulspace.clj.java.awt.graphics :as agfx]
             [org.soulspace.clj.java.swing.core :as swing]
-            [org.soulspace.clj.astronomy.coordinates.projection :as cpr]
-            [org.soulspace.clj.astronomy.app.data.common :as adc]
-            [org.soulspace.clj.astronomy.app.chart.scaling :as csc]))
+            [org.soulspace.astronomy.coordinates :as cpr]
+            [org.soulspace.astronomy.app.data.common :as adc]
+            [org.soulspace.astronomy.app.chart.scaling :as csc]))
 
 (def moon-texture "/textures/albers/moon.jpg")
 (def moon-image (agfx/buffered-image (io/as-file (str adc/data-dir moon-texture))))
