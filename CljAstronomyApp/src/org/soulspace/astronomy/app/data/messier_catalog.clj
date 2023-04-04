@@ -131,19 +131,15 @@
 ;;;
 
 (defrecord MessierCatalog
-  [in out]
+           [in out]
   adc/Catalog
   (initialize
-   [this]
-   (load-catalog!)
-   (handle-requests in out))
-  (get-objects
-   ([this]
+    [this]
+    (load-catalog!)
+    (handle-requests in out))
+  (get-objects [this]
     (:objects @catalog))
-   ([this criteria]
-    (into [] (filter (adc/filter-xf criteria)) (:objects @catalog))))
+  (get-objects [this criteria]
+    (into [] (filter (adc/filter-xf criteria)) (:objects @catalog)))
   (get-capabilities
-   [this]
-   
-   )
-  )
+    [this]))

@@ -133,10 +133,9 @@
     [this]
     (load-catalog!)
     (handle-requests in out))
-  (get-objects
-    ([this]
-     (:objects @catalog))
-    ([this criteria]
-     (into [] (adc/filter-xf criteria) (:objects @catalog))))
+  (get-objects [this] 
+    (:objects @catalog))
+  (get-objects [this criteria]
+    (into [] (adc/filter-xf criteria) (:objects @catalog)))
   (get-capabilities
     [this]))

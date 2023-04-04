@@ -100,7 +100,7 @@
   "Called when a mouse click happens in the chart panel."
   [event parent reverse-scale objects]
   (let [o (adc/find-object-by-coordinates (reverse-scale (point-coordinates (.getPoint event)))
-                                      (filter (adc/mag-filter 10.5) objects))]
+                                      (filter (adc/in-mag-range? 10.5) objects))]
     (println o)
     (oi/object-info-dialog parent o)))
 
@@ -189,10 +189,10 @@
     (agfx/set-rendering-hint gfx (agfx/rendering-hint-keys :antialialising) (agfx/antialias-hints :on))
     (cdr/draw-chart-background gfx (equirectangular-panel-dimension))
     (cdr/draw-chart-grid gfx equirectangular-scale)
-    (cdr/draw-dso-labels gfx equirectangular-scale (filter (adc/mag-filter 3) stars))
-    (cdr/draw-dso-labels gfx equirectangular-scale (filter adc/common-name? (filter (adc/mag-filter 6) dsos)))
-    (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 8) dsos))
-    (cdr/draw-dsos gfx equirectangular-scale (filter (adc/mag-filter 6) stars))))
+    (cdr/draw-dso-labels gfx equirectangular-scale (filter (adc/in-mag-range? 3) stars))
+    (cdr/draw-dso-labels gfx equirectangular-scale (filter adc/common-name? (filter (adc/in-mag-range? 6) dsos)))
+    (cdr/draw-dsos gfx equirectangular-scale (filter (adc/in-mag-range? 8) dsos))
+    (cdr/draw-dsos gfx equirectangular-scale (filter (adc/in-mag-range? 6) stars))))
 
 (defn equirectangular-star-chart-panel
   "Creates the star chart panel."
@@ -218,7 +218,7 @@
                         (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-equirectangular-scale
                                                                                   ;; => Syntax error compiling at (src/org/soulspace/clj/astronomy/app/ui/swing/charts.clj:1:8045).
                                                                                   ;;    Unable to resolve symbol: reverse-equirectangular-scale in this context
- (filter (adc/mag-filter 10.5) (cmes/get-objects))))
+ (filter (adc/in-mag-range? 10.5) (cmes/get-objects))))
     (.setComponentPopupMenu panel popup-menu)
     (aevt/add-mouse-listener panel (popup-listener popup-menu))
     d))
@@ -278,18 +278,18 @@
   ;TODO use transducers
     (cdr/draw-dso-labels gfx stereographic-scale
                          (filter adc/common-name?
-                                 (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                                         (filter (adc/mag-filter 6) dsos))))
+                                 (filter (adc/angular-distance-below? m/HALF-PI csc/home)
+                                         (filter (adc/in-mag-range? 6) dsos))))
     (cdr/draw-dso-labels gfx stereographic-scale
                          (filter adc/common-name?
-                                 (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                                         (filter (adc/mag-filter 2) stars))))
+                                 (filter (adc/angular-distance-below? m/HALF-PI csc/home)
+                                         (filter (adc/in-mag-range? 2) stars))))
     (cdr/draw-dsos gfx stereographic-scale
-                   (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                           (filter (adc/mag-filter 10) dsos)))
+                   (filter (adc/angular-distance-below? m/HALF-PI csc/home)
+                           (filter (adc/in-mag-range? 10) dsos)))
     (cdr/draw-dsos gfx stereographic-scale
-                   (filter (adc/angular-distance-filter m/HALF-PI csc/home)
-                           (filter (adc/mag-filter 7) stars)))))
+                   (filter (adc/angular-distance-below? m/HALF-PI csc/home)
+                           (filter (adc/in-mag-range? 7) stars)))))
 
 (defn stereographic-star-chart-panel
   "Creates the star chart panel."
@@ -311,7 +311,7 @@
         d (swing/dialog {:title (app/i18n "label.chart.stereographic.title")} [(swing/scroll-pane panel)])]
     (aevt/add-mouse-listener panel
                         (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-stereographic-scale
-                                                      (filter (adc/mag-filter 10.5) (cmes/get-objects))))
+                                                      (filter (adc/in-mag-range? 10.5) (cmes/get-objects))))
     d))
 
 (def stereographic-star-chart-action
@@ -375,17 +375,17 @@
   (cdr/draw-dso-labels gfx orthographic-scale
                    (filter adc/common-name?
                            (filter (adc/rad-ra-dec-filter [0.0 0.0] [m/DOUBLE-PI m/HALF-PI])
-                                   (filter (adc/mag-filter 2) stars))))
+                                   (filter (adc/in-mag-range? 2) stars))))
   (cdr/draw-dso-labels gfx orthographic-scale
                    (filter adc/common-name?
                            (filter (adc/rad-ra-dec-filter [0.0 0.0] [m/DOUBLE-PI m/HALF-PI])
-                                   (filter (adc/mag-filter 6) dsos))))
+                                   (filter (adc/in-mag-range? 6) dsos))))
   (cdr/draw-dsos gfx orthographic-scale
              (filter (adc/rad-ra-dec-filter [0.0 0.0] [m/DOUBLE-PI m/HALF-PI])
-                     (filter (adc/mag-filter 10) dsos)))
+                     (filter (adc/in-mag-range? 10) dsos)))
   (cdr/draw-dsos gfx orthographic-scale
              (filter (adc/rad-ra-dec-filter [0.0 0.0] [m/DOUBLE-PI m/HALF-PI])
-                     (filter (adc/mag-filter 7) stars)))))
+                     (filter (adc/in-mag-range? 7) stars)))))
 
 (defn orthographic-star-chart-panel
   "Creates the star chart panel."
@@ -407,7 +407,7 @@
         d (swing/dialog {:title (app/i18n "label.chart.orthographic.title")} [(swing/scroll-pane panel)])]
     (aevt/add-mouse-listener panel
                         (aevt/mouse-clicked-listener chart-panel-mouse-clicked d reverse-orthographic-scale
-                                                      (filter (adc/mag-filter 10.5) (cmes/get-objects))))
+                                                      (filter (adc/in-mag-range? 10.5) (cmes/get-objects))))
     d))
 
 (def orthographic-star-chart-action
