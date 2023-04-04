@@ -10,7 +10,7 @@
 ;;;;   You must not remove this notice, or any other, from this software.
 ;;;;
 
-(ns org.soulspace.clj.astronomy.app.ui.swing.equipment
+(ns org.soulspace.astronomy.app.ui.swing.equipment
   (:require [org.soulspace.clj.java.awt.core :as awt]
             [org.soulspace.clj.java.awt.events :as aevt]
             [org.soulspace.clj.java.swing.core :as swing]
