@@ -15,7 +15,7 @@
         [org.soulspace.clj.java.swing.core :as swing]
         [org.soulspace.astronomy.app.common :as app]
         [org.soulspace.astronomy.app.observation :as obs]
-        [org.soulspace.clj.astronomy.app.ui.swing.common :as swc])
+        [org.soulspace.astronomy.app.ui.swing.common :as swc])
   (:import [javax.swing Action BorderFactory]))
 
 (defn observations-table-model

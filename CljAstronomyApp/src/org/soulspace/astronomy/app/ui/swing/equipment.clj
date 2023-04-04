@@ -16,8 +16,8 @@
             [org.soulspace.clj.java.swing.core :as swing]
             [org.soulspace.clj.java.swing.events :as sevt]
             [org.soulspace.astronomy.app.common :as app]
-            [org.soulspace.clj.astronomy.app.instruments.equipment :as ieq]
-            [org.soulspace.clj.astronomy.app.ui.swing.common :as swc]))
+            [org.soulspace.astronomy.app.instruments.equipment :as ieq]
+            [org.soulspace.astronomy.app.ui.swing.common :as swc]))
 
 ; TODO wire and show ok and cancel buttons
 
