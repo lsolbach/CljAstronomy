@@ -109,8 +109,10 @@
   [event args]
   (println "Resize" event))
 
-(def chart-filter-action (swing/action (fn [e] (println "filter") (chart-filter-dialog)) {:name (app/i18n "action.chart.filter")}))
-(def chart-info-action (swing/action (fn [e] (println "info")) {:name (app/i18n "action.chart.info")}))
+(def chart-filter-action (swing/action (fn [e] (println "filter") (chart-filter-dialog))
+                                       {:name (app/i18n "action.chart.filter")}))
+(def chart-info-action (swing/action (fn [e] (println "info"))
+                                     {:name (app/i18n "action.chart.info")}))
 
 (defn chart-popup-menu
   "Creates a popup menu for the star charts."

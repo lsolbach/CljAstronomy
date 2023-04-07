@@ -89,8 +89,8 @@
                                                   (barlow-reducer-panel)])
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
-     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
-     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent barlows-reducers]
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
@@ -167,8 +167,8 @@
                                                   (eyepiece-panel)])
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
-     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
-     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent eyepieces]
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
@@ -249,8 +249,8 @@
                                                   (filter-panel)])
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
-     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
-     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent filters]
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
@@ -360,8 +360,8 @@
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
      ; TODO add selection listener to update the optic panel on list selections
-     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
-     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent optics]
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
@@ -375,8 +375,8 @@
                             (swing/panel {} [[b-cancel "tag cancel"]
                                        [b-ok "span, tag ok"]])])])]
      ; TODO add selection listener to update the optic panel on list selections
-     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
-     (aevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-cancel (aevt/action-listener (fn [_] (.setVisible d false))))
      d)))
 
 (def optics-action

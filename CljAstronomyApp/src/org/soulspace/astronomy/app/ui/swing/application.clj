@@ -26,9 +26,9 @@
 (defn -main
   "Main function to start the application"
   [& args]
-  (chsc/load-hyg-star-catalog)
-  (cmes/load-messier-catalog)
-  (chdc/load-hyg-dso-catalog)
+  (chsc/load-catalog!)
+  (cmes/load-catalog!)
+  (chdc/load-catalog!)
   (ui/start-ui))
 
 (comment

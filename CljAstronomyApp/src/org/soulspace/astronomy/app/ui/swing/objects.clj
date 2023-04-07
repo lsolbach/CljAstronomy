@@ -143,7 +143,7 @@
                             [list-panel "span, grow"]
                             [b-ok "span, tag ok"]])])]
      (.setVisible d true)
-     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
   ([parent coll]
    (set-object-list coll)
@@ -155,7 +155,7 @@
                            [p
                             [b-ok "span, tag ok"]])])]
      (.setVisible d true)
-     (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+     (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
      d)))
 
 (def object-list-action
@@ -207,5 +207,5 @@
                             [(object-panel o)
                              [b-ok "span, tag ok"]])])]
       (.setVisible d true)
-      (aevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
+      (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
       d)))

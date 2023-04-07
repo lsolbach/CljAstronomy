@@ -399,15 +399,15 @@
   ([ra-min dec-min ra-max dec-max]
    (fn [obj] (and (>= (:ra obj) ra-min) (>= (:dec obj) dec-min) (<= (:ra obj) ra-max) (<= (:dec obj) dec-max)))))
 
-(comment
  ; TODO handle angle format in Angle and Coordinate abstractions and use common code
- (defn rad-ra-dec-filter
+(defn rad-ra-dec-filter
   "Returns a filter for the RA and Dec coordinates of an object."
   ([[ra-min dec-min] [ra-max dec-max]]
    (rad-ra-dec-filter ra-min dec-min ra-max dec-max))
   ([ra-min dec-min ra-max dec-max]
    (fn [obj] (and (>= (:ra-rad obj) ra-min) (>= (:dec-rad obj) dec-min) (<= (:ra-rad obj) ra-max) (<= (:dec-rad obj) dec-max)))))
-)
+
+(comment)
 
 (defn angular-distance-below?
   "Returns a filter for the angular distance of an object."
@@ -527,8 +527,7 @@
   {:catalog-designations #{:ngc :ic}
    :object-types #{:globular-cluster :galaxy :planetary-nebula
                    :emission-nebula :open-cluster :reflection-nebula}
-   :magnitudes {:max -30. :min 6.}}
-  )
+   :magnitudes {:max -30. :min 6.}})
 
 (defn criterium-predicate
   "Returns a filter predicate for the given criterium."
@@ -602,7 +601,7 @@
 
 (defprotocol AstronomicalObject
   "Protocol for astronomical objects."
-  (object-type [this]                                  "Returns the type of the object.")
+  (objecttype [this]                               "Returns the type of the object.")
   (designation [this]                               "Returns the designation of the object.                      
                                                      If the object has multiple designations,
                                                      the most common designation will be returned")
@@ -657,15 +656,3 @@
    :long 9.0
    :height 300})
 
-;; TODO convert to records
-(defprotocol HorizontalCoordinates
-  "Protocol for horizontal coordinate system (Alt/Az).")
-
-(defprotocol EquatorialCoordinates
-  "Protocol for equatorial coordinate system (RA/Dec).")
-
-(defprotocol EclipticalCoordinates
-  "Protocol for ecliptical coordinate system.")
-
-(defprotocol GalacticalCoordinates
-  "Protocol for galactical coordinate system.")
