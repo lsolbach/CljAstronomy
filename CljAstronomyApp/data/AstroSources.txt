@@ -3,7 +3,7 @@ Astro Sources
 
 HYG (Hipparchos, Yale, Gliese), DSO
 -----------------------------------
-http://astronexus.com/node/34
+https://github.com/astronexus/HYG-Database
 
 Stardroid
 ---------
@@ -17,6 +17,13 @@ http://www.nexstarsite.com/Book/DSO.htm
 Constellation Data
 ------------------
 ftp://cdsarc.u-strasbg.fr/cats/VI/49/
+
+Constellation Boundaries
+------------------------
+https://www.iau.org/public/themes/constellations/
+
+IAU Approved Common Star Names
+https://www.iau.org/public/themes/naming_stars/
 
 Star Colours
 ------------
