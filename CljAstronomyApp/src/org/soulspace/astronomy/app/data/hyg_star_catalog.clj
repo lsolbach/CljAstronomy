@@ -41,7 +41,7 @@
     bayer flam con comp comp-primary base lum var var-min var-max]]
   (let [[_ flamsteed bayer superscript constellation] (bayer-flamsteed-designations bayer-flamsteed)]
     {:hyg-id id
-     :type :star
+     :object-type :star
      :hd (if (seq hd) hd)
      :hr (if (seq hr) hr)
      :hip (if (seq hip) hip)
@@ -77,7 +77,7 @@
      :base (if (seq base) base)}))
 
 (defrecord HygStar
-  [hyg-id type hd hr hip gliese bayer bayer-superscript flamsteed constellation common-name
+  [hyg-id object-type hd hr hip gliese bayer bayer-superscript flamsteed constellation common-name
    ra dec distance mag mag-abs spectral-type color-index x y z v-x v-y v-z ra-rad dec-rad
    pm-ra-rad pm-dec-rad lum var mag-var-min mag-var-max comp comp-primary base])
 
