@@ -72,7 +72,7 @@
 (defrecord MessierObject
   [id messier object-type ra dec ra-rad dec-rad mag size ngc constellation common-name])
 
-(defn parse-messier-xf
+(defn read-xf
   "Creates a mapping transducer from csv vector to messier object."
   []
   (comp
@@ -85,7 +85,7 @@
   "Read the messier catalog."
   []
   (with-open [in-file (io/reader messier-file)]
-    (into [] (parse-messier-xf) (csv/read-csv in-file))))
+    (into [] (read-xf) (csv/read-csv in-file))))
 
 (defn load-catalog!
   "Loads the Messier catalog."
