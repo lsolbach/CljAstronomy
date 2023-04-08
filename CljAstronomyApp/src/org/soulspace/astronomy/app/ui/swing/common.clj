@@ -15,6 +15,10 @@
 
 (def heading-font (awt/font (awt/font-names :dialog) [(awt/font-styles :bold)] 14))
 
+; TODO use global state atom with get-in/update-in
+
+(def ui-state (atom {}))
+
 (comment
   ; UI state?
   {:observer {:location ""
@@ -25,7 +29,7 @@
                 :size-y 720
                 :zoom-level 0
                 :object-types :all ; #{:galaxy :star} ; set of objct types to display
-                :magnitudes {:max -30 :min 6}}
+                :magnitude {:max -30 :min 6}}
    :selected-object nil}
   
   )

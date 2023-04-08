@@ -80,15 +80,6 @@
     (= type "") :unknown
     :default (do (println "Unknown type in HYG DSO catalog:" type) :unknown)))
 
-(comment 
-(defrecord HygDSOObject
-           [id ra dec object-type constellation mag common-name ra-rad dec-rad r1 r2 angle]
-  adc/AstronomicalObject
-  (object-type [this]
-    (:object-type this))
-  (designation [this])) 
-  )
-
 (defn catalog-id
   "Extracts the catalog id of the object."
   [catalog id1 cat1 id2 cat2]
@@ -128,12 +119,18 @@
    :pk (catalog-id "PK" id1 cat1 id2 cat2)
    :pgc (catalog-id "PGC" id1 cat1 id2 cat2)})
 
+(defrecord HygDSO
+  [ra dec object-type constellation mag common-name ra-rad dec-rad
+   id r1 r2 pos-angle source id1 cat1 id2 cat2 dupid dupcat display-mag
+   messier ngc ic c col pk pgc])
+
 (defn read-xf
   "Returns a transducer to transform the HYG DSO data on read."
   []
   (comp
    (drop 1)
    (map parse-hyg-dso)
+   (map map->HygDSO)
    (filter #(< (:mag %) 16))
    (filter #(not= (:type %) :unknown))
    (filter #(not= (:messier %) "40"))))
@@ -191,25 +188,50 @@
   adc/Catalog
   (initialize [this]
               (load-catalog!)
-              (handle-requests in out))
-  (get-objects [this]
+              (handle-requests in out)
+              this)
+  (get-objects [_]
                (:objects @catalog))
-  (get-objects [this criteria]
+  (get-objects [_ criteria]
                (into [] (adc/filter-xf criteria) (:objects @catalog)))
-  (get-capabilities [this]))
+  (get-capabilities [_]))
+
+;;
+;; testing
+;;
 
 (comment
-  (def in (a/chan 100))
-  (def out (a/chan 100))
+
   (load-catalog!)
   (:enabled? @catalog)
-  (count (get-objects (:criteria {:criteria {:magnitudes {:max -30 :min 8}
-                                             :object-types #{:emission-nebula}}})))
+  (get-objects)
+  (get-objects {:magnitude {:brightest -30 :faintest 8}
+                :object-types #{:galaxy}})
+
+  (count (get-objects {:magnitude {:brightest -30 :faintest 9}
+                       :object-types #{:emission-nebula}}))
+
+  (def in (a/chan 100))
+  (def out (a/chan 100))
+
   (handle-requests in out)
   (ca/go (a/>! in (do (range 100))))
   (ca/go (println (a/<! in)))
-  (ca/go (a/>! in {:criteria {:magnitudes {:max -30 :min 8}
-                                           :object-types #{:emission-nebula}}}))
+  (ca/go (a/>! in {:criteria {:magnitude {:brightest -30 :faintest 8}
+                              :object-types #{:emission-nebula}}}))
   (ca/go (println (a/<! out)))
-)
+
+
+  ; perform simple timing
+  (time (load-catalog!))
+  (time (get-objects {:magnitude {:brightest -30 :faintest 8}
+                      :object-types #{:emission-nebula}}))
+
+  ; perform benchmarks
+  (require '[criterium.core :as crt])
+  (crt/bench (load-catalog!))
+  (crt/bench (get-objects {:magnitude {:brightest -30 :faintest 8}
+                           :object-types #{:emission-nebula}}))
+
+  )
 

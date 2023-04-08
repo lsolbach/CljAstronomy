@@ -18,6 +18,9 @@
         [org.soulspace.astronomy.app.ui.swing.common :as swc])
   (:import [javax.swing Action BorderFactory]))
 
+
+; TODO use global state atom with get-in/update-in
+
 (defn observations-table-model
   "Creates a table model for observations in coll."
   [coll]

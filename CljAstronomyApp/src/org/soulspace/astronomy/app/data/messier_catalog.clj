@@ -16,7 +16,8 @@
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.math.core :as m]
-            [org.soulspace.astronomy.app.data.common :as adc]))
+            [org.soulspace.astronomy.app.data.common :as adc]
+            [clojure.string :as str]))
 
 (def catalog (atom {:initialized? false
                     :enabled? false
@@ -57,7 +58,7 @@
   [[id type ra dec mag size ngc constellation detailed-type common-name]]
   {:id id
    :messier (parse-messier-id id)
-   :type (messier-type type detailed-type)
+   :object-type (messier-type type detailed-type)
    :ra (java.lang.Double/valueOf ra)
    :dec (java.lang.Double/valueOf dec)
    :ra-rad (m/deg-to-rad (* 15 (java.lang.Double/valueOf ra)))
@@ -65,23 +66,26 @@
    :mag (java.lang.Double/valueOf mag)
    :size size
    :ngc (parse-ngc-id ngc)
-   :constellation (adc/constellation-by-name-map constellation)
+   :constellation (adc/constellation-by-name-map (str/trim constellation))
    :common-name common-name})
+
+(defrecord MessierObject
+  [id messier ra dec ra-rad dec-rad mag size ngc constellation common-name])
 
 (defn parse-messier-xf
   "Creates a mapping transducer from csv vector to messier object."
   []
-  (map #(parse-messier %)))
+  (comp
+   (drop 1)
+   (map parse-messier)
+   (map map->MessierObject)
+   ))
 
 (defn read-messier
   "Read the messier catalog."
   []
   (with-open [in-file (io/reader messier-file)]
-    (into []
-          (comp
-            (drop 1)
-            (map parse-messier))
-          (csv/read-csv in-file))))
+    (into [] (parse-messier-xf) (csv/read-csv in-file))))
 
 (defn load-catalog!
   "Loads the Messier catalog."
@@ -133,13 +137,38 @@
 (defrecord MessierCatalog
            [in out]
   adc/Catalog
-  (initialize
-    [this]
-    (load-catalog!)
-    (handle-requests in out))
-  (get-objects [this]
+  (initialize [this]
+              (load-catalog!)
+              (handle-requests in out)
+              this)
+  (get-objects [_]
     (:objects @catalog))
-  (get-objects [this criteria]
+  (get-objects [_ criteria]
     (into [] (filter (adc/filter-xf criteria)) (:objects @catalog)))
-  (get-capabilities
-    [this]))
+  (get-capabilities [_]))
+
+;;
+;; testing
+;;
+
+(comment
+  ; tests
+  (read-messier)
+  (load-catalog!)
+  (get-objects)
+  (get-objects {:magnitude {:brightest -30 :faintest 8}
+                :object-types #{:galaxy}
+                })
+
+  ; perform simple timing
+  (time (load-catalog!))
+  (time (get-objects {:magnitude {:brightest -30 :faintest 8}
+                      :object-types #{:emission-nebula}}))
+
+  ; perform benchmarks
+  (require '[criterium.core :as crt])
+  (crt/bench (load-catalog!))
+  (crt/bench (get-objects {:magnitude {:brightest -30 :faintest 8}
+                           :object-types #{:emission-nebula}}))
+
+  )

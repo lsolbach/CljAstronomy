@@ -12,7 +12,6 @@
 
 (ns org.soulspace.astronomy.app.ui.swing.main-frame
   (:require [clojure.java.io :as io]
-            [clojure.inspector :as inspect]
             [clojure.tools.swing-utils :refer [do-swing-and-wait]]
             [reagi.core :as r]
             [org.soulspace.clj.java.awt.core :as awt]
@@ -29,6 +28,9 @@
            [org.soulspace.astronomy.time JulianDay]))
 
 (declare ui-frame)
+
+; TODO use global state atom with get-in/update-in
+
 (def chart-frame) ; TODO use atom or ref here
 
 ; TODO implement if neccessary
@@ -244,7 +246,7 @@
   []
   (println "main-frame")
   (swing/frame {:title (app/i18n "label.app.title")
-;          :jMenuBar (main-menu)
+          :jMenuBar (main-menu)
           :defaultCloseOperation JFrame/DISPOSE_ON_CLOSE}
          [(swing/panel
             {:layout (swing/mig-layout {:layoutConstraints "wrap 1"})}
@@ -261,7 +263,6 @@
   []
   (println "init-ui")
   (def ui-frame (main-frame))
-  (inspect/inspect-tree (bean main-frame))
   (doto ui-frame
     (.pack)
     (.setVisible true)))

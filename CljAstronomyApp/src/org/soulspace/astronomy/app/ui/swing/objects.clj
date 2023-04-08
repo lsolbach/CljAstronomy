@@ -26,6 +26,7 @@
 ;;; Object list
 ;;;
 
+; TODO use global state atom with get-in/update-in
 (def object-list (ref []))
 
 (defn set-object-list

@@ -533,28 +533,30 @@
   "Returns a filter predicate for the given criterium."
   [[k v]]
   (cond
+    ; TODO add functions for other criteria
+    ; constellation criterium
+    (= :constellations k)
+    #(contains? v (:constellation %))
     ; object type criterium
     (= :object-types k)
     #(contains? v (:object-type %))
     ; catalog-designation criterium
     (= :catalog-designation k)
     #(contains? (:catalog-designations %) v)
-    (= :magnitudes k)
-    #(let [max (get v :max -30)
-           min (get v :min 10)]
-       ;(println "<" max (:mag %) min)
-       (and (< max (:mag %) min)))))
-    ; TODO add functions for other criteria
-
-(comment
-  (criterium-predicate {}))
+    (= :magnitude k)
+    #(let [brightest (get v :brightest -30)
+           faintest (get v :faintest 10)]
+       ;(println "<" brightest (:mag %) faintest)
+       (and (< brightest (:mag %) faintest)))))
 
 (defn filter-xf
-  "Creates a filter transducer for the criteria."
+  "Creates a filter transducer for the map of criteria."
   [criteria]
-  (loop [remaining criteria filter-predicates []]
+  (loop [remaining criteria
+         filter-predicates []]
     (if (seq remaining)
-      (recur (rest remaining) (conj filter-predicates (criterium-predicate (first remaining))))
+      (recur (rest remaining)
+             (conj filter-predicates (criterium-predicate (first remaining))))
       ; compose the filtering functions and create a filter transducer
       (filter (apply every-pred (remove nil? filter-predicates))))))
 

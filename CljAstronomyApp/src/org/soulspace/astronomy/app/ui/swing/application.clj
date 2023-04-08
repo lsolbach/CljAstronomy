@@ -14,7 +14,8 @@
   (:require [org.soulspace.astronomy.app.ui.swing.main-frame :as ui]
             [org.soulspace.astronomy.app.data.hyg-dso-catalog :as chdc]
             [org.soulspace.astronomy.app.data.hyg-star-catalog :as chsc]
-            [org.soulspace.astronomy.app.data.messier-catalog :as cmes])
+            [org.soulspace.astronomy.app.data.messier-catalog :as cmes]
+            [criterium.core :as crt])
   (:gen-class))
 
 
@@ -32,5 +33,7 @@
   (ui/start-ui))
 
 (comment
+  ; start the Swing UI
   (-main)
+
   )
