@@ -68,6 +68,9 @@
    :constellation (adc/constellation-by-name-map constellation)
    :common-name common-name})
 
+(defrecord MessierObject
+  [id messier ra dec ra-rad dec-rad mag size ngc constellation common-name])
+
 (defn parse-messier-xf
   "Creates a mapping transducer from csv vector to messier object."
   []

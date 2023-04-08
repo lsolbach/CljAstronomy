@@ -84,7 +84,7 @@
 (defrecord HygDSOObject
            [id ra dec object-type constellation mag common-name ra-rad dec-rad r1 r2 angle]
   adc/AstronomicalObject
-  (object-type [this]
+  (objecttype [this]
     (:object-type this))
   (designation [this])) 
   )
@@ -127,6 +127,11 @@
    :mel (catalog-id "Mel" id1 cat1 id2 cat2)
    :pk (catalog-id "PK" id1 cat1 id2 cat2)
    :pgc (catalog-id "PGC" id1 cat1 id2 cat2)})
+
+(defrecord HygDSO
+  [ra dec object-type constellation mag common-name ra-rad dec-rad
+   id r1 r2 pos-angle source id1 cat1 id2 cat2 dupid dupcat display-mag
+   messier ngc ic c col pk pgc])
 
 (defn read-xf
   "Returns a transducer to transform the HYG DSO data on read."

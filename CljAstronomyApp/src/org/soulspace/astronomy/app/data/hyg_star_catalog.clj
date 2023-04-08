@@ -76,6 +76,11 @@
      :comp-primary (if (seq comp-primary) comp-primary)
      :base (if (seq base) base)}))
 
+(defrecord HygStar
+  [hyg-id type hd hr hip gliese bayer bayer-superscript flamsteed constellation common-name
+   ra dec distance mag mag-abs spectral-type color-index x y z v-x v-y v-z ra-rad dec-rad
+   pm-ra-rad pm-dec-rad lum var mag-var-min mag-var-max comp comp-primary base])
+
 (defn parse-hyg-star-mapping-transformer
   "Creates a mapping transformation from csv vector to hyg catalog star."
   []

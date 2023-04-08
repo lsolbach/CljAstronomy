@@ -244,7 +244,7 @@
   []
   (println "main-frame")
   (swing/frame {:title (app/i18n "label.app.title")
-;          :jMenuBar (main-menu)
+          :jMenuBar (main-menu)
           :defaultCloseOperation JFrame/DISPOSE_ON_CLOSE}
          [(swing/panel
             {:layout (swing/mig-layout {:layoutConstraints "wrap 1"})}
