@@ -19,6 +19,8 @@
             [org.soulspace.astronomy.app.instruments.equipment :as ieq]
             [org.soulspace.astronomy.app.ui.swing.common :as swc]))
 
+; TODO use global state atom with get-in/update-in
+
 ; TODO wire and show ok and cancel buttons
 
 (defn equipment-panel

@@ -37,6 +37,9 @@
 
 ; implementation of common functions here in common and usage in protocol implementations
 
+
+; TODO use global state atom with get-in/update-in
+
 (def chart-spec (ref {:faintest-stellar-mag 6.0
                                       :faintest-dso-mag 10.0}))
 

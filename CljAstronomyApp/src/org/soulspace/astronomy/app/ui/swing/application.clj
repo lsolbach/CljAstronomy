@@ -36,16 +36,4 @@
   ; start the Swing UI
   (-main)
 
-  ; perform simple timing
-  (time (chdc/load-catalog!))
-  (time (chsc/load-catalog!))
-  (time (cmes/load-catalog!))
-  (time (Thread/sleep 200))
-
-  ; perform benchmarks
-  (require '[criterium.core :as crt])
-  (crt/bench (chdc/load-catalog!))
-  (crt/bench (chsc/load-catalog!))
-  (crt/bench (cmes/load-catalog!))
-  (crt/bench (Thread/sleep 200))
   )

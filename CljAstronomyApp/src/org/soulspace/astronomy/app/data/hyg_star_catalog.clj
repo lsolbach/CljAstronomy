@@ -81,20 +81,19 @@
    ra dec distance mag mag-abs spectral-type color-index x y z v-x v-y v-z ra-rad dec-rad
    pm-ra-rad pm-dec-rad lum var mag-var-min mag-var-max comp comp-primary base])
 
-(defn parse-hyg-star-mapping-transformer
+(defn read-xf
   "Creates a mapping transformation from csv vector to hyg catalog star."
   []
-  (map #(parse-hyg-star %)))
+  (comp
+   (drop 2) ; line 0 are the headers, line 1 is sol, our own star
+   (map parse-hyg-star)
+   (map map->HygStar)))
 
 (defn read-hyg-star
   "Read and parse the HYG star data."
   []
   (with-open [in-file (io/reader hyg-star-file)]
-    (into []
-      (comp
-        (drop 2) ; line 0 are the headers, line 1 is sol, our own star
-        (map parse-hyg-star))
-      (csv/read-csv in-file :separator \,))))
+    (into [] (read-xf) (csv/read-csv in-file :separator \,))))
 
 (defn load-catalog!
   "Loads the HYG star catalog."
@@ -134,13 +133,38 @@
 (defrecord HygStarCatalog
            [in out]
   adc/Catalog
-  (initialize
-    [this]
-    (load-catalog!)
-    (handle-requests in out))
-  (get-objects [this] 
-    (:objects @catalog))
-  (get-objects [this criteria]
-    (into [] (adc/filter-xf criteria) (:objects @catalog)))
-  (get-capabilities
-    [this]))
+  (initialize [this]
+              (load-catalog!)
+              (handle-requests in out)
+              this)
+  (get-objects [_]
+               (:objects @catalog))
+  (get-objects [_ criteria]
+               (into [] (adc/filter-xf criteria) (:objects @catalog)))
+  (get-capabilities [_]))
+
+;;
+;; testing
+;;
+
+(comment
+
+  ; testing
+  (load-catalog!)
+  (get-objects)
+  (get-objects {:magnitude {:brightest -30 :faintest 2}
+                :object-types #{:star}})
+
+
+  ; perform simple timing
+  (time (load-catalog!))
+  (time (get-objects {:magnitude {:brightest -30 :faintest 2}
+                      :object-types #{:star}}))
+
+  ; perform benchmarks
+  (require '[criterium.core :as crt])
+  (crt/bench (load-catalog!))
+  (crt/bench (get-objects {:magnitude {:brightest -30 :faintest 2}
+                           :object-types #{:star}}))
+
+  )

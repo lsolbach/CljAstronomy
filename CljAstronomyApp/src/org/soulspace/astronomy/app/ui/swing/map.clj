@@ -20,6 +20,8 @@
             [org.soulspace.astronomy.app.data.common :as adc]
             [org.soulspace.astronomy.app.chart.scaling :as csc]))
 
+; TODO use global state atom with get-in/update-in
+
 (def moon-texture "/textures/albers/moon.jpg")
 (def moon-image (agfx/buffered-image (io/as-file (str adc/data-dir moon-texture))))
 
