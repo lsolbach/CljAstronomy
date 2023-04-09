@@ -31,7 +31,7 @@
   (agfx/fill-colored-rect gfx 0 0 x-max y-max (cco/chart-colors :black)))
 
 ;"Draws a deep sky object."
-(defmulti draw-dso (fn [gfx scale dso] (:type dso)) :hierarchy #'adc/object-hierarchy)
+(defmulti draw-dso (fn [gfx scale dso] (:object-type dso)) :hierarchy #'adc/object-hierarchy)
 
 (defmethod draw-dso :star [^java.awt.Graphics2D gfx scale dso]
   (let [[x y] (scale [(:ra-rad dso) (:dec-rad dso)])
@@ -106,7 +106,7 @@
   (doseq [dso dsos]
     (draw-dso gfx scale dso)))
 
-(defmulti draw-dso-label (fn [gfx scale dso] (:type dso)) :hierarchy #'adc/object-hierarchy)
+(defmulti draw-dso-label (fn [gfx scale dso] (:object-type dso)) :hierarchy #'adc/object-hierarchy)
 
 (defmethod draw-dso-label :star
   [^java.awt.Graphics2D gfx scale dso]

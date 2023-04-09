@@ -434,7 +434,7 @@
 ;;; Celestial object labels
 ;;;
 
-(defmulti object-label :type  :hierarchy #'object-hierarchy)
+(defmulti object-label :object-type  :hierarchy #'object-hierarchy)
 
 ; "Returns the label for the star."
 (defmethod object-label :star
@@ -466,7 +466,7 @@
 
 (defmethod object-label nil
   [obj]
-  (println (:id obj) (:type obj))
+  (println (:id obj) (:object-type obj))
   "")
 
 (defn ra-label
@@ -546,7 +546,6 @@
     (= :magnitude k)
     #(let [brightest (get v :brightest -30)
            faintest (get v :faintest 10)]
-       ;(println "<" brightest (:mag %) faintest)
        (and (< brightest (:mag %) faintest)))))
 
 (defn filter-xf
