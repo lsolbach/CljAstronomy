@@ -277,7 +277,9 @@
   [^java.awt.Graphics2D gfx]
   (let [stars (chsc/get-objects)
         dsos  (cmes/get-objects)]
-    (agfx/set-rendering-hint gfx (agfx/rendering-hint-keys :antialialising) (agfx/antialias-hints :on))
+    (agfx/set-rendering-hint gfx
+                             (agfx/rendering-hint-keys :antialialising)
+                             (agfx/antialias-hints :on))
     (cdr/draw-chart-background gfx (stereographic-panel-dimension))
   ;(draw-chart-grid gfx)
   ;TODO use transducers

@@ -17,7 +17,30 @@
 
 ; TODO use global state atom with get-in/update-in
 
-(def ui-state (atom {}))
+(def ui-state (atom {:observer {}
+                     :observer-view {:location {}
+                                     :time 0}
+                     :object-view {:objects []
+                                   :object-filter {}
+                                   :selected-object {}}
+                     :observations-view {:observations []
+                                         :observation-filter {}
+                                         :selected-observation {}}
+                     :equipment-view {:optics []
+                                      :optics-filter {}
+                                      :selected-optics {}
+                                      :eyepieces []
+                                      ::eyepiece-filter {}
+                                      :selected-eyepiece {}
+                                      :filters []
+                                      :filter-filter {}
+                                      :selected-filter {}
+                                      :reducers []
+                                      :reducer-filter {}
+                                      :selected-reducer {}
+                                      :cameras []
+                                      :camera-filter {}
+                                      :selected-camera {}}}))
 
 (comment
   ; UI state?

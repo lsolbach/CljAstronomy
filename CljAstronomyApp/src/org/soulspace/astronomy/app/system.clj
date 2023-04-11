@@ -5,7 +5,6 @@
             [org.soulspace.astronomy.app.data.hyg-dso-catalog :as chsc]
             [org.soulspace.astronomy.app.data.hyg-dso-catalog :as cmes]))
 
-
 (def catalog-requests (a/chan 10))
 (def catalog-responses (a/chan 10))
 

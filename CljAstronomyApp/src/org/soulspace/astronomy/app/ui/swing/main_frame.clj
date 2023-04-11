@@ -23,7 +23,8 @@
             [org.soulspace.astronomy.app.ui.swing.equipment :as sweq]
             [org.soulspace.astronomy.app.ui.swing.observation :as swobs]
             [org.soulspace.astronomy.app.ui.swing.objects :as swobj]
-            [org.soulspace.astronomy.app.ui.swing.charts :as swch])
+            [org.soulspace.astronomy.app.ui.swing.charts :as swch]
+            [org.soulspace.astronomy.app.ui.swing.map :as swmp])
   (:import [javax.swing Action BorderFactory JFrame JDialog]
            [org.soulspace.astronomy.time JulianDay]))
 
@@ -92,11 +93,21 @@
 
 (def orrery-action
   (swing/action (fn [_]
-            (let [chart-dialog (swch/orthographic-star-chart-dialog)]
+            (let [^JDialog chart-dialog (swch/orthographic-star-chart-dialog)]
               (.setVisible chart-dialog true)))
           {:name (app/i18n "action.view.orrery")
            :accelerator (swing/key-stroke \y :ctrl)
            :mnemonic nil}))
+
+(def moon-action
+  (swing/action (fn [_]
+                  (let [^JDialog moon-dialog (swmp/moon-dialog)]
+                    (.setVisible moon-dialog true)))
+                {:name (app/i18n "action.view.moon")
+                 :accelerator (swing/key-stroke \m :ctrl)
+                 :mnemonic nil}))
+
+
 
 ;;
 ;; Panels
@@ -192,6 +203,7 @@
                                              (swing/menu-item {:action swch/orthographic-star-chart-action})])
                                 (swing/menu-item {:action planetarium-action})
                                 (swing/menu-item {:action orrery-action})
+                                (swing/menu-item {:action moon-action})
                                 (swing/menu-item {:action swobj/object-list-action})])
                    (swing/menu {:text (app/i18n "menu.equipment")}
                                [(swing/menu-item {:action sweq/optics-action})

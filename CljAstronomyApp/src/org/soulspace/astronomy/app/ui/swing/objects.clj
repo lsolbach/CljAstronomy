@@ -27,12 +27,18 @@
 ;;;
 
 ; TODO use global state atom with get-in/update-in
-(def object-list (ref []))
+(comment
+  (def object-list (ref []))
+
+  (defn set-object-list
+    "Sets the object list."
+    [coll]
+    (dosync (ref-set object-list coll))))
 
 (defn set-object-list
   "Sets the object list."
   [coll]
-  (dosync (ref-set object-list coll)))
+  (swap! swc/ui-state update-in [:object-view] assoc :objects coll))
 
 (defn objectlist-table-model
   [coll]
@@ -82,34 +88,34 @@
       "Clears the filter panel."
       [])
     (swing/panel {:layout (swing/mig-layout {:layoutConstraints "insets 10, wrap 4, fill"
-                                 :columnConstraints "[left|grow]"})}
-           [[(swing/label {:text (app/i18n "label.object.filter.title") :font swc/heading-font}) "left, wrap"]
-            (swing/label {:text (app/i18n "label.object.filter.name")}) f-name
-            (swing/label {:text (app/i18n "label.object.filter.constellation")}) f-constellation
-            (swing/label {:text (app/i18n "label.object.filter.ra-min")}) f-ra-min
-            (swing/label {:text (app/i18n "label.object.filter.ra-max")}) f-ra-max
-            (swing/label {:text (app/i18n "label.object.filter.dec-min")}) f-dec-min
-            (swing/label {:text (app/i18n "label.object.filter.dec-max")}) f-dec-max
-            (swing/label {:text (app/i18n "label.object.filter.mag-min")}) f-mag-min
-            (swing/label {:text (app/i18n "label.object.filter.mag-max")}) f-mag-max
-            (swing/button {:text (app/i18n "button.clear")})
-            (swing/button {:text (app/i18n "button.apply")})])))
+                                             :columnConstraints "[left|grow]"})}
+                 [[(swing/label {:text (app/i18n "label.object.filter.title") :font swc/heading-font}) "left, wrap"]
+                  (swing/label {:text (app/i18n "label.object.filter.name")}) f-name
+                  (swing/label {:text (app/i18n "label.object.filter.constellation")}) f-constellation
+                  (swing/label {:text (app/i18n "label.object.filter.ra-min")}) f-ra-min
+                  (swing/label {:text (app/i18n "label.object.filter.ra-max")}) f-ra-max
+                  (swing/label {:text (app/i18n "label.object.filter.dec-min")}) f-dec-min
+                  (swing/label {:text (app/i18n "label.object.filter.dec-max")}) f-dec-max
+                  (swing/label {:text (app/i18n "label.object.filter.mag-min")}) f-mag-min
+                  (swing/label {:text (app/i18n "label.object.filter.mag-max")}) f-mag-max
+                  (swing/button {:text (app/i18n "button.clear")})
+                  (swing/button {:text (app/i18n "button.apply")})])))
 
 
 
 (defn object-list-panel
   "Creates an object list panel."
   ([]
-   (object-list-panel @object-list))
+   (object-list-panel (get-in @swc/ui-state [:object-view :objects])))
   ([coll]
    (set-object-list coll)
    (let [t-object-list (swing/table {:model (objectlist-table-model coll) :gridColor java.awt.Color/DARK_GRAY})
          t-selection-model (swing/get-selection-model t-object-list)
          p (swing/panel {:layout (swing/mig-layout {:layoutConstraints "wrap 1, insets 10, fill"
-                                        :columnConstraints "[left|grow]"
-                                        :rowConstraints "[grow]"})}
-                  [[(swing/label {:text (app/i18n "label.object.list.title") :font swc/heading-font}) "left, wrap"]
-                   [(swing/scroll-pane t-object-list) "span, grow"]])]
+                                                    :columnConstraints "[left|grow]"
+                                                    :rowConstraints "[grow]"})}
+                        [[(swing/label {:text (app/i18n "label.object.list.title") :font swc/heading-font}) "left, wrap"]
+                         [(swing/scroll-pane t-object-list) "span, grow"]])]
 
 
      (defn show-object
@@ -131,18 +137,18 @@
 (defn object-list-dialog
   "Creates the object list dialog."
   ([]
-   (object-list-dialog @object-list))
+   (object-list-dialog (get-in @swc/ui-state [:object-view :objects])))
   ([coll]
    (set-object-list coll)
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
          filter-panel (object-filter-panel)
          list-panel (object-list-panel)
          d (swing/dialog {:title (app/i18n "label.object.list.title")}
-                   [(swing/panel {:layout (swing/mig-layout {:layoutConstraints "fill, wrap 1"
-                                                 :columnConstraints "[left|grow]"})}
-                           [filter-panel
-                            [list-panel "span, grow"]
-                            [b-ok "span, tag ok"]])])]
+                         [(swing/panel {:layout (swing/mig-layout {:layoutConstraints "fill, wrap 1"
+                                                                   :columnConstraints "[left|grow]"})}
+                                       [filter-panel
+                                        [list-panel "span, grow"]
+                                        [b-ok "span, tag ok"]])])]
      (.setVisible d true)
      (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
      d))
@@ -152,21 +158,21 @@
          filter-panel (object-filter-panel)
          p (object-list-panel)
          d (swing/dialog parent {:title (app/i18n "label.object.list.title")}
-                   [(swing/panel {:layout (swing/mig-layout {:layoutConstraints "wrap 1"})}
-                           [p
-                            [b-ok "span, tag ok"]])])]
+                         [(swing/panel {:layout (swing/mig-layout {:layoutConstraints "wrap 1"})}
+                                       [p
+                                        [b-ok "span, tag ok"]])])]
      (.setVisible d true)
      (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
      d)))
 
 (def object-list-action
   (swing/action (fn [_]
-            (let [object-list (chsc/get-objects) ; TODO replace with command on channel
-                  dialog-object-list (object-list-dialog object-list)]
-              (.setVisible dialog-object-list true)))
-          {:name (app/i18n "action.view.object-list")
-           :accelerator (swing/key-stroke \l :ctrl)
-           :mnemonic nil}))
+                  (let [object-list (chsc/get-objects) ; TODO replace with command on channel
+                        dialog-object-list (object-list-dialog object-list)]
+                    (.setVisible dialog-object-list true)))
+                {:name (app/i18n "action.view.object-list")
+                 :accelerator (swing/key-stroke \l :ctrl)
+                 :mnemonic nil}))
 
 ;;;
 ;;; Object info
@@ -182,14 +188,14 @@
         f-dec (swing/number-field {:columns 20 :text (str (:dec o)) :editable false})
         f-mag (swing/number-field {:columns 20 :text (str (:mag o)) :editable false})
         p (swing/panel {:layout (swing/mig-layout {:layoutConstraints "insets 10, wrap 2, fill"
-                                       :columnConstraints "[left|grow]"})}
-                 [[(swing/label {:text (app/i18n "label.object.info.title") :font swc/heading-font}) "left, wrap 10"]
-                  (swing/label {:text (app/i18n "label.object.name")}) f-name
-                  (swing/label {:text (app/i18n "label.object.constellation")}) f-constellation
-                  (swing/label {:text (app/i18n "label.object.type")}) f-type
-                  (swing/label {:text (app/i18n "label.object.ra")}) f-ra
-                  (swing/label {:text (app/i18n "label.object.dec")}) f-dec
-                  (swing/label {:text (app/i18n "label.object.mag")}) f-mag])]
+                                                   :columnConstraints "[left|grow]"})}
+                       [[(swing/label {:text (app/i18n "label.object.info.title") :font swc/heading-font}) "left, wrap 10"]
+                        (swing/label {:text (app/i18n "label.object.name")}) f-name
+                        (swing/label {:text (app/i18n "label.object.constellation")}) f-constellation
+                        (swing/label {:text (app/i18n "label.object.type")}) f-type
+                        (swing/label {:text (app/i18n "label.object.ra")}) f-ra
+                        (swing/label {:text (app/i18n "label.object.dec")}) f-dec
+                        (swing/label {:text (app/i18n "label.object.mag")}) f-mag])]
     (defn update-object-panel
       [object])
 
@@ -204,9 +210,9 @@
   (if (seq o)
     (let [b-ok (swing/button {:text (app/i18n "button.ok")})
           d (swing/dialog parent {:title (app/i18n "label.object.info.title")}
-                    [(swing/panel {:layout (swing/mig-layout {:layoutConstraints "wrap 1"})}
-                            [(object-panel o)
-                             [b-ok "span, tag ok"]])])]
+                          [(swing/panel {:layout (swing/mig-layout {:layoutConstraints "wrap 1"})}
+                                        [(object-panel o)
+                                         [b-ok "span, tag ok"]])])]
       (.setVisible d true)
       (sevt/add-action-listener b-ok (aevt/action-listener (fn [_] (.setVisible d false))))
       d)))
