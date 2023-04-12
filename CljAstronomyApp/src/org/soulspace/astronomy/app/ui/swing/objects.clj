@@ -35,10 +35,21 @@
     [coll]
     (dosync (ref-set object-list coll))))
 
-(defn set-object-list
-  "Sets the object list."
+(defn update-object-list
+  "Sets the object list in the UI state."
   [coll]
   (swap! swc/ui-state update-in [:object-view] assoc :objects coll))
+
+(defn update-object-filter
+  "Sets the selected object in the UI state."
+  [obj-filter]
+  (swap! swc/ui-state update-in [:object-view] assoc :object-filter obj-filter))
+
+(defn update-selected-object
+  "Sets the selected object in the UI state."
+  [obj]
+  (swap! swc/ui-state update-in [:object-view] assoc :selected-object obj))
+
 
 (defn objectlist-table-model
   [coll]
@@ -100,7 +111,6 @@
                   (swing/label {:text (app/i18n "label.object.filter.mag-max")}) f-mag-max
                   (swing/button {:text (app/i18n "button.clear")})
                   (swing/button {:text (app/i18n "button.apply")})])))
-
 
 
 (defn object-list-panel
