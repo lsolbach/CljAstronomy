@@ -13,7 +13,7 @@
 (ns org.soulspace.astronomy.app.data.hyg-star-catalog
   (:require [clojure.string :as str]
             [clojure.set :refer [map-invert]]
-            [clojure.core.async :as a]
+            [clojure.core.async :as a :refer [>! >!! <! <!!]]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.astronomy.app.data.common :as adc]))
@@ -22,7 +22,8 @@
                     :enabled? false
                     :objects []
                     :object-types #{}
-                    :catalog-designations #{:messier}}))
+                    :catalog-type :star
+                    :catalog-designations #{:hip :bayer :flamsteed :gliese :hd :hr}}))
 
 (def hyg-star-file (str adc/data-dir "/catalogs/hygdata_v3.csv"))
 
@@ -100,11 +101,8 @@
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (a/thread (read-hyg-star))]
-    (a/go (let [objs  (a/<! t)]
-          (reset! catalog {:enabled? true
-                           :objects objs
-                           :catalog-designations #{}
-                           :object-types #{}})))))
+    (a/go (let [objs  (<! t)]
+          (swap! catalog assoc :initialized? true :enabled? true :objects objs)))))
 
 (defn get-objects
   "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
@@ -120,14 +118,14 @@
     (while (:enabled? @catalog)
       (loop []
         (println "looping...")
-        (let [request (a/<! in)]
+        (let [request (<! in)]
           (adc/data-tapper "Request" request) ; for debugging
           (let [criteria (:criteria request)
                 ; TODO check criteria against the capabilities of the repository
                 ;      to skip real searches when not neccessary
                 objs (get-objects criteria)]
             (adc/data-tapper "Response" objs) ; for debugging
-            (a/>! out objs))
+            (>! out objs))
           (recur))))))
 
 (defrecord HygStarCatalog

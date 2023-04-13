@@ -497,7 +497,7 @@
 ;;; angular distance
 ;;;
 
-(defn angular-distance-of-object-and-coords
+(defn angular-distance-to-object
   "Calculates the angular distance of the coordinates and the object."
   [[ra dec] o]
   (angular-distance [ra dec] [(:ra-rad o) (:dec-rad o)]))
@@ -506,7 +506,7 @@
   "Returns the object nearest to the coordinates."
   [[ra dec] coll]
   (if (seq coll)
-    (apply min-key (partial angular-distance-of-object-and-coords [ra dec]) coll)))
+    (apply min-key (partial angular-distance-to-object [ra dec]) coll)))
 
 ;;;
 ;;; Catalog filter predicates
@@ -516,12 +516,12 @@
   ; example for the filter criteria, use criteria to build a filter transducer
   {:catalog-designations #{:hd :hip :ngc :ic}                ; catalogs to include
    :object-types #{:star :galaxy}                            ; object types to include
-   :magnitudes {:max -30 :min 6}                             ; magnitudes to include 
-   :bounding-box {:coordinates-min {:ra-min 0 :deg-min -90}  ; bounding box on coordinates 
-                  :coordinates-max {:ra-max 24 :deg-max 90}}
+   :constellations #{:And :Peg}                              ; constellations to include
+   :magnitude {:max -30 :min 6}                              ; magnitudes to include 
+   :bounding-box {:ra-min 0 :dec-min -90                     ; bounding box on coordinates 
+                  :ra-max 24 :dec-max 90}
    :distance {:coordinates {:ra 12 :dec 0}                   ; angular distance from coordinates
-              :max-distance 10}
-   :constellations #{}}
+              :max-distance 10}}
 
   ; idea for the capabilities of a catalog
   {:catalog-designations #{:ngc :ic}
@@ -541,16 +541,25 @@
     (= :object-types k)
     #(contains? v (:object-type %))
     ; catalog-designation criterium
-    (= :catalog-designation k)
-    #(contains? (:catalog-designations %) v)
+    (= :catalogs k)
+    #(contains? (:catalogs %) v)
     (= :magnitude k)
     #(let [brightest (get v :brightest -30)
            faintest (get v :faintest 10)]
-       (and (< brightest (:mag %) faintest)))))
+       (and (< brightest (:mag %) faintest)))
+    (= :bounding-box k)
+    #(let [ra-min (get v :ra-min)
+           dec-min (get v :dec-min)
+           ra-max (get v :ra-max)
+           dec-max (get v :dec-max)]
+       (and (<= ra-min (:ra-rad %))
+            (<= dec-min (:dec-rad %))
+            (< (:ra-rad %) ra-max)
+            (< (:dec-rad %) dec-max)))))
 
 (defn filter-xf
   "Creates a filter transducer for the map of criteria."
-  [criteria]
+  [criteria]   
   (loop [remaining criteria
          filter-predicates []]
     (if (seq remaining)

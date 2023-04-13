@@ -118,7 +118,7 @@
   ([]
    (object-list-panel (get-in @swc/ui-state [:object-view :objects])))
   ([coll]
-   (set-object-list coll)
+   (update-object-list coll)
    (let [t-object-list (swing/table {:model (objectlist-table-model coll) :gridColor java.awt.Color/DARK_GRAY})
          t-selection-model (swing/get-selection-model t-object-list)
          p (swing/panel {:layout (swing/mig-layout {:layoutConstraints "wrap 1, insets 10, fill"
@@ -131,13 +131,15 @@
      (defn show-object
        [e]
        (when-not (.getValueIsAdjusting e)
+         (update-selected-object (nth coll (.getFirstIndex e)))
          (println (nth coll (.getFirstIndex e)))))
 
      (defn update-object-list-panel
        [object-list])
 
      (defn clear-object-list-panel
-       [object-list])
+       [object-list]
+       )
 
      (swing/set-selection-mode t-selection-model (swing/list-selection-keys :single))
      (sevt/add-list-selection-listener t-selection-model (sevt/list-selection-listener show-object))
@@ -149,7 +151,7 @@
   ([]
    (object-list-dialog (get-in @swc/ui-state [:object-view :objects])))
   ([coll]
-   (set-object-list coll)
+   (update-object-list coll)
    (let [b-ok (swing/button {:text (app/i18n "button.ok")})
          filter-panel (object-filter-panel)
          list-panel (object-list-panel)

@@ -12,7 +12,7 @@
 
 (ns org.soulspace.astronomy.app.data.messier-catalog
   (:require [clojure.set :refer [map-invert]]
-            [clojure.core.async :as a]
+            [clojure.core.async :as a :refer [>! >!! <! >!!]]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.math.core :as m]
@@ -78,8 +78,7 @@
   (comp
    (drop 1)
    (map parse-messier)
-   (map map->MessierObject)
-   ))
+   (map map->MessierObject)))
 
 (defn read-messier
   "Read the messier catalog."
@@ -92,13 +91,8 @@
   []
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (a/thread (read-messier))]
-    (a/go (let [objs  (a/<! t)]
-          (reset! catalog {:initialized? true
-                           :enabled? true
-                           :source ""
-                           :objects objs
-                           :catalog-designations #{}
-                           :object-types #{}})))))
+    (a/go (let [objs  (<! t)]
+          (swap! catalog assoc :initialized? true :enabled? true :objects objs)))))
 
 (defn get-objects
   "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
@@ -114,21 +108,20 @@
     (while (:enabled? @catalog)
       (loop []
         (println "looping...")
-        (let [request (a/<! in)]
+        (let [request (<! in)]
           (adc/data-tapper "Request" request) ; for debugging
           (let [criteria (:criteria request)
                 ; TODO check criteria against the capabilities of the repository
                 ;      to skip real searches when not neccessary
                 objs (get-objects criteria)]
             (adc/data-tapper "Response" objs) ; for debugging
-            (a/>! out objs))
+            (>! out objs))
           (recur))))))
 
 (defn init-catalog
   [in out]
   (load-catalog!)
   (handle-requests in out))
-
 
 ;;;
 ;;; Massier catalog component
