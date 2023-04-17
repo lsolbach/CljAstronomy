@@ -133,7 +133,7 @@
 
 (defrecord MessierCatalog
            [in out]
-  adc/Catalog
+  adc/ICatalog
   (initialize [this]
               (load-catalog!)
               (handle-requests in out)

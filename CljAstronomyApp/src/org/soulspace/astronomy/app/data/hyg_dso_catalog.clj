@@ -11,6 +11,7 @@
 ;;;;
 
 (ns org.soulspace.astronomy.app.data.hyg-dso-catalog
+  "Namespace for the HYG DSO Catalog."
   (:require [clojure.string :as str]
             [clojure.set :refer [map-invert]]
             [clojure.core.async :as a :refer [>! >!! <! <!!]]
@@ -188,7 +189,7 @@
 ; defrecord or deftype?
 (defrecord HygDSOCatalog
            [in out objects]
-  adc/Catalog
+  adc/ICatalog
   (initialize [this]
               (load-catalog!)
               (handle-requests in out)

@@ -603,7 +603,7 @@
 ;;; Protocols
 ;;;
 
-(defprotocol Catalog
+(defprotocol ICatalog
   "Protocol for catalogs."
   (initialize [this]                  "Initializes the catalog.")
   (get-objects [this] [this criteria] "Returns objects from the catalog.")
@@ -611,7 +611,7 @@
 
 (defprotocol AstronomicalObject
   "Protocol for astronomical objects."
-  (objecttype [this]                               "Returns the type of the object.")
+  (objecttype [this]                                "Returns the type of the object.")
   (designation [this]                               "Returns the designation of the object.                      
                                                      If the object has multiple designations,
                                                      the most common designation will be returned")
