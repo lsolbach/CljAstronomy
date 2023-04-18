@@ -10,7 +10,7 @@
                  [integrant/integrant "0.8.0"]
                  [reagi/reagi "0.10.1" :exclusions [org.clojure/clojure]]
                  [org.soulspace.clj/astronomy.core "0.4.3"]
-                 [org.soulspace.clj/clj.swing "0.8.1"]]
+                 [org.soulspace.clj/clj.swing "0.8.3"]]
   :test-paths ["test"]
   :profiles {:dev {:dependencies [[djblue/portal "0.37.1"]
                                   [criterium "0.4.6"]]
