@@ -168,16 +168,16 @@
       (loop []
         (println "looping...")
         (let [request (<! in)]
-          (adc/data-tapper "Request" request) ; for debugging
+          (user/data-tapper "Request" request) ; for debugging
           (let [criteria (:data request)
                 ; TODO check criteria against the capabilities of the repository
                 ;      to skip real searches when not neccessary
                 objs (get-objects criteria)
                 response {:msg-type :get-objects-result
-                          :sender "HygDSOCatalog"
-                          :receiver (:sender request)
+                          :source "HygDSOCatalog"
+                          :receiver (:source request)
                           :data objs}]
-            (adc/data-tapper "Response" response) ; for debugging
+            (user/data-tapper "Response" response) ; for debugging
             (>! out response))
           (recur))))))
 
