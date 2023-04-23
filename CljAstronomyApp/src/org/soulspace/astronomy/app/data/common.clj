@@ -511,8 +511,8 @@
    :magnitude {:max -30 :min 6}                              ; magnitudes to include 
    :bounding-box {:ra-min 0 :dec-min -90                     ; bounding box on coordinates 
                   :ra-max 24 :dec-max 90}
-   :distance {:coordinates {:ra 12 :dec 0}                   ; angular distance from coordinates
-              :max-distance 10}}
+   :distance {:ra 12 :dec 0 :max-distance 10}}               ; angular distance from coordinates
+              
 
   ; idea for the capabilities of a catalog
   {:catalog-designations #{:ngc :ic}
@@ -538,6 +538,8 @@
     #(let [brightest (get v :brightest -30)
            faintest (get v :faintest 10)]
        (and (< brightest (:mag %) faintest)))
+    (= :distance k)
+    #(angular-distance-below? (:max-distance v) (:ra v) (:dec v))
     (= :bounding-box k)
     #(let [ra-min (get v :ra-min)
            dec-min (get v :dec-min)
