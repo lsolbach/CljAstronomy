@@ -150,9 +150,7 @@
   ; load catalog asynchronously so the application start is not delayed by catalog loading
   (let [t (a/thread (read-hyg-dso))]
     (a/go (let [objs  (<! t)]
-          (swap! catalog assoc {:initialized? true
-                                :enabled? true
-                                :objects objs})))))
+          (swap! catalog assoc :initialized? true :enabled? true :objects objs)))))
 
 (defn get-objects
   "Returns the loaded objects of this catalog, optionally filtered by the given criteria."
