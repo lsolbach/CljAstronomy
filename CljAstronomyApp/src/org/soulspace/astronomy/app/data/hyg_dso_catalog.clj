@@ -17,7 +17,8 @@
             [clojure.core.async :as a :refer [>! >!! <! <!!]]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
-            [org.soulspace.astronomy.app.data.common :as adc]))
+            [org.soulspace.astronomy.app.data.common :as adc]
+            [org.soulspace.astronomy.app.data.catalogs :as cat]))
 
 (def catalog (atom {:initialized? false
                     :enabled? false
@@ -158,7 +159,7 @@
   ([]
    (:objects @catalog))
   ([criteria]
-   (into [] (adc/filter-xf criteria) (:objects @catalog))))
+   (into [] (cat/filter-xf criteria) (:objects @catalog))))
 
 (defn handle-requests
   "Reads queries from the in channel and returns the results on the out channel."
@@ -168,7 +169,7 @@
       (loop []
         (println "looping...")
         (let [request (<! in)]
-          (user/data-tapper "Request" request) ; for debugging
+          ;(user/data-tapper "Request" request) ; for debugging
           (let [criteria (:data request)
                 ; TODO check criteria against the capabilities of the repository
                 ;      to skip real searches when not neccessary
@@ -177,7 +178,7 @@
                           :source "HygDSOCatalog"
                           :receiver (:source request)
                           :data objs}]
-            (user/data-tapper "Response" response) ; for debugging
+            ;(user/data-tapper "Response" response) ; for debugging
             (>! out response))
           (recur))))))
 
@@ -197,7 +198,7 @@
   (get-objects [_]
                (:objects @catalog))
   (get-objects [_ criteria]
-               (into [] (adc/filter-xf criteria) (:objects @catalog)))
+               (into [] (cat/filter-xf criteria) (:objects @catalog)))
   (get-capabilities [_]))
 
 ;;

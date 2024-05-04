@@ -12,12 +12,13 @@
 
 (ns org.soulspace.astronomy.app.data.messier-catalog
   (:require [clojure.set :refer [map-invert]]
+            [clojure.string :as str]
             [clojure.core.async :as a :refer [>! >!! <! >!!]]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
             [org.soulspace.math.core :as m]
             [org.soulspace.astronomy.app.data.common :as adc]
-            [clojure.string :as str]))
+            [org.soulspace.astronomy.app.data.catalogs :as cat]))
 
 (def catalog (atom {:initialized? false
                     :enabled? false
@@ -99,7 +100,7 @@
   ([]
    (:objects @catalog))
   ([criteria]
-   (into [] (adc/filter-xf criteria) (:objects @catalog))))
+   (into [] (cat/filter-xf criteria) (:objects @catalog))))
 
 (defn handle-requests
   "Reads queries from the in channel and returns the results on the out channel."
@@ -141,7 +142,7 @@
   (get-objects [_]
     (:objects @catalog))
   (get-objects [_ criteria]
-    (into [] (filter (adc/filter-xf criteria)) (:objects @catalog)))
+    (into [] (filter (cat/filter-xf criteria)) (:objects @catalog)))
   (get-capabilities [_]))
 
 ;;

@@ -16,7 +16,8 @@
             [clojure.core.async :as a :refer [>! >!! <! <!!]]
             [clojure.java.io :as io]
             [clojure.data.csv :as csv]
-            [org.soulspace.astronomy.app.data.common :as adc]))
+            [org.soulspace.astronomy.app.data.common :as adc]
+            [org.soulspace.astronomy.app.data.catalogs :as cat]))
 
 (def catalog (atom {:initialized? false
                     :enabled? false
@@ -43,14 +44,14 @@
   (let [[_ flamsteed bayer superscript constellation] (bayer-flamsteed-designations bayer-flamsteed)]
     {:hyg-id id
      :object-type :star
-     :hd (if (seq hd) hd)
-     :hr (if (seq hr) hr)
-     :hip (if (seq hip) hip)
-     :gliese (if (seq gliese) gliese)
-     :bayer (if (seq bayer) (adc/greek-abbrev-keys bayer))
-     :bayer-superscript (if (not (= superscript " ")) superscript)
-     :flamsteed (if (seq flam) flam)
-     :constellation (if (and (seq con) (= (count con) 3)) (keyword con))
+     :hd (when (seq hd) hd)
+     :hr (when (seq hr) hr)
+     :hip (when (seq hip) hip)
+     :gliese (when (seq gliese) gliese)
+     :bayer (when (seq bayer) (adc/greek-abbrev-keys bayer))
+     :bayer-superscript (when (not (= superscript " ")) superscript)
+     :flamsteed (when (seq flam) flam)
+     :constellation (when (and (seq con) (= (count con) 3)) (keyword con))
      :common-name (str/trim proper-name)
      :ra (Double/valueOf ra)
      :dec (Double/valueOf dec)
@@ -109,7 +110,7 @@
   ([]
    (:objects @catalog))
   ([criteria]
-   (into [] (adc/filter-xf criteria) (:objects @catalog))))
+   (into [] (cat/filter-xf criteria) (:objects @catalog))))
 
 (defn handle-requests
   "Reads queries from the in channel and returns the results on the out channel."
@@ -142,7 +143,7 @@
   (get-objects [_]
                (:objects @catalog))
   (get-objects [_ criteria]
-               (into [] (adc/filter-xf criteria) (:objects @catalog)))
+               (into [] (cat/filter-xf criteria) (:objects @catalog)))
   (get-capabilities [_]))
 
 ;;
